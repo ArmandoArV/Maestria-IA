@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interrogación 1 – Pregunta de Desarrollo: Ortogonalidad del Residuo y Ecuaciones Normales</title>
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+    <style>
+        body { font-family: 'Georgia', serif; max-width: 900px; margin: 40px auto; padding: 0 20px; line-height: 1.7; color: #222; }
+        h1 { font-size: 1.5em; border-bottom: 2px solid #333; padding-bottom: 8px; }
+        h2 { font-size: 1.2em; color: #1a1a2e; margin-top: 30px; }
+        h3 { font-size: 1.05em; color: #16213e; margin-top: 20px; }
+        .enunciado { background: #f4f4f4; border-left: 4px solid #555; padding: 12px 18px; margin: 20px 0; font-style: italic; }
+        .header-info { font-size: 0.95em; color: #555; margin-bottom: 30px; }
+        .qed { text-align: right; font-size: 1.2em; }
+    </style>
+</head>
+<body>
+
+<h1>Interrogación 1 – IMT3850 Fundamentos Matemáticos para la IA</h1>
+<div class="header-info">
+    <strong>Alumno:</strong> Armando A.V. &nbsp;|&nbsp;
+    <strong>Fecha:</strong> Abril 2026 &nbsp;|&nbsp;
+    <strong>Magíster en Inteligencia Artificial – Pontificia Universidad Católica de Chile</strong>
+</div>
+
+<h2>Pregunta: Ortogonalidad del Residuo y Ecuaciones Normales</h2>
+
+<div class="enunciado">
+    <strong>Enunciado.</strong> En el ajuste de un modelo por mínimos cuadrados ordinarios, buscamos un vector $\hat{x}$ que minimice el residual $\|r\|_2^2$, donde $r = b - A\hat{x}$. Utilizando conceptos de cálculo vectorial y espacios generados (espacio columna), demuestre matemáticamente o argumente de forma geométrica por qué el vector residual óptimo debe ser estrictamente ortogonal a la imagen de la matriz $A$ ($\text{im}(A)$). Demuestre cómo esta condición geométrica de ortogonalidad deriva directamente en las Ecuaciones Normales.
+</div>
+
+<h3>Argumento geométrico</h3>
+
+<p>
+Partimos del objetivo: encontrar $\hat{x}$ tal que $A\hat{x}$ sea la mejor aproximación de $b$ dentro de $\text{im}(A)$. Geométricamente, el punto más cercano a un vector $b$ dentro de un subespacio es su <strong>proyección ortogonal</strong> sobre dicho subespacio.
+</p>
+
+<p>
+Si $A\hat{x} = \text{proy}_{\text{im}(A)}(b)$, entonces el residuo $\hat{r} = b - A\hat{x}$ debe ser perpendicular a todo vector en $\text{im}(A)$. Dado que cualquier vector en $\text{im}(A)$ se puede escribir como $Az$ para algún $z \in \mathbb{R}^n$, la condición de ortogonalidad exige:
+</p>
+
+$$(Az)^\top \hat{r} = 0, \quad \forall \, z \in \mathbb{R}^n$$
+
+<h3>Demostración analítica</h3>
+
+<p>
+Definimos la función de costo $J(x) = \|b - Ax\|_2^2$ y expandimos el cuadrado:
+</p>
+
+$$J(x) = (b - Ax)^\top (b - Ax) = b^\top b - 2b^\top Ax + x^\top A^\top A x$$
+
+<p>
+Derivamos respecto a $x$ e igualamos a cero para hallar el mínimo:
+</p>
+
+$$\nabla_x J = -2A^\top b + 2A^\top A x = 0$$
+
+<p>
+Reordenando se obtiene:
+</p>
+
+$$A^\top(A\hat{x} - b) = 0 \quad \Longrightarrow \quad A^\top \hat{r} = 0$$
+
+<p>
+Se observa que $A^\top \hat{r} = 0$ es precisamente la <strong>condición de ortogonalidad</strong>: cada columna $a_j$ de $A$ satisface $a_j^\top \hat{r} = 0$, es decir, $\hat{r} \perp \text{im}(A)$.
+</p>
+
+<div class="qed">$\blacksquare$</div>
+
+<h3>Derivación de las Ecuaciones Normales</h3>
+
+<p>
+Partimos directamente de la condición $A^\top \hat{r} = 0$. Sustituyendo $\hat{r} = b - A\hat{x}$:
+</p>
+
+$$A^\top(b - A\hat{x}) = 0$$
+
+$$A^\top b - A^\top A \hat{x} = 0$$
+
+$$\boxed{A^\top A \hat{x} = A^\top b}$$
+
+<p>
+Si $A$ tiene rango completo de columnas, la <strong>matriz de Gram</strong> $A^\top A \in \mathbb{R}^{n \times n}$ es invertible, y la solución única es:
+</p>
+
+$$\hat{x} = (A^\top A)^{-1} A^\top b = A^\dagger b$$
+
+<div class="qed">$\blacksquare$</div>
+
+<h3>Discusión</h3>
+
+<p>
+Esto confirma que la ortogonalidad no es solo una propiedad del resultado, sino la <strong>razón fundamental</strong> por la que mínimos cuadrados funciona: proyectar ortogonalmente minimiza la distancia (norma del residuo), lo cual es una consecuencia directa del Teorema de Pitágoras en $\mathbb{R}^m$. <strong>En la práctica</strong>, las ecuaciones normales se resuelven de forma estable mediante la factorización QR ($A = QR \Rightarrow R\hat{x} = Q^\top b$) o la SVD ($\hat{x} = V\Sigma^{-1}U^\top b$), evitando calcular explícitamente $A^\top A$ que puede estar mal condicionada.
+</p>
+
+</body>
+</html>

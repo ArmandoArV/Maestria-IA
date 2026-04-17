@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interrogación 1 – Pregunta de Desarrollo: PCA y Centrado de Datos</title>
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+    <style>
+        body { font-family: 'Georgia', serif; max-width: 900px; margin: 40px auto; padding: 0 20px; line-height: 1.7; color: #222; }
+        h1 { font-size: 1.5em; border-bottom: 2px solid #333; padding-bottom: 8px; }
+        h2 { font-size: 1.2em; color: #1a1a2e; margin-top: 30px; }
+        h3 { font-size: 1.05em; color: #16213e; margin-top: 20px; }
+        .enunciado { background: #f4f4f4; border-left: 4px solid #555; padding: 12px 18px; margin: 20px 0; font-style: italic; }
+        .header-info { font-size: 0.95em; color: #555; margin-bottom: 30px; }
+        .qed { text-align: right; font-size: 1.2em; }
+    </style>
+</head>
+<body>
+
+<h1>Interrogación 1 – IMT3850 Fundamentos Matemáticos para la IA</h1>
+<div class="header-info">
+    <strong>Alumno:</strong> Armando A.V. &nbsp;|&nbsp;
+    <strong>Fecha:</strong> Abril 2026 &nbsp;|&nbsp;
+    <strong>Magíster en Inteligencia Artificial – Pontificia Universidad Católica de Chile</strong>
+</div>
+
+<h2>Pregunta: PCA y la Importancia del Centrado de Datos</h2>
+
+<div class="enunciado">
+    <strong>Enunciado.</strong> En el Análisis de Componentes Principales, el primer paso algorítmico obligatorio es "centrar los datos" (restar el vector de la media a cada observación) antes de calcular la matriz de covarianza o extraer los vectores singulares. Si un analista de datos inexperto omite este paso y aplica PCA directamente sobre datos fuertemente desplazados del origen, ¿qué información capturará erróneamente la primera "componente principal"? Argumente en base a la relación entre el origen de coordenadas, la nube de datos y la maximización de la varianza.
+</div>
+
+<h3>PCA correctamente aplicado</h3>
+
+<p>
+Partimos del procedimiento estándar de PCA. Dada la matriz de datos $X \in \mathbb{R}^{N \times d}$ ($N$ observaciones, $d$ atributos), se centra:
+</p>
+
+$$B = X - \mathbf{1}\bar{x}^\top$$
+
+<p>
+donde $\bar{x} = \frac{1}{N}\sum_{i=1}^{N} x_i$ es el vector de medias. Luego se calcula la matriz de covarianza:
+</p>
+
+$$C = \frac{1}{N-1} B^\top B$$
+
+<p>
+Las componentes principales son los autovectores de $C$ (o equivalentemente, los vectores singulares derechos de $B$). La varianza explicada por la $i$-ésima componente es $\sigma_i^2 / (N-1)$. Se observa que la varianza mide <strong>dispersión respecto a la media</strong>, no respecto al origen.
+</p>
+
+<h3>¿Qué ocurre sin centrar?</h3>
+
+<p>
+Si se omite el centrado, se trabaja directamente con $X$. La matriz $X^\top X$ se puede descomponer como:
+</p>
+
+$$X^\top X = B^\top B + N \cdot \bar{x}\bar{x}^\top$$
+
+<p>
+El término $N \cdot \bar{x}\bar{x}^\top$ es una matriz de rango 1 que domina cuando los datos están desplazados del origen (es decir, cuando $\|\bar{x}\|$ es grande). Al aplicar SVD sobre $X$ sin centrar, se maximiza $\|Xv\|^2$, que incluye tanto la varianza intrínseca de los datos como el desplazamiento de la media.
+</p>
+
+<h3>Formalización</h3>
+
+<p>
+La "varianza" en la dirección de un vector unitario $v$ ($\|v\| = 1$), calculada sobre datos sin centrar, es:
+</p>
+
+$$\frac{1}{N}\|Xv\|^2 = \frac{1}{N}\sum_{i=1}^{N}(x_i^\top v)^2 = \underbrace{\text{Var}(X^\top v)}_{\text{varianza real}} + \underbrace{(\bar{x}^\top v)^2}_{\text{sesgo del desplazamiento}}$$
+
+<p>
+Se observa que el término de sesgo $(\bar{x}^\top v)^2$ se maximiza cuando $v$ apunta en la dirección de $\bar{x}$. Por ello, la primera componente principal sin centrar capturará predominantemente la <strong>dirección del vector media $\bar{x}$</strong>, es decir, la dirección desde el origen hacia el centroide de la nube de datos.
+</p>
+
+<h3>Consecuencias</h3>
+
+<p>
+<strong>(1)</strong> La primera componente principal <strong>desperdicia capacidad</strong> explicando la posición media de los datos, que es información trivial y no representa variabilidad intrínseca.
+</p>
+
+<p>
+<strong>(2)</strong> Las componentes siguientes (PC2, PC3, ...) mezclan varianza real con artefactos del desplazamiento, lo que distorsiona toda la representación reducida.
+</p>
+
+<p>
+<strong>(3)</strong> La proporción de varianza explicada ($\sigma_i^2 / \sum \sigma_j^2$) queda inflada artificialmente para la primera componente, dando una falsa sensación de que una sola dimensión captura casi toda la información.
+</p>
+
+<h3>Discusión</h3>
+
+<p>
+<strong>En la práctica</strong>, el centrado garantiza que $\bar{x} = 0$, eliminando el término de sesgo y asegurando que PCA capture únicamente las direcciones de máxima <strong>variabilidad intrínseca</strong>. En aplicaciones como <strong>Eigenfaces</strong>, omitir el centrado haría que la primera componente represente la cara promedio en lugar de las variaciones faciales que permiten discriminar entre individuos. De forma análoga, en el análisis de datos genómicos de cáncer ovárico (4000 dimensiones reducidas a 3 por PCA), un centrado incorrecto impediría separar correctamente los grupos patológicos.
+</p>
+
+<div class="qed">$\blacksquare$</div>
+
+</body>
+</html>

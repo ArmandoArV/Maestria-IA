@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interrogación 1 – Pregunta de Desarrollo: Álgebra Lineal en IA</title>
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+    <style>
+        body { font-family: 'Georgia', serif; max-width: 900px; margin: 40px auto; padding: 0 20px; line-height: 1.7; color: #222; }
+        h1 { font-size: 1.5em; border-bottom: 2px solid #333; padding-bottom: 8px; }
+        h2 { font-size: 1.2em; color: #1a1a2e; margin-top: 30px; }
+        h3 { font-size: 1.05em; color: #16213e; margin-top: 20px; }
+        .enunciado { background: #f4f4f4; border-left: 4px solid #555; padding: 12px 18px; margin: 20px 0; font-style: italic; }
+        .header-info { font-size: 0.95em; color: #555; margin-bottom: 30px; }
+        .qed { text-align: right; font-size: 1.2em; }
+    </style>
+</head>
+<body>
+
+<h1>Interrogación 1 – IMT3850 Fundamentos Matemáticos para la IA</h1>
+<div class="header-info">
+    <strong>Alumno:</strong> Armando A.V. &nbsp;|&nbsp;
+    <strong>Fecha:</strong> Abril 2026 &nbsp;|&nbsp;
+    <strong>Magíster en Inteligencia Artificial – Pontificia Universidad Católica de Chile</strong>
+</div>
+
+<h2>Pregunta: Conceptos de Álgebra Lineal en Inteligencia Artificial</h2>
+
+<div class="enunciado">
+    <strong>Enunciado.</strong> De al menos dos ejemplos de conceptos básicos de Álgebra Lineal que son utilizados en aplicaciones y algoritmos de inteligencia artificial. Para esto, explique claramente: 1. el concepto, 2. dónde se utiliza, 3. en qué se aplica.
+</div>
+
+<h3>Ejemplo 1: Producto Interior (Producto Punto)</h3>
+
+<p>
+<strong>1. El concepto.</strong> El producto interior de dos vectores $x, y \in \mathbb{R}^n$ se define como:
+</p>
+
+$$x^\top y = \sum_{i=1}^{n} x_i y_i$$
+
+<p>
+Es una operación que toma dos vectores y produce un escalar. Geométricamente, mide la <strong>similitud direccional</strong> entre los vectores: es máximo cuando apuntan en la misma dirección, cero cuando son ortogonales, y negativo cuando apuntan en direcciones opuestas.
+</p>
+
+<p>
+<strong>2. Dónde se utiliza.</strong> En el <strong>Perceptrón</strong>, la neurona artificial calcula la función:
+</p>
+
+$$f(x) = \text{sgn}(w^\top x + b)$$
+
+<p>
+donde $w$ es el vector de pesos y $b$ es el sesgo. El producto $w^\top x$ mide cuánto se alinea la entrada $x$ con el vector de pesos $w$. Si $w^\top x + b > 0$, la entrada se clasifica como positiva; si $w^\top x + b < 0$, como negativa. La ecuación $w^\top x + b = 0$ define un hiperplano afín que actúa como frontera de decisión.
+</p>
+
+<p>
+<strong>3. Aplicación.</strong> <strong>Clasificación binaria</strong> — por ejemplo, clasificar correos electrónicos como spam o no-spam. El vector $x$ representa las características del correo (frecuencia de ciertas palabras), $w$ codifica la importancia aprendida de cada palabra, y $w^\top x + b$ determina la clase. La regla de aprendizaje del perceptrón, $w \leftarrow w + \eta y_i x_i$, ajusta los pesos iterativamente hasta encontrar una frontera que separe correctamente las clases.
+</p>
+
+<h3>Ejemplo 2: Descomposición en Valores Singulares (SVD)</h3>
+
+<p>
+<strong>1. El concepto.</strong> Toda matriz $A \in \mathbb{R}^{m \times n}$ admite la descomposición:
+</p>
+
+$$A = U\Sigma V^\top = \sum_{i=1}^{p} \sigma_i \, u_i v_i^\top$$
+
+<p>
+donde $U$ y $V$ son matrices ortogonales, y $\Sigma = \text{diag}(\sigma_1, \ldots, \sigma_p)$ contiene los valores singulares con $\sigma_1 \geq \sigma_2 \geq \cdots \geq 0$. Geométricamente, cualquier transformación lineal se puede interpretar como una rotación, seguida de un escalamiento, seguido de otra rotación. La propiedad fundamental es que la truncación a rango $k$, $A_k = \sum_{i=1}^{k} \sigma_i u_i v_i^\top$, constituye la mejor aproximación de rango $k$ en norma Frobenius (Teorema de Eckart-Young).
+</p>
+
+<p>
+<strong>2. Dónde se utiliza.</strong> En <strong>PCA (Análisis de Componentes Principales)</strong>. Se centra la matriz de datos $B = X - \mathbf{1}\bar{x}^\top$, se calcula la SVD de $B$, y las primeras $k$ columnas de $V$ corresponden a las componentes principales — las direcciones de máxima varianza. La varianza explicada por la $i$-ésima componente es $\sigma_i^2/(N-1)$.
+</p>
+
+<p>
+<strong>3. Aplicación.</strong> <strong>Eigenfaces para reconocimiento facial.</strong> Imágenes de rostros de alta dimensionalidad (miles de píxeles) se reducen a un espacio de $k$ componentes principales. Cada rostro se representa como una combinación lineal de "eigenfaces" (las componentes principales). Para reconocer un rostro nuevo, se proyecta al espacio reducido y se busca el vecino más cercano. Este mismo enfoque se aplica en el análisis de datos genómicos de cáncer ovárico, donde se reducen 4000 dimensiones a tan solo 3, permitiendo visualizar y separar distintos grupos patológicos.
+</p>
+
+<div class="qed">$\blacksquare$</div>
+
+</body>
+</html>

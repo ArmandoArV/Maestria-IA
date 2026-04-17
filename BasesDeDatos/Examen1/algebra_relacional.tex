@@ -1,0 +1,331 @@
+\documentclass[12pt,a4paper]{article}
+
+% --- Encoding & Language ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+
+% --- Fonts ---
+\usepackage{lmodern}
+\usepackage{microtype}
+
+% --- Math ---
+\usepackage{amsmath,amssymb}
+
+% --- Layout ---
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{parskip}
+\usepackage{enumitem}
+
+% --- Header / Footer ---
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small Bases de Datos --- Evaluación 1}
+\fancyhead[R]{\small Armando Arredondo Valle}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% --- Graphics ---
+\usepackage{graphicx}
+
+% --- Colors & Boxes ---
+\usepackage[dvipsnames]{xcolor}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+% --- Hyperlinks ---
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=MidnightBlue, urlcolor=MidnightBlue}
+
+% =====================================================================
+% Custom tcolorbox styles
+% =====================================================================
+\newtcolorbox{schemabox}{
+  colback=gray!5,
+  colframe=gray!60,
+  fonttitle=\bfseries,
+  title=Esquema de la Base de Datos,
+  boxrule=0.6pt,
+  arc=3pt,
+  left=10pt, right=10pt, top=6pt, bottom=6pt
+}
+
+\newtcolorbox{querybox}[1]{
+  colback=MidnightBlue!3,
+  colframe=MidnightBlue!70,
+  fonttitle=\bfseries\sffamily,
+  title={#1},
+  boxrule=0.5pt,
+  arc=3pt,
+  left=10pt, right=10pt, top=6pt, bottom=8pt,
+  breakable
+}
+
+% =====================================================================
+\begin{document}
+
+% --- Title Page ---
+\begin{titlepage}
+  \centering
+  \vspace*{1cm}
+
+  \includegraphics[width=0.35\textwidth]{Logo.png}
+
+  \vspace{1cm}
+
+  {\Large\scshape Pontificia Universidad Católica de Chile}
+
+  \vspace{0.4cm}
+  {\large Magíster en Inteligencia Artificial}
+
+  \vspace{2.5cm}
+
+  {\Huge\bfseries Evaluación 1}
+
+  \vspace{0.5cm}
+  {\LARGE Álgebra Relacional}
+
+  \vspace{2.5cm}
+
+  \begin{tabular}{r l}
+    \textbf{Curso:}    & Bases de Datos \\[4pt]
+    \textbf{Profesor:}  & Ariel Leandro Reyes Pardo \\[4pt]
+    \textbf{Alumno:}    & Armando Arredondo Valle \\
+  \end{tabular}
+
+  \vfill
+  {\large Abril 2026}
+\end{titlepage}
+
+% =====================================================================
+% Schema
+% =====================================================================
+\begin{schemabox}
+\begin{align*}
+  \textbf{actores}&(\underline{id},\; anombre) \\[4pt]
+  \textbf{peliculas}&(\underline{id},\; pnombre,\; a\tilde{n}o,\;
+    categoria,\; calificacion,\; pdirector) \\[4pt]
+  \textbf{actuo\_en}&(id\_actor,\; id\_pelicula)
+\end{align*}
+
+\smallskip
+\footnotesize
+\textbf{Nota:} Las llaves primarias están \underline{subrayadas}.
+\texttt{actuo\_en.id\_actor} referencia \texttt{actores.id} y
+\texttt{actuo\_en.id\_pelicula} referencia \texttt{peliculas.id}.
+\end{schemabox}
+
+\vspace{0.8cm}
+
+% =====================================================================
+% Consulta 1
+% =====================================================================
+\begin{querybox}{Consulta 1 --- Encuentre los nombres de todos los actores}
+\[
+  \pi_{\,anombre}\!\left(\, actores \,\right)
+\]
+\end{querybox}
+
+\vspace{0.4cm}
+
+% =====================================================================
+% Consulta 2
+% =====================================================================
+\begin{querybox}{Consulta 2 --- Películas dirigidas por `C.\ Nolan'}
+\textit{Encuentre los nombres de todas las películas que fueron dirigidas
+por \textnormal{`C.~Nolan'}.}
+
+\[
+  \pi_{\,pnombre}\!\Big(\;
+    \sigma_{\,pdirector\,=\,\text{`C.\ Nolan'}}\!\left(\, peliculas \,\right)
+  \;\Big)
+\]
+\end{querybox}
+
+\vspace{0.4cm}
+
+% =====================================================================
+% Consulta 3
+% =====================================================================
+\begin{querybox}{Consulta 3 --- Películas estrenadas después de 2010}
+\textit{Encuentre los nombres de todas las películas que se estrenaron
+después del año 2010.}
+
+\[
+  \pi_{\,pnombre}\!\Big(\;
+    \sigma_{\,a\tilde{n}o\,>\,2010}\!\left(\, peliculas \,\right)
+  \;\Big)
+\]
+\end{querybox}
+
+\vspace{0.4cm}
+
+% =====================================================================
+% Consulta 4
+% =====================================================================
+\begin{querybox}{Consulta 4 --- Películas SciFi con calificación $> 8.5$}
+\textit{Encuentre los nombres de todas las películas de la categoría
+\textnormal{`SciFi'} que tienen una calificación mayor a 8.5.}
+
+\[
+  \pi_{\,pnombre}\!\Big(\;
+    \sigma_{\,categoria\,=\,\text{`SciFi'}
+      \;\wedge\;
+      calificacion\,>\,8.5}\!\left(\, peliculas \,\right)
+  \;\Big)
+\]
+\end{querybox}
+
+\vspace{0.4cm}
+
+% =====================================================================
+% Consulta 5
+% =====================================================================
+\begin{querybox}{Consulta 5 --- IDs de actores en `Interstellar'}
+\textit{Encuentre los identificadores (\textnormal{id}) de todos los
+actores que actuaron en la película con nombre \textnormal{`Interstellar'}.}
+
+\[
+  \pi_{\,id\_actor}\!\Big(\;
+    actuo\_en
+    \;\bowtie_{id\_pelicula\,=\,id}\;
+    \sigma_{\,pnombre\,=\,\text{`Interstellar'}}\!\left(\, peliculas \,\right)
+  \;\Big)
+\]
+\end{querybox}
+
+\vspace{0.4cm}
+
+% =====================================================================
+% Consulta 6
+% =====================================================================
+\begin{querybox}{Consulta 6 --- Actores en películas dirigidas por `C.\ Nolan'}
+\textit{Encuentre los nombres de todos los actores que actuaron en alguna
+película dirigida por \textnormal{`C.~Nolan'}.}
+
+Definimos primero las películas de C.\ Nolan:
+\[
+  P_{Nolan} \;=\;
+    \sigma_{\,pdirector\,=\,\text{`C.\ Nolan'}}\!\left(\, peliculas \,\right)
+\]
+
+Luego, cruzamos con \texttt{actuo\_en} y \texttt{actores}:
+\[
+  \pi_{\,anombre}\!\Big(\;
+    actores
+    \;\bowtie_{id\,=\,id\_actor}\;
+    actuo\_en
+    \;\bowtie_{id\_pelicula\,=\,id}\;
+    P_{Nolan}
+  \;\Big)
+\]
+\end{querybox}
+
+\vspace{0.4cm}
+
+% =====================================================================
+% Consulta 7
+% =====================================================================
+\begin{querybox}{Consulta 7 --- Actores que no actuaron en películas de `C.\ Nolan'}
+\textit{Encuentre los actores que no actuaron en ninguna película dirigida
+por \textnormal{`C.~Nolan'}.}
+
+Definimos los actores que sí actuaron en películas de C.\ Nolan:
+\[
+  A_{Nolan} \;=\;
+    \pi_{\,anombre}\!\Big(\;
+      actores
+      \;\bowtie_{id\,=\,id\_actor}\;
+      actuo\_en
+      \;\bowtie_{id\_pelicula\,=\,id}\;
+      \sigma_{\,pdirector\,=\,\text{`C.\ Nolan'}}\!(peliculas)
+    \;\Big)
+\]
+
+Luego, usamos la diferencia:
+\[
+  \pi_{\,anombre}\!(actores) \;-\; A_{Nolan}
+\]
+\end{querybox}
+
+\vspace{0.4cm}
+
+% =====================================================================
+% Consulta 8
+% =====================================================================
+\begin{querybox}{Consulta 8 --- Actores solo en películas `SciFi' o `Adventure'}
+\textit{Encuentra los actores que solo actuaron en películas de categoría
+\textnormal{`SciFi'} o \textnormal{`Adventure'}.}
+
+Definimos los actores que actuaron en alguna película que \textbf{no} es
+SciFi ni Adventure:
+\[
+  A_{otras} \;=\;
+    \pi_{\,anombre}\!\Big(\;
+      actores
+      \;\bowtie_{id\,=\,id\_actor}\;
+      actuo\_en
+      \;\bowtie_{id\_pelicula\,=\,id}\;
+      \sigma_{\,categoria\,\neq\,\text{`SciFi'}
+        \;\wedge\;
+        categoria\,\neq\,\text{`Adventure'}}\!(peliculas)
+    \;\Big)
+\]
+
+Definimos los actores que actuaron en al menos una película:
+\[
+  A_{todos} \;=\;
+    \pi_{\,anombre}\!\Big(\;
+      actores
+      \;\bowtie_{id\,=\,id\_actor}\;
+      actuo\_en
+    \;\Big)
+\]
+
+Luego, los que solo actuaron en SciFi o Adventure:
+\[
+  A_{todos} \;-\; A_{otras}
+\]
+\end{querybox}
+
+\vspace{0.4cm}
+
+% =====================================================================
+% Consulta 9
+% =====================================================================
+\begin{querybox}{Consulta 9 --- Actores que han trabajado con más de un director}
+\textit{Actores que han trabajado con más de un director.}
+
+Construimos las parejas (actor, director) renombrando para obtener dos
+copias con distintos directores:
+\[
+  AD \;=\;
+    \pi_{\,anombre,\,pdirector}\!\Big(\;
+      actores
+      \;\bowtie_{id\,=\,id\_actor}\;
+      actuo\_en
+      \;\bowtie_{id\_pelicula\,=\,id}\;
+      peliculas
+    \;\Big)
+\]
+
+Renombramos una copia del director:
+\[
+  AD' \;=\;
+    \rho_{\,pdirector \to pdirector2}\!(AD)
+\]
+
+Actores con al menos dos directores distintos:
+\[
+  \pi_{\,anombre}\!\Big(\;
+    \sigma_{\,pdirector\,\neq\,pdirector2}\!\left(\,
+      AD \;\bowtie_{anombre\,=\,anombre}\; AD'
+    \,\right)
+  \;\Big)
+\]
+\end{querybox}
+
+\end{document}

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interrogación 1 – Pregunta de Desarrollo: Sistemas Dinámicos y Convergencia Espectral</title>
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+    <style>
+        body { font-family: 'Georgia', serif; max-width: 900px; margin: 40px auto; padding: 0 20px; line-height: 1.7; color: #222; }
+        h1 { font-size: 1.5em; border-bottom: 2px solid #333; padding-bottom: 8px; }
+        h2 { font-size: 1.2em; color: #1a1a2e; margin-top: 30px; }
+        h3 { font-size: 1.05em; color: #16213e; margin-top: 20px; }
+        .enunciado { background: #f4f4f4; border-left: 4px solid #555; padding: 12px 18px; margin: 20px 0; font-style: italic; }
+        .header-info { font-size: 0.95em; color: #555; margin-bottom: 30px; }
+        .qed { text-align: right; font-size: 1.2em; }
+    </style>
+</head>
+<body>
+
+<h1>Interrogación 1 – IMT3850 Fundamentos Matemáticos para la IA</h1>
+<div class="header-info">
+    <strong>Alumno:</strong> Armando A.V. &nbsp;|&nbsp;
+    <strong>Fecha:</strong> Abril 2026 &nbsp;|&nbsp;
+    <strong>Magíster en Inteligencia Artificial – Pontificia Universidad Católica de Chile</strong>
+</div>
+
+<h2>Pregunta: Sistemas Dinámicos Lineales y Convergencia Espectral</h2>
+
+<div class="enunciado">
+    <strong>Enunciado.</strong> Suponga que está modelando la probabilidad de transición de clientes entre tres distintos planes de suscripción de su empresa mes a mes, utilizando un sistema dinámico discreto $x_{t+1} = A x_t$. La matriz estocástica $A$ codifica estas tasas de transición. Explique cómo el cálculo de los valores y vectores propios de la matriz $A$ permite predecir la distribución de clientes a largo plazo. ¿Qué condición espectral específica garantiza que el sistema convergerá a un estado estacionario estable?
+</div>
+
+<h3>Desarrollo</h3>
+
+<p>
+Partimos del sistema dinámico discreto $x_{t+1} = A x_t$, donde $x_t \in \mathbb{R}^3$ representa la distribución de clientes entre los tres planes en el instante $t$, y $A \in \mathbb{R}^{3\times 3}$ es una matriz estocástica cuyas columnas suman 1 y cuyas entradas son no negativas.
+</p>
+
+<p>
+Si $A$ es diagonalizable, se tiene la descomposición $A = V\Lambda V^{-1}$, donde $\Lambda = \text{diag}(\lambda_1, \lambda_2, \lambda_3)$ contiene los valores propios y $V = [v_1 \; v_2 \; v_3]$ los vectores propios asociados. Luego, la evolución temporal se expresa como:
+</p>
+
+$$x_t = A^t x_0 = V \Lambda^t V^{-1} x_0$$
+
+<p>
+Dado que $x_0$ se puede escribir como combinación lineal de los vectores propios, $x_0 = c_1 v_1 + c_2 v_2 + c_3 v_3$, se obtiene:
+</p>
+
+$$x_t = c_1 \lambda_1^t v_1 + c_2 \lambda_2^t v_2 + c_3 \lambda_3^t v_3$$
+
+<p>
+Se observa que cada término evoluciona de forma independiente, escalado por $\lambda_i^t$. Si $|\lambda_i| < 1$, el modo $i$-ésimo decae exponencialmente hacia cero. Si $|\lambda_i| = 1$, el modo persiste. Si $|\lambda_i| > 1$, el modo diverge.
+</p>
+
+<h3>Propiedad espectral de matrices estocásticas</h3>
+
+<p>
+Es un resultado conocido que toda matriz estocástica posee $\lambda_1 = 1$ como valor propio, con $|\lambda_i| \leq 1$ para los restantes. El vector propio $v_1$ asociado a $\lambda_1 = 1$ satisface $Av_1 = v_1$, por lo que constituye un <strong>estado estacionario</strong>: una vez alcanzado, la distribución de clientes no cambia.
+</p>
+
+<h3>Condición espectral de convergencia</h3>
+
+<p>
+Para que el sistema converja a un estado estacionario estable <strong>independientemente de la condición inicial</strong>, se requiere que:
+</p>
+
+$$\lambda_1 = 1 \text{ sea el único valor propio de módulo } 1, \quad \text{y} \quad |\lambda_i| < 1 \;\; \forall \, i \geq 2$$
+
+<p>
+Bajo esta condición, cuando $t \to \infty$ los términos $\lambda_i^t \to 0$ para $i \geq 2$, y se obtiene:
+</p>
+
+$$x_\infty = \lim_{t\to\infty} x_t = c_1 v_1$$
+
+<p>
+Es decir, la distribución de clientes converge al vector propio $v_1$ asociado a $\lambda_1 = 1$, sin importar la distribución inicial $x_0$. Esto es análogo al método de <strong>iteración de potencia</strong>, que converge al autovector dominante precisamente porque los demás modos se atenúan.
+</p>
+
+<h3>Discusión</h3>
+
+<p>
+<strong>En la práctica</strong>, este resultado tiene una aplicación directa: para conocer la distribución estacionaria de clientes entre los tres planes, basta con calcular el vector propio de $A$ asociado a $\lambda = 1$ y normalizarlo para que sus componentes sumen 1. No es necesario simular la dinámica paso a paso. Este mismo principio es la base del algoritmo de <strong>PageRank</strong>, donde la relevancia de páginas web se determina como el vector propio dominante de la matriz de transición de la red.
+</p>
+
+<div class="qed">$\blacksquare$</div>
+
+</body>
+</html>

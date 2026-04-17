@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interrogación 1 – Pregunta de Desarrollo: SVD y Sistemas de Recomendación</title>
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+    <style>
+        body { font-family: 'Georgia', serif; max-width: 900px; margin: 40px auto; padding: 0 20px; line-height: 1.7; color: #222; }
+        h1 { font-size: 1.5em; border-bottom: 2px solid #333; padding-bottom: 8px; }
+        h2 { font-size: 1.2em; color: #1a1a2e; margin-top: 30px; }
+        h3 { font-size: 1.05em; color: #16213e; margin-top: 20px; }
+        .enunciado { background: #f4f4f4; border-left: 4px solid #555; padding: 12px 18px; margin: 20px 0; font-style: italic; }
+        .header-info { font-size: 0.95em; color: #555; margin-bottom: 30px; }
+        .qed { text-align: right; font-size: 1.2em; }
+    </style>
+</head>
+<body>
+
+<h1>Interrogación 1 – IMT3850 Fundamentos Matemáticos para la IA</h1>
+<div class="header-info">
+    <strong>Alumno:</strong> Armando A.V. &nbsp;|&nbsp;
+    <strong>Fecha:</strong> Abril 2026 &nbsp;|&nbsp;
+    <strong>Magíster en Inteligencia Artificial – Pontificia Universidad Católica de Chile</strong>
+</div>
+
+<h2>Pregunta: SVD y Sistemas de Recomendación</h2>
+
+<div class="enunciado">
+    <strong>Enunciado.</strong> Considere una plataforma de comercio electrónico. Se cuenta con una gran matriz de interacción $M$ de tamaño $m \times n$ ($m$ clientes, $n$ productos), la cual es extremadamente dispersa (sparse) porque la mayoría de los clientes solo interactúa con una pequeña fracción del catálogo. Explique detalladamente cómo usaría una aproximación de bajo rango mediante SVD ($M \approx U_k \Sigma_k V_k^\top$) para predecir qué productos recomendar a un usuario. ¿Qué significado geométrico o latente le atribuye a las filas de la matriz truncada $U_k$ y a las filas de $V_k$?
+</div>
+
+<h3>Planteamiento del problema</h3>
+
+<p>
+Se tiene la matriz de interacciones $M \in \mathbb{R}^{m \times n}$, donde $M_{ij}$ representa la valoración (o indicador de compra) del cliente $i$ sobre el producto $j$. Dado que la mayoría de los clientes solo interactúa con una pequeña fracción del catálogo, $M$ es extremadamente dispersa. El objetivo es <strong>rellenar las entradas faltantes</strong> para predecir preferencias no observadas.
+</p>
+
+<h3>Aproximación de bajo rango mediante SVD</h3>
+
+<p>
+Calculamos la SVD de $M$:
+</p>
+
+$$M = U \Sigma V^\top = \sum_{i=1}^{p} \sigma_i \, u_i v_i^\top$$
+
+<p>
+donde $p = \min(m,n)$, $\sigma_1 \geq \sigma_2 \geq \cdots \geq 0$. Luego, se trunca a rango $k$:
+</p>
+
+$$M \approx M_k = U_k \Sigma_k V_k^\top = \sum_{i=1}^{k} \sigma_i \, u_i v_i^\top$$
+
+<p>
+Por el <strong>Teorema de Eckart-Young</strong>, $M_k$ es la mejor aproximación de rango $k$ en norma Frobenius, es decir, minimiza $\|M - M_k\|_F^2 = \sum_{j=k+1}^{p} \sigma_j^2$. Esto confirma que los primeros $k$ valores singulares capturan las estructuras dominantes de la matriz, descartando ruido y entradas ruidosas.
+</p>
+
+<h3>Significado geométrico de $U_k$ y $V_k$</h3>
+
+<p>
+La SVD truncada induce un <strong>espacio latente</strong> de dimensión $k$, en el cual tanto clientes como productos quedan representados:
+</p>
+
+<p>
+<strong>(1)</strong> Las <strong>filas de $U_k$</strong> (de dimensión $k$ por cliente) representan a cada cliente como un vector en el espacio latente. Cada coordenada codifica el grado de afinidad del cliente con un "factor latente" — por ejemplo, preferencia por tecnología, sensibilidad al precio, o interés en moda. El cliente $i$ queda representado por el vector $(U_k)_i \in \mathbb{R}^k$.
+</p>
+
+<p>
+<strong>(2)</strong> Las <strong>filas de $V_k$</strong> (de dimensión $k$ por producto) representan a cada producto en el <strong>mismo espacio latente</strong>. Cada coordenada indica cuánto se asocia ese producto a cada factor. El producto $j$ queda representado por $(V_k)_j \in \mathbb{R}^k$.
+</p>
+
+<p>
+Los <strong>valores singulares</strong> $\sigma_1, \ldots, \sigma_k$ en $\Sigma_k$ ponderan la importancia relativa de cada factor latente.
+</p>
+
+<h3>Predicción de recomendaciones</h3>
+
+<p>
+La predicción de la preferencia del cliente $i$ sobre el producto $j$ es:
+</p>
+
+$$\hat{M}_{ij} = (U_k \Sigma_k)_i \cdot (V_k)_j^\top = \sum_{\ell=1}^{k} \sigma_\ell \, u_{i\ell} \, v_{j\ell}$$
+
+<p>
+Se observa que esta operación es un <strong>producto interior en el espacio latente</strong>: un cliente recibe una puntuación alta para un producto si sus vectores latentes apuntan en direcciones similares. Para generar recomendaciones al cliente $i$, se calculan $\hat{M}_{ij}$ para todos los productos $j$ que <strong>no ha consumido</strong>, se ordenan de mayor a menor, y se recomiendan los top-$N$.
+</p>
+
+<h3>Discusión</h3>
+
+<p>
+<strong>En la práctica</strong>, la aproximación de bajo rango actúa como un filtro: captura los $k$ patrones globales de preferencia dominantes y descarta el ruido asociado a los valores singulares pequeños ($\sigma_{k+1}, \ldots, \sigma_p$). Esto es análogo a lo que ocurre en PCA, donde se retienen las componentes de mayor varianza. La elección de $k$ se realiza por <strong>validación cruzada</strong>: se separan interacciones conocidas en conjuntos de entrenamiento y prueba, y se selecciona el $k$ que minimice el error de predicción en el conjunto de prueba, evitando así el sobreajuste.
+</p>
+
+<div class="qed">$\blacksquare$</div>
+
+</body>
+</html>

@@ -38,17 +38,18 @@ table { width: 100%; margin: 10px 0; font-size: 9pt; }
 th { background-color: #2c3e50; color: white; padding: 6px 8px; text-align: left; }
 td { padding: 5px 8px; border-bottom: 1px solid #ddd; }
 code {
-    background-color: #f4f4f4;
+    background-color: #f0f0f0;
     padding: 1px 4px;
     font-family: Courier;
     font-size: 9pt;
 }
 pre {
-    background-color: #2d2d2d;
-    color: #f8f8f2;
+    background-color: #f5f5f5;
+    color: #1a1a1a;
     padding: 12px;
     font-size: 8pt;
-    line-height: 1.3;
+    line-height: 1.4;
+    border: 1px solid #ddd;
 }
 pre code { background-color: transparent; color: inherit; padding: 0; }
 hr { border: none; border-top: 1px solid #ccc; margin: 16px 0; }

@@ -1,0 +1,33 @@
+# Large data files
+*.csv
+
+# Binary geospatial files
+*.shp
+*.shx
+*.dbf
+*.sbn
+*.sbx
+*.shp.xml
+*.CPG
+*.prj
+
+# PDFs (presentations / large docs)
+*.pdf
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# Python
+__pycache__/
+*.pyc
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# LaTeX build artifacts
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.synctex.gz

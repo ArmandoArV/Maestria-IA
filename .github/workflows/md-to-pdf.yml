@@ -35,10 +35,13 @@ jobs:
       - name: Discover markdown files
         id: discover
         run: |
+          # Trim whitespace and stray characters from input
+          RAW_INPUT=$(echo "${{ inputs.markdown_file }}" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//;s/)$//')
+
           if [ "${{ inputs.convert_all }}" = "true" ]; then
             FILES=$(find . -name '*.md' ! -path './.github/*' ! -name 'README.md' | sed 's|^\./||' | sort)
-          elif [ -n "${{ inputs.markdown_file }}" ]; then
-            FILES="${{ inputs.markdown_file }}"
+          elif [ -n "$RAW_INPUT" ]; then
+            FILES="$RAW_INPUT"
           else
             echo "::error::Please provide a markdown file path or check 'Convert ALL'"
             echo ""

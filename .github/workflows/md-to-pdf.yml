@@ -1,0 +1,73 @@
+name: Markdown to PDF
+
+on:
+  workflow_dispatch:
+    inputs:
+      markdown_file:
+        description: "Path to the markdown file (e.g. DataScience/Talleres/Taller1/Argumento_Pregunta_Taller1.md)"
+        required: false
+        type: string
+      convert_all:
+        description: "Convert ALL markdown files in the repo"
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  convert:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install markdown xhtml2pdf
+
+      - name: Discover markdown files
+        id: discover
+        run: |
+          if [ "${{ inputs.convert_all }}" = "true" ]; then
+            FILES=$(find . -name '*.md' ! -path './.github/*' ! -name 'README.md' | sed 's|^\./||' | sort)
+          elif [ -n "${{ inputs.markdown_file }}" ]; then
+            FILES="${{ inputs.markdown_file }}"
+          else
+            echo "::error::Please provide a markdown file path or check 'Convert ALL'"
+            echo ""
+            echo "Available markdown files in this repo:"
+            find . -name '*.md' ! -path './.github/*' | sed 's|^\./||' | sort
+            exit 1
+          fi
+
+          # Write to file for multi-line support
+          echo "$FILES" > /tmp/md_files.txt
+          COUNT=$(echo "$FILES" | wc -l)
+          echo "count=$COUNT" >> "$GITHUB_OUTPUT"
+          echo "📄 Found $COUNT file(s) to convert:"
+          echo "$FILES"
+
+      - name: Convert markdown to PDF
+        run: |
+          mkdir -p output
+          while IFS= read -r md_file; do
+            if [ -f "$md_file" ]; then
+              BASENAME=$(basename "$md_file" .md)
+              echo "📝 Converting: $md_file → output/${BASENAME}.pdf"
+              python md_to_pdf.py "$md_file" "output/${BASENAME}.pdf"
+            else
+              echo "⚠️  File not found: $md_file"
+              exit 1
+            fi
+          done < /tmp/md_files.txt
+
+      - name: Upload PDFs
+        uses: actions/upload-artifact@v4
+        with:
+          name: pdf-output
+          path: output/*.pdf
+          retention-days: 30

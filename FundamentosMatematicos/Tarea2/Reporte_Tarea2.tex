@@ -160,7 +160,7 @@ Se ejecutó el algoritmo para $n = 100, 200, \ldots, 5000$ con 30 repeticiones p
 
 \begin{figure}[h!]
     \centering
-    \fbox{\parbox{0.8\textwidth}{\centering\textit{[Gráfico generado en el notebook Jupyter]\\Comparaciones promedio vs. $2n\ln(n)$ y $2n$}}}
+    \includegraphics[width=0.85\textwidth]{fig_quicksort.png}
     \caption{Comparaciones del quicksort aleatorio vs. cotas teóricas.}
     \label{fig:quicksort}
 \end{figure}
@@ -302,6 +302,20 @@ def gamma_log(g, H, t):
 
 \subsection{Resultados}
 
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.95\textwidth]{fig_lineal.png}
+    \caption{Datos lineales: ajuste, convergencia GD y distribución de loss SGD (100 runs).}
+    \label{fig:lineal}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.95\textwidth]{fig_cuadratico.png}
+    \caption{Datos cuadráticos: ajuste, convergencia GD y distribución de loss SGD (100 runs).}
+    \label{fig:cuadratico}
+\end{figure}
+
 \begin{table}[h!]
 \centering
 \begin{tabular}{llcc}
@@ -383,6 +397,13 @@ print(f'Garantia delta = {delta}')
 \end{lstlisting}
 
 Se simularon $10{,}000$ repeticiones con $n = n_{\text{CLT}}$ y $p = 0.85$. La proporción empírica $P(|\bar{X}-p|\geq\varepsilon) \approx 0.05 \leq \delta$, confirmando la garantía del CLT.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\textwidth]{fig_clt.png}
+    \caption{Simulación CLT: histograma de $\bar{X}_n$ con $n = 4{,}898$ y $p=0.85$. Las líneas naranjas marcan $p \pm \varepsilon$.}
+    \label{fig:clt}
+\end{figure}
 
 % =====================================================================
 \section{Pregunta 6: Algoritmo de Mediana Aleatoria (10 pts — Bonus)}

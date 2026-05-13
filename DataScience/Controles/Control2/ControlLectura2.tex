@@ -1,0 +1,110 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{titlesec}
+\usepackage{parskip}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+
+\geometry{margin=1in}
+
+% Configuración de encabezado y pie de página
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\textbf{Examen de Lectura}}
+\fancyhead[C]{\textbf{Control 2}}
+\fancyhead[R]{\today}
+\fancyfoot[C]{\thepage}
+
+% Formato de títulos
+\titleformat{\section}
+{\normalfont\Large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}
+{\normalfont\large\bfseries}{\thesubsection}{1em}{}
+
+% Título principal
+\title{\vspace{-1cm}
+\huge\textbf{Control de Lectura N°2} \\
+\Large\textbf{Orientation and Decision-Making for Soccer Based on Sports Analytics and AI: A Systematic Review} \\
+\vspace{0.5cm}
+\large{Pu, Pan, Wang, Liu, Chen, Ma \& Cui (2024)}}
+\author{\textbf{Armando Arredondo Valle} \\
+\textit{Magíster en Inteligencia Artificial} \\
+\textit{Pontificia Universidad Católica de Chile}}
+\date{30 de abril de 2026}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{fancy}
+
+\vspace{0.5cm}
+
+\vspace{0.5cm}
+\hrule
+\vspace{0.5cm}
+
+\section*{Pregunta N°1}
+\textbf{La lectura plantea que el análisis del fútbol puede entenderse mediante un ciclo de observación, orientación, decisión y acción. Explique brevemente qué significa este ciclo en el contexto del fútbol y cómo se relaciona con la Ciencia de Datos y la Inteligencia Artificial.}
+
+\subsection*{Respuesta}
+A lo largo de la lectura se plantea justamente que el análisis del fútbol puede modelarse mediante el ciclo OODA (Observation-Orientation-Decision-Action), un modelo originalmente creado para pilotos de combate aéreo, pero que se adapta de forma interesante al contexto deportivo.\\
+
+En el fútbol, la \textit{observación} corresponde a la recolección de datos mediante sistemas de tracking óptico, cámaras y dispositivos GPS. La \textit{orientación} es donde entran los modelos de análisis como los expected goals (xG), el expected possession value (EPV) y el pitch control. La \textit{decisión} representa la etapa donde se generan recomendaciones tácticas, pudiendo incluso que en entornos virtuales como Google Research Football los algoritmos controlen agentes directamente. Finalmente, la \textit{acción} es la ejecución a través del entrenamiento diario y los partidos.\\
+
+Es fascinante cómo este ciclo es prácticamente un pipeline de ciencia de datos aplicado al deporte: recolectar, analizar, decidir y actuar. De igual forma, el fútbol ha sido un benchmark representativo para la IA, especialmente en aprendizaje por refuerzo multiagente, donde la cooperación entre 11 jugadores y las recompensas escasas representan problemas de frontera.
+
+\vspace{0.5cm}
+\hrule
+\vspace{0.5cm}
+
+\section*{Pregunta N°2}
+\textbf{Según la lectura, existen distintos tipos de datos usados en el análisis del fútbol, como event data, tracking data y otros datos complementarios. Compare estos tipos de datos e indique qué ventajas y limitaciones tiene cada uno para construir modelos de análisis deportivo.}
+
+\subsection*{Respuesta}
+La lectura nos habla sobre tres tipos principales de datos en el análisis del fútbol.\\
+
+Los \textbf{event data} son un registro cronológico de eventos clave: pases, tiros, faltas y tackles. Proveedores como Opta, WyScout y StatsBomb ofrecen estos datos, incluso con datasets abiertos de casi 2000 partidos. Su ventaja es la disponibilidad y volumen, permitiendo calcular métricas como xG y expected threat (xT). Sin embargo, el gran problema aquí es que no capturan información de jugadores fuera del balón, y los intervalos entre eventos son de varios segundos.\\
+
+Los \textbf{tracking data} registran la posición de todos los jugadores y el balón a tasa fija (por ejemplo, 10 fps), permitiendo obtener velocidad, aceleración y tácticas de jugadores sin balón. Con estos datos se construyen modelos como el de pitch control. A fin de cuentas, su limitación principal es el costo; los datasets abiertos son muy escasos.\\
+
+Los \textbf{otros datos} incluyen información física (biométrica, sprints) y datos de redes sociales. Permiten evaluar rendimiento físico individual pero su alcance es más limitado.\\
+
+De igual forma, la lectura muestra que la combinación de event data con tracking data es donde se obtienen los mejores resultados, pudiendo tener análisis tácticos más completos.
+
+\vspace{0.5cm}
+\hrule
+\vspace{0.5cm}
+
+\section*{Pregunta N°3}
+\textbf{Imagine que usted trabaja con datos del fútbol chileno. Proponga una visualización que permita comunicar una idea relevante inspirada en la lectura. Indique qué datos usaría, qué gráfico construiría y qué pregunta deportiva ayudaría a responder.}
+
+\subsection*{Respuesta}
+Inspirándome en el modelo de pitch control de la lectura, propondría un \textbf{mapa de calor de control territorial} para equipos de la liga chilena.\\
+
+Usaría tracking data de los partidos (posiciones de jugadores y balón), complementado con event data de pases, tiros y recuperaciones. El gráfico sería un mapa de calor sobre la cancha donde los colores representen la ventaja territorial: rojo donde el equipo local domina, azul donde domina el visitante y tonos neutros en zonas de equilibrio, utilizando el modelo de influencia individual con distribuciones normales que describe la lectura.\\
+
+La pregunta deportiva sería: \textit{¿Cómo varía el control territorial de un equipo chileno jugando de local versus visitante, y qué zonas son las más disputadas en los clásicos?} Siendo así que esta visualización permitiría a los entrenadores identificar zonas débiles del rival y momentos críticos donde se pierde el control espacial.
+
+\vspace{0.5cm}
+\hrule
+\vspace{0.5cm}
+
+\section*{Pregunta N°4}
+\textbf{La lectura muestra cómo la IA y la Ciencia de Datos pueden apoyar decisiones en un contexto complejo como el fútbol. Explique cómo una idea de la lectura podría aplicarse a su trabajo diario, aunque no esté relacionado directamente con deporte.}
+
+\subsection*{Respuesta}
+A lo largo de la lectura se presenta un concepto aplicable a mi trabajo como ingeniero de software en Microsoft: el ciclo OODA y los modelos integrados de conocimiento y datos.\\
+
+El ciclo OODA del fútbol se traduce casi directo a lo que hago en operaciones live-site en Azure. La \textit{observación} es nuestra capa de observabilidad con Azure Monitor y Geneva, como el tracking captura posiciones de jugadores. La \textit{orientación} es el análisis de esos datos para detectar anomalías, similar a cómo el pitch control evalúa la ventaja espacial. La \textit{decisión} es el diagnóstico del incidente, donde al igual que en el fútbol, a fin de cuentas el juicio del ingeniero es insustituible. Y la \textit{acción} es el despliegue de correcciones a través de nuestros pipelines CI/CD con staged deployments y slot swaps.\\
+
+De igual forma, el análisis contrafactual de la lectura me recuerda a los postmortems de incidentes: analizamos qué habría ocurrido con una validation gate adicional o una estrategia de disaster recovery diferente.\\
+
+A fin de cuentas, la lección más valiosa es que la combinación de conocimiento experto con técnicas de IA produce resultados que ninguno lograría por separado, y eso se refleja claramente en cómo la experiencia del ingeniero combinada con alertas inteligentes nos permite mantener servicios distribuidos a escala.
+
+\end{document}

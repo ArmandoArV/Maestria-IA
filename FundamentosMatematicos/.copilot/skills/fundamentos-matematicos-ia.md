@@ -245,6 +245,90 @@ Use this skill when the user asks questions about linear algebra, matrix factori
 
 **Applications:** Pollster sample size estimation, Chebyshev vs CLT comparison, Hoeffding for PAC bounds, pooled testing, parameter estimation from data.
 
+### Clase 8 — Optimización Avanzada (Clase8_IMT3850.pdf)
+
+**Core Topics:**
+
+- **Método de Newton (Optimization):**
+  - Update: x_{k+1} = x_k − [H(x_k)]⁻¹∇F(x_k)
+  - Equivalent to minimizing 2nd-order Taylor polynomial around x_k
+  - **Convergence:** Quadratic (‖x_{k+1} − x*‖ ≤ C‖x_k − x*‖²) — digits of accuracy double each iteration
+  - **Problem:** Only converges if x₀ is close to x* (local convergence)
+  - **Backtracking line search:** Control step size t ∈ (0,1]. Armijo condition: F(x_k + tΔx_k) ≤ F(x_k) + αt∇F(x_k)⊤Δx_k. Reduce t → βt until satisfied (β ∈ (0,1), α ∈ (0,0.5))
+
+- **Quasi-Newton Methods:**
+  - **Secant equation (multidimensional):** B_k s_k = y_k where s_k = x_k − x_{k-1}, y_k = ∇f(x_k) − ∇f(x_{k-1})
+  - **Broyden update (rank-1):** B_k = B_{k-1} + (y_k − B_{k-1}s_k)s_k⊤ / (s_k⊤s_k). Avoids computing Hessian.
+  - **BFGS (rank-2):** Preserves symmetry AND positive definiteness (Broyden breaks symmetry). Uses Sherman-Morrison for direct inverse update → O(n²) per iteration.
+  - **L-BFGS (Limited memory):** Only stores last m pairs (s_i, y_i) (m ≈ 10). Never builds full matrix. Memory O(mn) instead of O(n²). Essential for large neural networks.
+
+- **Gradient Descent — Analysis:**
+  - **Exact line search:** γ_k = argmin_{γ≥0} f(x_k − γ∇f(x_k)). Turns n-dim problem into 1-dim.
+  - **Zig-zag example:** f(x₁,x₂) = ½(x₁² + bx₂²). With exact line search: γ_k = 2/(1+b), convergence factor = ((1−b)/(1+b))². When b ≈ 0, convergence is very slow.
+  - **Condition number κ = M/m** (ratio of max/min curvature). Convergence: f(x_{k+1}) − f(x*) ≤ (1 − m/M)(f(x_k) − f(x*)). Large κ → slow convergence.
+  - **Backtracking (inexact line search):** Same Armijo condition as Newton. Convergence: f(x_{k+1}) ≤ f(x_k) − min{α, βα/M}‖∇f(x_k)‖²
+
+- **Momentum Methods:**
+  - **Polyak momentum:** x_{k+1} = x_k − γz_k, z_k = ∇f(x_k) + βz_{k-1}. Direction "remembers" previous step.
+  - For quadratic f = ½x⊤Sx: optimal γ = (2/(√λ_max + √λ_min))², β = ((√λ_max − √λ_min)/(√λ_max + √λ_min))²
+  - Improvement: ((1−b)/(1+b))² → ((1−√b)/(1+√b))² — dramatic speedup for ill-conditioned problems
+  - Example: b=0.01 → GD factor ≈ 0.96, momentum factor ≈ 0.67
+  - **Nesterov Accelerated Gradient (NAG):** "Look before you leap" — compute gradient at x_k + βv_k first: v_{k+1} = βv_k + γ∇f(x_k + βv_k), x_{k+1} = x_k − v_{k+1}
+
+- **Subgradients (Non-smooth optimization):**
+  - **Definition:** g is a subgradient of convex f at x if f(y) ≥ f(x) + g⊤(y−x) ∀y
+  - **Subdifferential ∂f(x):** Set of all subgradients at x
+  - |x| at x=0: ∂f(0) = [−1, 1]. ReLU at x=0: ∂f(0) = [0, 1]
+  - **Subgradient method:** x_{k+1} = x_k − γ_k g_k, g_k ∈ ∂L(x_k). NOT a descent method — track best value seen.
+
+- **Levenberg-Marquardt (NLS):**
+  - **Nonlinear Least Squares:** L(Θ) = ½‖y − ŷ(Θ)‖². Gradient: ∇L = −J⊤(y − ŷ). Gauss-Newton: H ≈ J⊤J.
+  - **LM update:** (J⊤J + λI)ΔΘ = J⊤e
+  - λ large → gradient descent (safe, slow): ΔΘ ≈ (1/λ)J⊤e
+  - λ → 0 → Gauss-Newton (fast, risky): (J⊤J)ΔΘ = J⊤e
+  - λ adjusted dynamically — interpolates between GD and Newton
+
+- **Logistic Regression (Derivation):**
+  - Model: p_i = P(Y=1|x_i) = exp(w⊤x_i + b)/(1 + exp(w⊤x_i + b)) (sigmoid)
+  - Bernoulli trick: P(Y=y_i|x_i) = p_i^{y_i}(1−p_i)^{1−y_i}
+  - **Negative log-likelihood (cross-entropy):** L(w,b) = Σ[log(1 + exp(w⊤x_i + b)) − y_i(w⊤x_i + b)]
+  - L is strictly convex (Softplus second derivative = p_i(1−p_i) > 0)
+  - Gradient: ∂L/∂b = Σ(p_i − y_i), ∇_w L = Σ(p_i − y_i)x_i
+
+- **Stochastic Gradient Descent (SGD):**
+  - Full loss: L(Θ) = (1/N)ΣℓΘ_i. SGD: Θ_{k+1} = Θ_k − γ_k ∇ℓ_{i_k}(Θ_k) where i_k random
+  - **Unbiased estimator:** E[∇ℓ_j] = ∇L — correct direction on average
+  - **Mini-batch SGD:** Average over B samples (typically 32, 64, 256). Reduces variance by 1/√B.
+  - **Robbins-Monro conditions:** Σγ_k = ∞ (reach minimum from anywhere), Σγ_k² < ∞ (noise vanishes)
+  - Loss functions: Square loss ℓ_i = ½‖y_i − f(x_i;Θ)‖², Cross-entropy, Hinge loss
+
+- **Constrained Optimization:**
+  - **General form:** min f(Θ) s.t. h_i(Θ)=0 (equality), g_j(Θ)≤0 (inequality)
+  - **SVM example:** min ½‖w‖² s.t. y_i(w⊤x_i + b) ≥ 1
+  - **LASSO example:** min ½‖y − Xw‖² s.t. Σ|w_j| ≤ t
+  - **Lagrangian:** L(Θ,λ,μ) = f(Θ) + Σλ_i h_i(Θ) + Σμ_j g_j(Θ)
+  - **Dual function:** q(λ,μ) = inf_Θ L(Θ,λ,μ). Always concave. Provides lower bound.
+  - **Weak duality:** q(λ,μ) ≤ f(Θ) for feasible Θ, μ≥0
+  - **Strong duality (Slater):** If problem is convex and ∃Θ with g_j(Θ) < 0 strictly, then p* = d*
+
+- **KKT Conditions (4 conditions for optimality):**
+  1. **Stationarity:** ∇f(Θ*) + Σλ_i*∇h_i(Θ*) + Σμ_j*∇g_j(Θ*) = 0
+  2. **Primal feasibility:** h_i(Θ*) = 0, g_j(Θ*) ≤ 0
+  3. **Dual feasibility:** μ_j* ≥ 0
+  4. **Complementary slackness:** μ_j* g_j(Θ*) = 0 (if constraint inactive → multiplier = 0)
+  - For convex problems with Slater: KKT necessary AND sufficient
+  - KKT identifies support vectors in SVM (μ_j > 0)
+
+- **Quadratic Minimization with Linear Constraints:**
+  - Problem: min ½x⊤Sx s.t. A⊤x = b (S symmetric positive definite)
+  - KKT system: [S A; A⊤ 0][x; λ] = [0; b]
+  - Solution: λ* = −(A⊤S⁻¹A)⁻¹b, x* = S⁻¹A(A⊤S⁻¹A)⁻¹b
+  - Optimal cost: F(x*) = ½b⊤(A⊤S⁻¹A)⁻¹b
+  - ∂F/∂b = −λ* (sensitivity of optimal cost to constraint level)
+  - Saddle point property: max_λ min_x L = min_x max_λ L
+
+**Applications:** SVM formulation, LASSO regularization, neural network training (SGD, momentum, Adam), logistic regression, nonlinear curve fitting (Levenberg-Marquardt), support vectors via KKT.
+
 ---
 
 ## Course Progression
@@ -268,9 +352,15 @@ Clase 7a → Optimization: calculus review, convexity, Newton's method,
     ↓
 Clase 7b → Probability: MGF, covariance, Chebyshev/Hoeffding/Kolmogorov,
             LLN/CLT (with proofs), parameter estimation (MoM)
+    ↓
+Clase 8 → Newton (convergence, backtracking), Quasi-Newton (Broyden, BFGS, L-BFGS),
+           GD analysis (zig-zag, condition number), Momentum (Polyak, Nesterov),
+           Subgradients, Levenberg-Marquardt, Logistic Regression (full derivation),
+           SGD (mini-batch, Robbins-Monro), Constrained optimization (Lagrangian,
+           Dual, KKT conditions), Quadratic minimization with linear constraints
 ```
 
-The course builds from **vector algebra** → **matrix algebra & linear systems** → **advanced factorizations (QR, eigen, SVD)** → **data science applications (PCA, least squares, regularization)** → **probabilistic frameworks (Bayes, MLE, cross-entropy loss)** → **advanced probability (randomized algorithms, concentration inequalities, limit theorems)** → **optimization (convexity, gradient descent, Newton's method, Levenberg-Marquardt)**.
+The course builds from **vector algebra** → **matrix algebra & linear systems** → **advanced factorizations (QR, eigen, SVD)** → **data science applications (PCA, least squares, regularization)** → **probabilistic frameworks (Bayes, MLE, cross-entropy loss)** → **advanced probability (randomized algorithms, concentration inequalities, limit theorems)** → **optimization foundations (convexity, GD, Newton)** → **advanced optimization (quasi-Newton, SGD, constrained optimization, KKT, logistic regression)**.
 
 ---
 

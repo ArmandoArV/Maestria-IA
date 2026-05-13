@@ -12,7 +12,7 @@
 *.prj
 
 # PDFs (presentations / large docs)
-*.pdf
+
 
 # Jupyter checkpoints
 .ipynb_checkpoints/

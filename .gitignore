@@ -24,7 +24,7 @@ __pycache__/
 # OS files
 Thumbs.db
 .DS_Store
-
+.hdf5
 # LaTeX build artifacts
 *.aux
 *.fdb_latexmk

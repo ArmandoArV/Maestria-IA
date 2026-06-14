@@ -1,0 +1,242 @@
+\documentclass[12pt, a4paper]{article}
+
+% ── Paquetes ──
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{parskip}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage[numbers]{natbib}
+\usepackage{graphicx}
+\usepackage{tikz}
+
+\geometry{margin=2.5cm}
+\onehalfspacing
+
+% ── Colores ──
+\definecolor{accent}{RGB}{0, 90, 130}
+\definecolor{ucblue}{RGB}{0, 75, 135}
+\definecolor{ucgold}{RGB}{198, 166, 80}
+
+% ── Formato de secciones ──
+\titleformat{\section}{\large\bfseries\color{accent}}{}{0em}{}[\vspace{-0.5em}\color{accent}\rule{\textwidth}{0.4pt}]
+\titleformat{\subsection}{\normalsize\bfseries\color{accent!80!black}}{}{0em}{}
+
+% ── Encabezado ──
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{Avance Formativo -- Informe Sociotécnico}}
+\fancyhead[R]{\small\textit{Ética en IA}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=accent,
+    urlcolor=accent!70!black,
+    citecolor=accent,
+    pdftitle={Avance Formativo - Informe Sociotécnico: IA en ayuda humanitaria},
+    pdfauthor={Armando Arredondo Valle},
+    pdfsubject={Ética en Inteligencia Artificial},
+    pdfkeywords={IA, ayuda humanitaria, sesgos algorítmicos, ética, sociotécnico}
+}
+
+% ══════════════════════════════════════════════════════════════════════
+\begin{document}
+
+% ── Portada ──
+\begin{titlepage}
+    \begin{tikzpicture}[remember picture, overlay]
+        % Barra superior azul UC
+        \fill[ucblue] (current page.north west) rectangle ([yshift=-4cm]current page.north east);
+        % Línea dorada decorativa
+        \fill[ucgold] ([yshift=-4cm]current page.north west) rectangle ([yshift=-4.15cm]current page.north east);
+        % Barra inferior
+        \fill[ucblue] (current page.south west) rectangle ([yshift=2cm]current page.south east);
+        \fill[ucgold] ([yshift=2cm]current page.south west) rectangle ([yshift=2.15cm]current page.south east);
+    \end{tikzpicture}
+
+    \centering
+    \vspace*{1.2cm}
+
+    \includegraphics[width=5.5cm]{Logo.png}
+
+    \vspace{1.5cm}
+
+    {\color{ucblue}\rule{0.6\textwidth}{0.8pt}}
+
+    \vspace{0.8cm}
+
+    {\LARGE\bfseries\color{ucblue} Avance Formativo\\[0.3em]
+    Informe Sociotécnico}
+
+    \vspace{1.2cm}
+
+    {\Large\color{black} Inteligencia Artificial en la distribución de\\[0.2em]
+    ayuda humanitaria: sesgos algorítmicos\\[0.2em]
+    y exclusión de poblaciones vulnerables}
+
+    \vspace{0.8cm}
+
+    {\color{ucblue}\rule{0.6\textwidth}{0.8pt}}
+
+    \vspace{1.5cm}
+
+    {\large\bfseries Armando Arredondo Valle}
+
+    \vspace{0.6cm}
+
+    {\normalsize Maestría en Inteligencia Artificial\\[0.2em]
+    Ética en Inteligencia Artificial\\[0.5em]
+    Pontificia Universidad Católica de Chile}
+
+    \vfill
+
+    {\normalsize 14 de junio de 2026}
+
+    \vspace{1.5cm}
+\end{titlepage}
+
+% ══════════════════════════════════════════════════════════════════════
+\section{Tema seleccionado}
+
+\textbf{Uso de sistemas de IA para la focalización y distribución de ayuda humanitaria},buscando enfatizar en los programas de transferencias monetarias a poblaciones afectadas por crisis, como el programa \textit{Emergency Social Safety Net} (ESSN) operado por la Federación Internacional de la Cruz Roja y la Media Luna Roja (IFRC) en Turquía.
+
+Estos sistemas emplean algoritmos de \textit{machine learning} y análisis de datos móviles para identificar a las personas con mayor necesidad de asistencia, determinar montos y priorizar la asignación de recursos limitados. El objetivo es mejorar la eficiencia y reducir el desperdicio; sin embargo, las decisiones algorítmicas en contextos de vulnerabilidad extrema plantean dilemas éticos profundos.
+
+El caso es particularmente relevante desde una \textbf{perspectiva sociotécnica}, ya que, como argumentan Kudina y van de Poel~\cite{kudina2024sociotechnical}, la IA no puede evaluarse únicamente como artefacto tecnológico, sino como parte de un sistema más amplio que incluye instituciones, cultura, reglas sociales y agentes humanos. Analizar la IA humanitaria exige, por tanto, examinar no solo el algoritmo, sino el entramado organizacional, político y social en el que opera.
+
+% ══════════════════════════════════════════════════════════════════════
+\section{Problema ético}
+
+El problema central es el \textbf{riesgo de discriminación algorítmica y exclusión sistemática} de poblaciones vulnerables cuando se emplean sistemas de IA para decidir quién recibe ayuda humanitaria y quién no.
+
+Coeckelbergh~\cite{coeckelbergh2021etica} advierte que la IA puede ``reforzar prejuicios y discriminaciones injustas'' cuando se alimenta de datos históricos sesgados, como ilustra el caso COMPAS en justicia penal, donde los falsos positivos del algoritmo se daban desproporcionadamente entre personas de piel negra. Este mismo mecanismo opera en la ayuda humanitaria: poblaciones históricamente invisibilizadas quedan fuera del alcance del algoritmo.
+
+Este problema se manifiesta en múltiples dimensiones:
+
+\begin{enumerate}[leftmargin=2em]
+    \item \textbf{Sesgo en los datos de entrenamiento.} Arriagada~\cite{arriagada2024sesgos} identifica diversas categorías de sesgo (cognitivo, social, técnico) que se replican en los sistemas de IA. En el contexto humanitario, el \textit{sesgo de disponibilidad} (heurística que sobreestima probabilidades basándose en información accesible) resulta especialmente peligroso: si ciertos grupos no están representados en los registros históricos, como personas sin documentación, comunidades nómadas o minorías étnicas, el modelo simplemente no los ``ve''. Como señala Arriagada, ``las inteligencias artificiales dependen de los datos y, como muchas veces están sesgados, se replican en los sistemas''~\cite{arriagada2024sesgos}.
+
+    \item \textbf{Opacidad en la toma de decisiones.} Coeckelbergh~\cite{coeckelbergh2021etica} dedica un capítulo completo a lo que denomina ``máquinas arresponsables y decisiones inexplicables'', argumentando que la falta de transparencia y explicabilidad genera un vacío de responsabilidad moral. Los beneficiarios, personas en situaciones de crisis, rara vez comprenden por qué fueron aceptados o rechazados. En un sistema sociotécnico, la explicabilidad no es solo una propiedad del algoritmo: como señalan Kudina y van de Poel, depende también ``del comportamiento de los funcionarios, el clima político y las reglas internas de la agencia gubernamental relevante''~\cite{kudina2024sociotechnical}.
+
+    \item \textbf{Tensión entre eficiencia y equidad.} Coeckelbergh plantea una pregunta ética fundamental: ``¿mejora para quién? ¿El gobierno o los ciudadanos? ¿La policía o aquellos que la policía tiene en su punto de mira?''~\cite{coeckelbergh2021etica}. En el contexto humanitario, la pregunta se traduce en: ¿optimizar para los donantes que financian el programa o para las comunidades que lo necesitan? Las métricas de costo-efectividad pueden entrar en conflicto directo con los principios de imparcialidad.
+
+    \item \textbf{Privacidad y vigilancia.} Coeckelbergh señala que ``un uso ético de la IA requiere que los datos sean recogidos, procesados y compartidos de una forma que respete la privacidad de los individuos y su derecho a saber lo que ocurre con ellos''~\cite{coeckelbergh2021etica}. En contextos humanitarios, la recolección masiva de datos personales (ubicación, patrones de gasto, datos biométricos) ocurre cuando las personas no tienen alternativa real para negarse, lo que plantea un problema de consentimiento bajo coacción.
+\end{enumerate}
+
+% ══════════════════════════════════════════════════════════════════════
+\section{Actores involucrados}
+
+La perspectiva sociotécnica nos obliga a identificar no solo los componentes tecnológicos, sino todos los agentes humanos, instituciones y reglas sociales que configuran el sistema~\cite{kudina2024sociotechnical}. Kudina y van de Poel señalan que los sistemas sociotécnicos incluyen ``agentes humanos, artefactos tecnológicos e instituciones sociales (reglas formales e informales que permiten y restringen las interacciones entre agentes)''. Siguiendo este marco, los actores del sistema de IA humanitaria son:
+
+\begin{description}[leftmargin=2em, style=nextline]
+    \item[\textbf{Poblaciones beneficiarias (agentes humanos: usuarios finales)}]
+    Personas refugiadas, desplazadas y afectadas por crisis humanitarias. Son los sujetos directos de las decisiones algorítmicas y quienes enfrentan las consecuencias de la exclusión. Poseen escasa capacidad de agencia frente al sistema. Arriagada~\cite{arriagada2024sesgos} enfatiza que es imprescindible ``ir a esa comunidad, conocer a las personas que yo quiero ayudar, entender su problema y levantarlo desde ahí. No buscar simplemente los datos históricos, sino contrastar, analizar''. Esto implica que los incumbentes, es decir, las personas directamente afectadas, deben participar en el diseño.
+
+    \item[\textbf{Organizaciones humanitarias: IFRC, ACNUR, PMA (agentes humanos: operadores e instituciones)}]
+    Operan los programas y toman la decisión de implementar sistemas de IA. Buscan maximizar el impacto de recursos limitados, pero tienen la obligación de respetar los principios humanitarios fundamentales: humanidad, imparcialidad, neutralidad e independencia. Desde la perspectiva sociotécnica, estas organizaciones constituyen las \textit{instituciones formales} que regulan cómo el sistema de IA interactúa con sus beneficiarios~\cite{kudina2024sociotechnical}.
+
+    \item[\textbf{Desarrolladores de tecnología (agentes humanos: diseñadores)}]
+    Empresas y equipos técnicos que diseñan los algoritmos y modelos. Coeckelbergh~\cite{coeckelbergh2021etica} subraya que ``ya en la fase de recolección de datos y en el diseño de su conjunto se toman decisiones [\ldots] la abstracción a partir de la realidad nunca es neutral''. Sus decisiones de diseño (selección de variables, definición de la función objetivo, manejo de datos faltantes) determinan quién es visible y quién no para el sistema.
+
+    \item[\textbf{Gobiernos anfitriones (instituciones formales)}]
+    Los estados donde se ejecutan los programas regulan el acceso a datos, definen marcos legales de protección y pueden instrumentalizar los sistemas de focalización para sus propios fines políticos. Kudina y van de Poel advierten sobre el caso del escándalo de las prestaciones por cuidado infantil en Países Bajos, donde una agencia tributaria empleó un sistema de IA que ``clasificó erróneamente a muchos ciudadanos en categorías de alto riesgo''~\cite{kudina2024sociotechnical}, un riesgo directamente transferible al contexto humanitario.
+
+    \item[\textbf{Donantes internacionales (instituciones formales: financiadores)}]
+    Financian los programas y frecuentemente exigen métricas de eficiencia que incentivan la adopción de IA sin suficiente escrutinio ético.
+
+    \item[\textbf{Cultura y contexto social (instituciones informales)}]
+    Kudina y van de Poel destacan la cultura como componente activo del sistema sociotécnico: ``los constructos culturales, como las creencias y expectativas, se reflejan inevitablemente en los conjuntos de datos de entrenamiento para sistemas de IA, mientras que el despliegue de estos sistemas puede no solo reforzar estos constructos, sino también desafiarlos''~\cite{kudina2024sociotechnical}. En el contexto humanitario, los sesgos culturales sobre quién ``merece'' ayuda se pueden codificar inadvertidamente en el algoritmo.
+
+    \item[\textbf{Comunidad académica y sociedad civil (agentes humanos: vigilancia)}]
+    Organismos de vigilancia, investigadores y ONG de derechos digitales que auditan, denuncian y proponen marcos normativos para la IA humanitaria.
+\end{description}
+
+% ══════════════════════════════════════════════════════════════════════
+\section{Postura a desarrollar}
+
+La postura que se propone defender es:
+
+\begin{quote}
+\textit{La implementación de sistemas de IA en la distribución de ayuda humanitaria es éticamente admisible únicamente cuando se adopta una perspectiva genuinamente sociotécnica: mecanismos de auditoría algorítmica, explicabilidad contextual de las decisiones, diseño inclusivo con participación de las comunidades afectadas y gobernanza institucional que permita la contestabilidad del sistema. En ausencia de estas salvaguardas, la eficiencia técnica no justifica el riesgo de exclusión sistemática de las poblaciones más vulnerables.}
+\end{quote}
+
+Esta postura se fundamenta en tres marcos teóricos del curso:
+
+\begin{enumerate}[leftmargin=2em]
+    \item \textbf{La perspectiva sociotécnica de Kudina y van de Poel}~\cite{kudina2024sociotechnical}, que exige evaluar la IA no como tecnología aislada, sino como sistema compuesto por agentes humanos, artefactos técnicos, instituciones y cultura. Esto implica que la ``justicia'' del sistema no depende únicamente de las métricas de \textit{fairness} del algoritmo, sino del diseño institucional completo: ``¿hay espacio para desviarse del consejo del algoritmo? ¿Se ofrece a los ciudadanos la posibilidad de objetar una decisión?''. Los autores enfatizan que abordar los problemas éticos de la IA requiere tres elementos frecuentemente ausentes: \textbf{instituciones}, \textbf{cultura} y \textbf{gobernanza}.
+
+    \item \textbf{El feminismo de datos y los conocimientos situados de Arriagada}~\cite{arriagada2024sesgos}, que aportan la idea de que la objetividad en ciencia y tecnología es siempre parcial. Arriagada argumenta, siguiendo a Haraway y Harding, que debemos ``incluir las perspectivas que permitan que las dimensiones sociales sean reconocidas inherentemente al proceso científico''. En el contexto humanitario, esto se traduce en la exigencia de \textit{diseño participativo}: no basta con datos estadísticos, sino que se requiere incorporar las narrativas y experiencias de las comunidades afectadas.
+
+    \item \textbf{La ética de la IA de Coeckelbergh}~\cite{coeckelbergh2021etica}, que provee el marco para analizar la responsabilidad (Cap.~8), el sesgo (Cap.~9), la privacidad (Cap.~7) y las políticas de actuación (Cap.~10). Coeckelbergh insiste en que las cuestiones éticas de la IA ``no son meramente técnicas, sino que conllevan un componente ético crucial'', y que debemos siempre preguntar ``¿mejora para quién?'' al evaluar la implementación de estos sistemas.
+\end{enumerate}
+
+La postura se sitúa en un punto intermedio entre:
+
+\begin{itemize}[leftmargin=2em]
+    \item El \textbf{tecno-optimismo} que asume que la IA inherentemente mejora la ayuda humanitaria al reducir errores humanos y optimizar recursos, posición representada, por ejemplo, por Efe~\cite{efe2022review}.
+    \item El \textbf{rechazo total} que considera que los contextos de vulnerabilidad extrema son incompatibles con la toma de decisiones algorítmica.
+\end{itemize}
+
+Se argumentará que el problema no es la tecnología en sí, sino la \textbf{ausencia de gobernanza sociotécnica adecuada}: la IA humanitaria necesita lo que Kudina y van de Poel llaman ``diseño de intervenciones'' en sistemas complejos, con marcos de rendición de cuentas diseñados para contextos donde los sujetos de las decisiones carecen de poder para impugnarlas.
+
+% ══════════════════════════════════════════════════════════════════════
+\section{Evidencia técnica necesaria}
+
+Para sustentar la postura, se requiere reunir evidencia en las siguientes áreas, alineadas con los marcos teóricos del curso:
+
+\subsection{Sesgo algorítmico y conocimientos situados}
+
+\begin{itemize}[leftmargin=2em]
+    \item Estudios que documenten sesgos concretos en modelos de focalización de ayuda (e.g., Aiken et al.~\cite{aiken2022machine}, sobre \textit{machine learning} y datos telefónicos para \textit{targeting} humanitario publicado en \textit{Nature}).
+    \item Aplicación del marco de Arriagada~\cite{arriagada2024sesgos} para categorizar los tipos de sesgo presentes: \textit{sesgo de disponibilidad} (datos no representativos), \textit{sesgo cultural} (supuestos sobre quién merece ayuda), y \textit{sesgo técnico} (elecciones de diseño que excluyen).
+    \item Análisis desde los ``conocimientos situados'' (Haraway/Harding, citados por Arriagada): ¿quién define las variables del modelo? ¿Desde qué posición social se diseña el sistema de focalización?
+    \item Métricas de equidad (\textit{fairness metrics}): disparidad demográfica, igualdad de oportunidades, calibración por subgrupos, y el problema de que existen ``múltiples métricas conflictivas'', como señalan Kudina y van de Poel~\cite{kudina2024sociotechnical}.
+\end{itemize}
+
+\subsection{Transparencia, explicabilidad y responsabilidad}
+
+\begin{itemize}[leftmargin=2em]
+    \item Estado del arte en técnicas de \textit{Explainable AI} (XAI): SHAP, LIME, \textit{counterfactual explanations}.
+    \item Análisis desde Coeckelbergh~\cite{coeckelbergh2021etica} (Cap.~8: ``Máquinas arresponsables y decisiones inexplicables''): ¿cómo atribuir responsabilidad moral cuando un algoritmo rechaza a un beneficiario? ¿Quién responde el desarrollador, la organización humanitaria, el gobierno anfitrión?
+    \item Evidencia de Coppi, Moreno Jiménez y Kyriazi~\cite{coppi2021explicability} sobre explicabilidad específica en IA humanitaria.
+    \item Evaluación de la viabilidad de implementar explicaciones comprensibles para beneficiarios con diversos niveles de alfabetización y en contextos multilingües.
+\end{itemize}
+
+\subsection{Gobernanza, instituciones y contestabilidad}
+
+\begin{itemize}[leftmargin=2em]
+    \item Análisis del marco de Kudina y van de Poel~\cite{kudina2024sociotechnical} sobre los tres elementos clave: \textbf{instituciones} (reglas formales e informales que regulan el sistema), \textbf{cultura} (creencias codificadas en los datos), y \textbf{gobernanza} (mecanismos para que los afectados puedan impugnar decisiones).
+    \item El concepto de \textbf{contestabilidad} (\textit{contestability by design}) discutido en Kudina y van de Poel como la capacidad del sistema de responder a impugnaciones de los usuarios, integrando ``derechos de autodeterminación y control''.
+    \item Revisión de marcos normativos existentes: principios de la OCHA, directrices del CICR, estándares de la UE sobre IA de alto riesgo (AI Act) lo que Coeckelbergh~\cite{coeckelbergh2021etica} analiza en sus capítulos 10--11 como ``políticas de actuación''.
+\end{itemize}
+
+\subsection{Diseño inclusivo y participación comunitaria}
+
+\begin{itemize}[leftmargin=2em]
+    \item Aplicación del enfoque de Arriagada~\cite{arriagada2024sesgos} sobre diseño sociotécnico inclusivo: ``si yo quiero modelar algo para ayudar a una comunidad, debo ir a esa comunidad [\ldots] no buscar simplemente los datos históricos''.
+    \item El concepto de ``democratización de la IA'' discutido por Noorman y Swierstra (citados en Kudina y van de Poel~\cite{kudina2024sociotechnical}), enfocado en inclusión, formación de voluntad y toma de decisiones democrática.
+    \item Evidencia empírica del programa ESSN de IFRC Turquía~\cite{efe2022review}: cobertura, tasas de exclusión/inclusión errónea, mecanismos de apelación.
+\end{itemize}
+
+\subsection{Privacidad y consentimiento en contextos de crisis}
+
+\begin{itemize}[leftmargin=2em]
+    \item Análisis desde Coeckelbergh~\cite{coeckelbergh2021etica} (Cap.~7: ``La privacidad y otros sospechosos habituales'') sobre la ``manipulación, explotación y usuarios vulnerables'' en sistemas de IA que procesan datos sensibles.
+    \item Análisis de la validez del consentimiento informado cuando la alternativa es no recibir ayuda lo que Coeckelbergh identifica como el problema de la asimetría de poder.
+    \item Riesgos de reidentificación y vigilancia derivados de la recolección de datos biométricos en contextos donde los datos pueden ser compartidos con gobiernos anfitriones que persiguen a las mismas poblaciones que deberían proteger.
+\end{itemize}
+
+% ══════════════════════════════════════════════════════════════════════
+
+\bibliographystyle{plainnat}
+\bibliography{referencias}
+
+\end{document}

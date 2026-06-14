@@ -1,0 +1,55 @@
+\begin{thebibliography}{6}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Aiken et~al.(2022)Aiken, Bellue, Karlan, Udry, and
+  Goldsmith-Pinkham]{aiken2022machine}
+Emily Aiken, Suzanne Bellue, Dean Karlan, Christopher Udry, and Paul
+  Goldsmith-Pinkham.
+\newblock Machine learning and phone data can improve targeting of humanitarian
+  aid.
+\newblock \emph{Nature}, 2022.
+\newblock \doi{10.1038/s41586-022-04484-9}.
+\newblock URL \url{https://doi.org/10.1038/s41586-022-04484-9}.
+
+\bibitem[Arriagada~Bruneau(2024)]{arriagada2024sesgos}
+Gabriela Arriagada~Bruneau.
+\newblock \emph{Los sesgos del algoritmo}.
+\newblock La Pollera Ediciones, 2024.
+\newblock ISBN 978-956-6267-25-6.
+
+\bibitem[Coeckelbergh(2021)]{coeckelbergh2021etica}
+Mark Coeckelbergh.
+\newblock \emph{{\'E}tica de la inteligencia artificial}.
+\newblock C{\'a}tedra, 2021.
+\newblock Traducci{\'o}n de Lucas {\'A}lvarez Canga.
+
+\bibitem[Coppi et~al.(2021)Coppi, Moreno~Jim{\'e}nez, and
+  Kyriazi]{coppi2021explicability}
+Giulio Coppi, Rebeca Moreno~Jim{\'e}nez, and Stamatia Kyriazi.
+\newblock Explicability of humanitarian {AI}: a matter of principles.
+\newblock \emph{International Journal of Humanitarian Action}, 6\penalty0 (19),
+  2021.
+\newblock \doi{10.1186/s41018-021-00096-6}.
+\newblock URL \url{https://doi.org/10.1186/s41018-021-00096-6}.
+
+\bibitem[Efe(2022)]{efe2022review}
+Ahmet Efe.
+\newblock A review on risk reduction potentials of artificial intelligence in
+  humanitarian aid sector.
+\newblock \emph{\.{I}nsan ve Sosyal Bilimler Dergisi}, 5\penalty0 (2):\penalty0
+  184--205, 2022.
+\newblock \doi{10.53048/johass.1189814}.
+\newblock URL \url{https://doi.org/10.53048/johass.1189814}.
+
+\bibitem[Kudina and van~de Poel(2024)]{kudina2024sociotechnical}
+Olya Kudina and Ibo van~de Poel.
+\newblock A sociotechnical system perspective on {AI}.
+\newblock \emph{Minds and Machines}, 34\penalty0 (21), 2024.
+\newblock \doi{10.1007/s11023-024-09680-2}.
+\newblock URL \url{https://doi.org/10.1007/s11023-024-09680-2}.
+
+\end{thebibliography}

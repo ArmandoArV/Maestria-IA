@@ -31,3 +31,4 @@ Thumbs.db
 *.fls
 *.log
 *.synctex.gz
+.Rproj.user

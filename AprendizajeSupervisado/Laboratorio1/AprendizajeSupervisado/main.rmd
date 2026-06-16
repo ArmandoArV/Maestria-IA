@@ -1,0 +1,512 @@
+---
+title: "Laboratorio 1 — Aprendizaje Supervisado"
+subtitle: "EPG4001 · Pontificia Universidad Católica de Chile"
+author: "Armando Arredondo Valle & Julynho Merlin Toledo Rios"
+date: "`r format(Sys.Date(), '%d de %B de %Y')`"
+output:
+  html_document:
+    theme: flatly
+    highlight: tango
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: true
+    number_sections: true
+    code_folding: show
+    df_print: paged
+---
+
+<style>
+:root {
+  --azul:     #004B93;
+  --azul-osc: #002D5A;
+  --gris:     #5A6C7D;
+  --gris-clr: #F4F6F8;
+  --borde:    #CBD5E0;
+}
+
+h1, h2, h3 { color: var(--azul) !important; }
+h1 { border-bottom: 2px solid var(--borde); padding-bottom: 6px; }
+h2 { border-left: 3px solid var(--azul); padding-left: 10px; }
+
+.tocify .active { background-color: var(--azul) !important; color: white !important; border-radius: 3px; }
+.tocify a { color: var(--azul-osc); }
+
+blockquote {
+  border-left: 3px solid var(--azul);
+  background: var(--gris-clr);
+  padding: 12px 16px;
+  margin: 14px 0;
+  font-size: 0.93em;
+  color: #333;
+}
+
+pre { border-left: 2px solid var(--borde); }
+.table > thead > tr > th { background-color: var(--azul) !important; color: white !important; }
+</style>
+
+<center>
+<img src="Logo.png" alt="PUC Logo" width="250" style="margin-bottom: 8px;">
+<br>
+<span style="font-size: 0.85em; color: var(--gris);">Facultad de Matemáticas · Magíster en Inteligencia Artificial</span>
+</center>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo       = TRUE,
+  message    = FALSE,
+  warning    = FALSE,
+  fig.align  = "center",
+  fig.width  = 9,
+  fig.height = 6,
+  comment    = "#>"
+)
+
+paleta <- c("#004B93", "#5A6C7D", "#8DA0B0", "#A3B1C6", "#CBD5E0")
+```
+
+```{r libraries}
+library(ISLR)
+library(MASS)
+library(mlbench)
+library(car)
+library(pROC)
+library(corrplot)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(knitr)
+library(kableExtra)
+library(plotly)
+library(DT)
+library(lmtest)
+```
+
+---
+
+# Pregunta 1 — Datos `Smarket` {.tabset}
+
+## a) Análisis descriptivo {.tabset}
+
+Se trabaja con el dataset **Smarket** (`ISLR`), que contiene 1250 registros diarios del índice S&P 500 entre 2001 y 2005. La variable de respuesta es $Y = \texttt{Today}$.
+
+```{r p1-data}
+data(Smarket)
+```
+
+### Estructura
+
+```{r p1-str}
+str(Smarket)
+```
+
+### Estadísticos descriptivos
+
+```{r p1-summary}
+Smarket %>%
+  select(-Direction) %>%
+  pivot_longer(everything(), names_to = "Variable", values_to = "Valor") %>%
+  group_by(Variable) %>%
+  summarise(
+    n       = n(),
+    Media   = round(mean(Valor), 4),
+    DE      = round(sd(Valor), 4),
+    Min     = round(min(Valor), 4),
+    Q1      = round(quantile(Valor, 0.25), 4),
+    Mediana = round(median(Valor), 4),
+    Q3      = round(quantile(Valor, 0.75), 4),
+    Max     = round(max(Valor), 4)
+  ) %>%
+  kable(caption = "Resumen estadístico de las variables numéricas") %>%
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)
+```
+
+### Histogramas
+
+```{r p1-histograms, fig.height=8}
+Smarket %>%
+  select(-Direction) %>%
+  pivot_longer(everything(), names_to = "variable", values_to = "valor") %>%
+  ggplot(aes(x = valor)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 30,
+                 fill = "#004B93", alpha = 0.65) +
+  geom_density(color = "#5A6C7D", linewidth = 0.8) +
+  facet_wrap(~ variable, scales = "free", ncol = 3) +
+  labs(x = "Valor", y = "Densidad") +
+  theme_minimal(base_size = 11)
+```
+
+### Correlaciones
+
+```{r p1-corr, fig.height=6, fig.width=7}
+cor_matrix <- cor(Smarket %>% select(-Direction))
+corrplot(cor_matrix, method = "color", type = "upper",
+         tl.col = "#002D5A", tl.srt = 45, addCoef.col = "#002D5A",
+         number.cex = 0.7,
+         col = colorRampPalette(c("#8DA0B0", "white", "#004B93"))(200))
+```
+
+### Boxplots por Direction
+
+```{r p1-boxplots, fig.height=5}
+Smarket %>%
+  pivot_longer(cols = c(Lag1:Lag5, Volume),
+               names_to = "variable", values_to = "valor") %>%
+  ggplot(aes(x = Direction, y = valor, fill = Direction)) +
+  geom_boxplot(alpha = 0.65, outlier.alpha = 0.4) +
+  facet_wrap(~ variable, scales = "free_y", ncol = 3) +
+  scale_fill_manual(values = c("Down" = "#5A6C7D", "Up" = "#004B93")) +
+  theme_minimal(base_size = 11) +
+  theme(legend.position = "bottom")
+```
+
+> Las variables Lag1–Lag5 no muestran diferencias apreciables entre días de subida y bajada. Lo más notable es la correlación entre `Volume` y `Year` (≈ 0.54), lo cual es esperable dado el crecimiento secular del volumen de operaciones.
+
+---
+
+## b) Selección de modelo lineal para `Today`
+
+Se ajusta primero el modelo completo con todas las variables (excluyendo `Direction`) y luego se aplica selección stepwise bidireccional con criterio AIC.
+
+```{r p1b-full}
+modelo_full <- lm(Today ~ . - Direction, data = Smarket)
+summary(modelo_full)
+```
+
+```{r p1b-step}
+modelo_step <- step(modelo_full, direction = "both", trace = 0)
+summary(modelo_step)
+```
+
+```{r p1b-anova}
+anova(modelo_step) %>%
+  kable(digits = 4, caption = "ANOVA del modelo seleccionado") %>%
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)
+```
+
+> Se utilizó selección stepwise bidireccional con AIC. El modelo resultante y sus indicadores se muestran arriba.
+
+---
+
+## c) Regresión logística para `Direction`
+
+Ahora se considera $Y = \texttt{Direction}$ como variable respuesta y se ajusta un modelo logístico con los rezagos Lag1–Lag5 como predictores.
+
+```{r p1c-full}
+glm_full <- glm(Direction ~ Lag1 + Lag2 + Lag3 + Lag4 + Lag5,
+                data = Smarket, family = binomial)
+summary(glm_full)
+```
+
+```{r p1c-step}
+glm_step <- step(glm_full, direction = "both", trace = 0)
+summary(glm_step)
+```
+
+```{r p1c-best}
+glm_best <- if (length(coef(glm_step)) <= 1) glm_full else glm_step
+cat("Variables en el modelo final:", length(coef(glm_best)) - 1, "\n")
+```
+
+> Se aplicó stepwise con AIC. Dado que los retornos pasados tienen escaso poder predictivo sobre la dirección futura (resultado consistente con la hipótesis de mercados eficientes), el procedimiento puede reducir el modelo al intercepto. En tal caso, se reportan los odds ratios del modelo completo para facilitar la interpretación.
+
+---
+
+## d) Odds Ratios
+
+```{r p1d-or}
+ci_raw <- confint(glm_best)
+ci_matrix <- matrix(ci_raw, ncol = 2)
+rownames(ci_matrix) <- names(coef(glm_best))
+
+data.frame(
+  Variable    = names(coef(glm_best)),
+  Log_odds    = round(coef(glm_best), 4),
+  OR          = round(exp(coef(glm_best)), 4),
+  IC_2.5      = round(exp(ci_matrix[, 1]), 4),
+  IC_97.5     = round(exp(ci_matrix[, 2]), 4)
+) %>%
+  kable(col.names = c("Variable", "Coef (log-odds)", "OR", "IC 2.5%", "IC 97.5%"),
+        caption = "Odds Ratios con intervalos de confianza al 95%") %>%
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)
+```
+
+> Un OR mayor a 1 indica que un aumento unitario en el predictor incrementa las probabilidades de que el mercado suba. Cuando el intervalo de confianza incluye el 1, el efecto no es significativo al 5%. En este caso, ninguno de los Lags muestra significancia, lo cual es coherente con la dificultad de predecir retornos bursátiles a partir de información pasada.
+
+---
+
+# Pregunta 2 — Datos `Boston` {.tabset}
+
+```{r p2-data}
+data(Boston)
+```
+
+El dataset `Boston` (librería `MASS`) contiene información sobre 506 vecindarios del área de Boston. Se busca predecir `medv`, el valor mediano de las viviendas (en miles de USD).
+
+## a) Modelo de regresión lineal múltiple
+
+```{r p2a-model}
+lm_boston <- lm(medv ~ ., data = Boston)
+summary(lm_boston)
+```
+
+```{r p2a-anova}
+anova(lm_boston) %>%
+  kable(digits = 4, caption = "Tabla ANOVA del modelo completo") %>%
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)
+```
+
+> El estadístico $F$ global contrasta $H_0$: todos los coeficientes son cero simultáneamente. Con un p-valor extremadamente bajo, rechazamos $H_0$ — al menos un predictor tiene relación lineal significativa con `medv`. A nivel individual, variables como `rm`, `lstat`, `dis` y `ptratio` presentan p-valores muy por debajo de 0.05.
+
+---
+
+## b) Selección stepwise con AIC
+
+```{r p2b-step}
+lm_step <- step(lm_boston, direction = "both", trace = 0)
+summary(lm_step)
+```
+
+```{r p2b-coefs}
+coef_tbl <- summary(lm_step)$coefficients %>%
+  as.data.frame() %>%
+  mutate(Variable = rownames(.)) %>%
+  select(Variable, everything())
+rownames(coef_tbl) <- NULL
+
+coef_tbl %>%
+  kable(digits = 4, caption = "Coeficientes del modelo seleccionado (stepwise AIC)") %>%
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)
+```
+
+> Interpretación de dos coeficientes seleccionados:
+>
+> - **`rm`**: cada habitación adicional en promedio se asocia con un aumento de aproximadamente `r round(coef(lm_step)["rm"], 2)` miles de USD en el valor mediano, manteniendo el resto constante. Es el predictor con mayor efecto positivo.
+> - **`lstat`**: un punto porcentual más de población de bajos ingresos reduce `medv` en cerca de `r abs(round(coef(lm_step)["lstat"], 2))` miles de USD. Esto refleja la relación inversa entre estatus socioeconómico y precio de vivienda.
+
+---
+
+## c) Supuestos del modelo {.tabset}
+
+### Multicolinealidad (VIF)
+
+```{r p2c-vif}
+vif_vals <- vif(lm_step)
+vif_df <- data.frame(Variable = names(vif_vals), VIF = round(vif_vals, 2))
+rownames(vif_df) <- NULL
+
+vif_df %>%
+  arrange(desc(VIF)) %>%
+  ggplot(aes(x = reorder(Variable, VIF), y = VIF)) +
+  geom_col(fill = "#004B93", alpha = 0.75, width = 0.65) +
+  geom_hline(yintercept = 5, linetype = "dashed", color = "#5A6C7D") +
+  geom_hline(yintercept = 10, linetype = "dotted", color = "#333") +
+  coord_flip() +
+  labs(x = NULL, y = "VIF",
+       caption = "Línea discontinua: VIF = 5 | Línea punteada: VIF = 10") +
+  theme_minimal(base_size = 11)
+```
+
+> VIF > 5 sugiere multicolinealidad moderada y VIF > 10 multicolinealidad severa. Las variables `rad` y `tax` suelen mostrar valores elevados por su fuerte asociación mutua; sin embargo, el modelo puede mantenerse si el objetivo es predicción más que inferencia causal.
+
+### Homocedasticidad
+
+```{r p2c-homo, fig.height=5}
+par(mfrow = c(1, 2))
+plot(lm_step, which = 1, col = "#004B93", pch = 16, cex = 0.6)
+plot(lm_step, which = 3, col = "#004B93", pch = 16, cex = 0.6)
+par(mfrow = c(1, 1))
+```
+
+```{r p2c-bp}
+bp_test <- lmtest::bptest(lm_step)
+cat("Test de Breusch-Pagan\n")
+cat("  BP =", round(bp_test$statistic, 4), "\n")
+cat("  p  =", format.pval(bp_test$p.value, digits = 4), "\n")
+```
+
+> `r ifelse(bp_test$p.value < 0.05, "El p-valor del test de Breusch-Pagan es inferior a 0.05, por lo que se rechaza la hipótesis nula de homocedasticidad. Esto indica que la varianza de los residuos no es constante, lo cual podría afectar la inferencia sobre los coeficientes.", "No se rechaza la hipótesis nula de homocedasticidad — los residuos presentan varianza aproximadamente constante.")`
+
+---
+
+## d) Observaciones influyentes {.tabset}
+
+### Influence Plot
+
+```{r p2d-influence, fig.height=6}
+car::influencePlot(lm_step, main = "Gráfico de influencia")
+```
+
+### Distancia de Cook
+
+```{r p2d-cook, fig.height=5}
+cook_d <- cooks.distance(lm_step)
+n <- nrow(Boston)
+umbral <- 4 / n
+
+data.frame(Obs = 1:n, Cook = cook_d) %>%
+  ggplot(aes(x = Obs, y = Cook)) +
+  geom_segment(aes(xend = Obs, yend = 0),
+               color = ifelse(cook_d > umbral, "#004B93", "#CBD5E0"), linewidth = 0.4) +
+  geom_point(color = ifelse(cook_d > umbral, "#004B93", "#CBD5E0"), size = 0.8) +
+  geom_hline(yintercept = umbral, linetype = "dashed", color = "#5A6C7D") +
+  labs(x = "Observación", y = "Distancia de Cook",
+       caption = paste0("Umbral 4/n = ", round(umbral, 4))) +
+  theme_minimal(base_size = 11)
+```
+
+```{r p2d-top}
+top5 <- sort(cook_d, decreasing = TRUE)[1:5]
+data.frame(
+  Observación = as.integer(names(top5)),
+  Cook_D = round(top5, 5)
+) %>%
+  kable(caption = "Las 5 observaciones con mayor distancia de Cook") %>%
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)
+```
+
+> Las observaciones listadas arriba combinan residuos grandes y/o alto leverage, lo que les otorga una influencia desproporcionada sobre las estimaciones. Conviene verificar si corresponden a registros atípicos genuinos o a errores de medición.
+
+---
+
+# Pregunta 3 — Datos `PimaIndiansDiabetes` {.tabset}
+
+```{r p3-data}
+data(PimaIndiansDiabetes)
+```
+
+Este dataset (`mlbench`) contiene 768 registros de mujeres de la comunidad Pima con variables clínicas. La variable respuesta `diabetes` indica presencia (pos) o ausencia (neg) de la enfermedad.
+
+## a) Regresión logística completa
+
+```{r p3a-model}
+glm_pima <- glm(diabetes ~ ., data = PimaIndiansDiabetes, family = binomial)
+summary(glm_pima)
+```
+
+```{r p3a-coefs}
+coef_pima <- summary(glm_pima)$coefficients %>%
+  as.data.frame() %>%
+  mutate(Variable = rownames(.), OR = exp(Estimate)) %>%
+  select(Variable, Estimate, OR, `Std. Error`, `z value`, `Pr(>|z|)`)
+rownames(coef_pima) <- NULL
+
+coef_pima %>%
+  kable(digits = 4,
+        col.names = c("Variable", "Log-odds", "OR", "Err. Std.", "z", "p-valor"),
+        caption = "Coeficientes del modelo logístico") %>%
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)
+```
+
+> - **`glucose`**: cada unidad adicional de glucosa incrementa el log-odds en `r round(coef(glm_pima)["glucose"], 4)`, lo que equivale a multiplicar los odds por `r round(exp(coef(glm_pima)["glucose"]), 4)`. Aunque el efecto unitario parece pequeño, el rango de glucosa es amplio (44–199), por lo que el impacto acumulado es considerable.
+> - **`mass`** (IMC): OR = `r round(exp(coef(glm_pima)["mass"]), 4)`. Un punto más de IMC aumenta los odds de diabetes en un `r round((exp(coef(glm_pima)["mass"]) - 1) * 100, 2)`%.
+>
+> Respecto a la significancia: se compara cada p-valor contra $\alpha = 0.05$.
+
+---
+
+## b) Bondad de ajuste (Devianza)
+
+```{r p3b-deviance}
+dev_nula  <- glm_pima$null.deviance
+dev_resid <- glm_pima$deviance
+pct_exp   <- (1 - dev_resid / dev_nula) * 100
+
+data.frame(
+  Indicador = c("Devianza nula (solo intercepto)", "Devianza residual (modelo completo)", "% Devianza explicada"),
+  Valor = c(round(dev_nula, 2), round(dev_resid, 2), paste0(round(pct_exp, 2), "%"))
+) %>%
+  kable(caption = "Comparación de devianzas") %>%
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)
+```
+
+> El modelo explica aproximadamente un `r round(pct_exp, 1)`% de la devianza total. Este valor puede parecer modesto, pero es habitual en estudios biomédicos donde la variabilidad entre individuos es alta y factores no capturados (genéticos, ambientales) juegan un rol importante. La reducción es estadísticamente significativa, lo cual se confirma con el test de razón de verosimilitudes implícito en la diferencia de devianzas.
+
+---
+
+## c) Curva ROC y punto de corte óptimo (Youden)
+
+```{r p3c-roc, fig.height=6}
+prob_pima <- predict(glm_pima, type = "response")
+roc_pima  <- roc(PimaIndiansDiabetes$diabetes, prob_pima, levels = c("neg", "pos"))
+
+coords_opt <- coords(roc_pima, x = "best", best.method = "youden",
+                     ret = c("threshold", "sensitivity", "specificity"))
+
+roc_df <- data.frame(
+  FPR = 1 - roc_pima$specificities,
+  TPR = roc_pima$sensitivities
+)
+
+ggplot(roc_df, aes(x = FPR, y = TPR)) +
+  geom_line(color = "#004B93", linewidth = 1) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "#CBD5E0") +
+  geom_point(aes(x = 1 - coords_opt$specificity, y = coords_opt$sensitivity),
+             color = "#5A6C7D", size = 3.5, shape = 18) +
+  annotate("text", x = 0.55, y = 0.3,
+           label = paste0("AUC = ", round(auc(roc_pima), 4)),
+           size = 4.5, color = "#004B93") +
+  annotate("text", x = 1 - coords_opt$specificity + 0.12,
+           y = coords_opt$sensitivity - 0.04,
+           label = paste0("Youden (", round(coords_opt$threshold, 3), ")"),
+           size = 3.2, color = "#5A6C7D") +
+  labs(x = "1 - Especificidad", y = "Sensibilidad") +
+  theme_minimal(base_size = 11)
+```
+
+```{r p3c-youden}
+cat("AUC:", round(auc(roc_pima), 4), "\n")
+cat("Punto de corte óptimo (Youden):", round(coords_opt$threshold, 4), "\n")
+cat("  Sensibilidad:", round(coords_opt$sensitivity, 4), "\n")
+cat("  Especificidad:", round(coords_opt$specificity, 4), "\n")
+```
+
+> El AUC de `r round(auc(roc_pima), 3)` indica una capacidad discriminativa aceptable. El índice de Youden ($J = \text{Sens} + \text{Esp} - 1$) identifica el umbral que balancea mejor la detección de positivos y negativos. En este caso, el punto de corte óptimo resulta ser `r round(coords_opt$threshold, 3)`, distinto del 0.5 habitual, lo que refleja el desbalance entre clases y el trade-off inherente a la detección temprana.
+
+---
+
+## d) Matriz de confusión y métricas
+
+```{r p3d-confusion}
+umbral_opt <- coords_opt$threshold
+pred_class <- factor(ifelse(prob_pima >= umbral_opt, "pos", "neg"), levels = c("neg", "pos"))
+cm <- table(Predicho = pred_class, Real = PimaIndiansDiabetes$diabetes)
+```
+
+```{r p3d-heatmap, fig.height=4, fig.width=5}
+as.data.frame(cm) %>%
+  ggplot(aes(x = Real, y = Predicho, fill = Freq)) +
+  geom_tile(color = "white", linewidth = 1.5) +
+  geom_text(aes(label = Freq), size = 7, fontface = "bold", color = "white") +
+  scale_fill_gradient(low = "#8DA0B0", high = "#004B93") +
+  labs(title = paste0("Matriz de confusión (umbral = ", round(umbral_opt, 4), ")")) +
+  theme_minimal(base_size = 11) +
+  theme(legend.position = "none",
+        axis.text = element_text(size = 11))
+```
+
+```{r p3d-metrics}
+TP <- cm["pos", "pos"]; TN <- cm["neg", "neg"]
+FP <- cm["pos", "neg"]; FN <- cm["neg", "pos"]
+
+sens <- TP / (TP + FN)
+espec <- TN / (TN + FP)
+acc <- (TP + TN) / sum(cm)
+
+data.frame(
+  Métrica = c("Sensibilidad", "Especificidad", "Accuracy"),
+  Valor   = round(c(sens, espec, acc), 4)
+) %>%
+  kable(caption = "Métricas de clasificación") %>%
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)
+```
+
+> En un problema de detección de enfermedades, generalmente conviene priorizar la **sensibilidad** por sobre la especificidad. Un falso negativo implica que un paciente diabético no recibe diagnóstico ni tratamiento oportuno, con riesgo de complicaciones como retinopatía, neuropatía o enfermedad cardiovascular. Un falso positivo, en cambio, se resuelve con exámenes confirmatorios adicionales. Por esta razón, un punto de corte menor a 0.5 (como el obtenido por Youden) puede ser clínicamente preferible.
+
+---
+
+<center style="margin-top: 30px; padding-top: 15px; border-top: 1px solid #CBD5E0; color: #5A6C7D; font-size: 0.88em;">
+EPG4001 — Aprendizaje Supervisado · Prof. Jorge Luis Bazán<br>
+Pontificia Universidad Católica de Chile · Facultad de Matemáticas<br>
+Santiago, `r format(Sys.Date(), '%d de %B de %Y')`
+</center>

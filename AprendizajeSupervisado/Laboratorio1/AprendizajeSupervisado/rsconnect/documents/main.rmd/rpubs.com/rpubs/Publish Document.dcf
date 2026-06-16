@@ -1,0 +1,10 @@
+name: Publish Document
+title:
+username:
+account: rpubs
+server: rpubs.com
+hostUrl: rpubs.com
+appId: https://api.rpubs.com/api/v1/document/1442209/2a4e90b4939643b481af0beb5b6ad277
+bundleId: https://api.rpubs.com/api/v1/document/1442209/2a4e90b4939643b481af0beb5b6ad277
+url: http://rpubs.com/ArmandoAV/1442209
+version: 1

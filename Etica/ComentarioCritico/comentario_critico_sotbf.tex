@@ -1,0 +1,135 @@
+\documentclass[12pt, a4paper]{article}
+
+% ── Paquetes ──
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{parskip}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{tikz}
+
+\geometry{margin=2.5cm}
+\onehalfspacing
+
+% ── Colores ──
+\definecolor{accent}{RGB}{0, 90, 130}
+\definecolor{ucblue}{RGB}{0, 75, 135}
+\definecolor{ucgold}{RGB}{198, 166, 80}
+
+% ── Formato de secciones ──
+\titleformat{\section}{\large\bfseries\color{accent}}{}{0em}{}[\vspace{-0.5em}\color{accent}\rule{\textwidth}{0.4pt}]
+\titleformat{\subsection}{\normalsize\bfseries\color{accent!80!black}}{}{0em}{}
+
+% ── Encabezado ──
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{Comentario Crítico}}
+\fancyhead[R]{\small\textit{Ética en IA}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=accent,
+    urlcolor=accent!70!black,
+    citecolor=accent,
+    pdftitle={Comentario Crítico: Survival of the Best Fit},
+    pdfauthor={Armando Arredondo Valle},
+    pdfsubject={Ética en Inteligencia Artificial},
+    pdfkeywords={IA, sesgo algorítmico, contratación, ética, juego educativo}
+}
+
+% ══════════════════════════════════════════════════════════════════════
+\begin{document}
+
+% ── Portada ──
+\begin{titlepage}
+    \begin{tikzpicture}[remember picture, overlay]
+        \fill[ucblue] (current page.north west) rectangle ([yshift=-4cm]current page.north east);
+        \fill[ucgold] ([yshift=-4cm]current page.north west) rectangle ([yshift=-4.15cm]current page.north east);
+        \fill[ucblue] (current page.south west) rectangle ([yshift=2cm]current page.south east);
+        \fill[ucgold] ([yshift=2cm]current page.south west) rectangle ([yshift=2.15cm]current page.south east);
+    \end{tikzpicture}
+
+    \centering
+    \vspace*{1.2cm}
+
+    \includegraphics[width=5.5cm]{Logo.png}
+
+    \vspace{1.5cm}
+
+    {\color{ucblue}\rule{0.6\textwidth}{0.8pt}}
+
+    \vspace{0.8cm}
+
+    {\LARGE\bfseries\color{ucblue} Comentario Crítico}
+
+    \vspace{1.2cm}
+
+    {\Large\color{black} \textit{Survival of the Best Fit}:\\[0.3em]
+    sesgo algorítmico en la contratación\\[0.2em]
+    automatizada}
+
+    \vspace{0.8cm}
+
+    {\color{ucblue}\rule{0.6\textwidth}{0.8pt}}
+
+    \vspace{1.5cm}
+
+    {\large\bfseries Armando Arredondo Valle}
+
+    \vspace{0.6cm}
+
+    {\normalsize Maestría en Inteligencia Artificial\\[0.2em]
+    Ética en Inteligencia Artificial\\[0.5em]
+    Pontificia Universidad Católica de Chile}
+
+    \vfill
+
+    {\normalsize 19 de junio de 2026}
+
+    \vspace{1.5cm}
+\end{titlepage}
+
+% ══════════════════════════════════════════════════════════════════════
+\section{Análisis crítico}
+
+\subsection{El sesgo no comienza en el algoritmo}
+
+Es interesante ver como es que la misma IA no es aquella que podamos decir es el origen del problema, sino más bien que podemos interpretarla como que esta misma puede llegar
+a amplificar incluso las decisiones humanas previas, hoy en día lo podemos ver cómo nuestra dependencia existe hacia la IA, pero realmente ¿qué es lo que la genera? Quizás podamos decir que son los patrones
+propios que se determinan en nuestra sociedad, en el juego lo podemos ver cómo las posibles "decisiones intuitivas" propias del jugador pueden llegar a parecer de cierta forma inofensivas, sin embargo, esto no es claro ya que,
+de una u otra forma demuestra como se excluye de forma sistemática (como sucede hoy en día jaja).
+
+\subsection{La ilusión de la objetividad automatizada}
+
+El juego desmonta eficazmente una narrativa común: que la IA elimina la subjetividad humana del proceso de selección. Esta es la promesa que muchas empresas de tecnología de recursos humanos hacen al vender herramientas de contratación automatizada. Sin embargo, como muestra el juego, el algoritmo no elimina el sesgo; lo automatiza, lo escala y le quita el rostro.
+
+\subsection{Responsabilidad difusa y opacidad}
+
+Una tensión que el juego pone (a mi parecer de pelos de punta), aunque no la resuelve del todo, es la cuestión de la responsabilidad. Cuando el algoritmo rechaza candidatos de forma discriminatoria, ¿quién es responsable? ¿El jugador que tomó las decisiones iniciales? ¿El equipo que diseñó el modelo? ¿La empresa que decidió implementarlo sin auditoría?
+
+% ══════════════════════════════════════════════════════════════════════
+\section{Reflexión final}
+
+\textit{Survival of the Best Fit} cumple su propósito central: hacer visible el mecanismo por el cual los sesgos humanos se codifican en sistemas de IA y se amplifican. Su mayor acierto es que no explica el problema con un artículo o una conferencia, sino que hace al jugador cómplice del proceso. Al ver cómo tus propias decisiones generan exclusión cuando se automatizan, la abstracción del ``sesgo algorítmico'' se convierte en algo concreto e incómodo.
+
+A mi parecer desde el marco teórico del curso se cumple la función de mostrar cómo es que verdaderamente la IA influye en la toma de decisiones, sin embargo, no me gustaría llamarlo que de forma plena, ya que a fin de cuentas, aunque se nos muestra lo sistematizado que está todo esto,
+creo que podemos decir que nos hace incluso cómplices del sistema, cosa que al demostrarnos la existencia queda en nosotros saber decidir ¿es acaso correcto , propio? o ¿verdaderamente queremos que funcione de esta forma?
+
+
+% ══════════════════════════════════════════════════════════════════════
+\section*{Referencias}
+
+\begin{enumerate}[leftmargin=2em, label={[\arabic*]}]
+    \item \textit{Survival of the Best Fit}. \url{https://www.survivalofthebestfit.com/}
+\end{enumerate}
+
+\end{document}

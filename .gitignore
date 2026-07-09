@@ -21,14 +21,27 @@
 __pycache__/
 *.pyc
 
+# Virtual environments
+.venv/
+.venv-*/
+venv/
+env/
+ENV/
+
 # OS files
 Thumbs.db
 .DS_Store
-.hdf5
+*.hdf5
 # LaTeX build artifacts
 *.aux
 *.fdb_latexmk
 *.fls
 *.log
 *.synctex.gz
+*.out
+*.bbl
+*.blg
+*.toc
 .Rproj.user
+.Rhistory
+.RData

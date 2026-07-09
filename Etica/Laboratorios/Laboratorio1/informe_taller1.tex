@@ -1,0 +1,221 @@
+\documentclass[12pt, a4paper]{article}
+
+% ── Paquetes ──
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{parskip}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{mathptmx} % Times New Roman
+\usepackage{multicol}
+\usepackage{booktabs}
+
+\geometry{margin=2cm}
+\onehalfspacing
+
+% ── Colores ──
+\definecolor{accent}{RGB}{0, 90, 130}
+\definecolor{ucblue}{RGB}{0, 75, 135}
+\definecolor{ucgold}{RGB}{198, 166, 80}
+
+% ── Formato de secciones ──
+\titleformat{\section}{\large\bfseries\color{accent}}{}{0em}{}[\vspace{-0.5em}\color{accent}\rule{\columnwidth}{0.4pt}]
+\titleformat{\subsection}{\normalsize\bfseries\color{accent!80!black}}{}{0em}{}
+
+% ── Encabezado ──
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{Taller Sumativo 1: Modelos Interpretables y XAI}}
+\fancyhead[R]{\small\textit{FIL2000}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=accent,
+    urlcolor=accent!70!black,
+    citecolor=accent,
+    pdftitle={Taller Sumativo 1 - FIL2000: Modelos Interpretables y XAI},
+    pdfauthor={Armando Arredondo Valle},
+    pdfsubject={Ética Aplicada a Inteligencia Artificial},
+    pdfkeywords={XAI, LIME, SHAP, explicabilidad, ética IA}
+}
+
+% ══════════════════════════════════════════════════════════════════════
+\begin{document}
+
+% ── Portada ──
+\begin{titlepage}
+    \begin{tikzpicture}[remember picture, overlay]
+        \fill[ucblue] (current page.north west) rectangle ([yshift=-4cm]current page.north east);
+        \fill[ucgold] ([yshift=-4cm]current page.north west) rectangle ([yshift=-4.15cm]current page.north east);
+        \fill[ucblue] (current page.south west) rectangle ([yshift=2cm]current page.south east);
+        \fill[ucgold] ([yshift=2cm]current page.south west) rectangle ([yshift=2.15cm]current page.south east);
+    \end{tikzpicture}
+
+    \centering
+    \vspace*{1.2cm}
+
+    \includegraphics[width=5.5cm]{Logo.png}
+
+    \vspace{1.5cm}
+
+    {\color{ucblue}\rule{0.6\textwidth}{0.8pt}}
+
+    \vspace{0.8cm}
+
+    {\LARGE\bfseries\color{ucblue} Taller Sumativo 1\\[0.3em]
+    Modelos Interpretables y XAI}
+
+    \vspace{1.2cm}
+
+    {\Large\color{black} LIME sobre análisis de sentimiento\\[0.2em]
+    y SHAP sobre predicción de\\[0.2em]
+    enfermedad renal crónica}
+
+    \vspace{0.8cm}
+
+    {\color{ucblue}\rule{0.6\textwidth}{0.8pt}}
+
+    \vspace{1.5cm}
+
+    {\large\bfseries Armando Arredondo Valle}
+
+    \vspace{0.6cm}
+
+    {\normalsize Maestría en Inteligencia Artificial\\[0.2em]
+    FIL2000 -- Ética Aplicada a Inteligencia Artificial\\[0.5em]
+    Pontificia Universidad Católica de Chile}
+
+    \vfill
+
+    {\normalsize Julio 2026}
+
+    \vspace{1.5cm}
+\end{titlepage}
+
+% ── Contenido en dos columnas ──
+\begin{multicols}{2}
+
+% ─────────────────────────────────────────────
+\section{Introducción}
+
+Ha ido en crecimiento la adopcióin de modelos de aprendizaje automático en ámbitos de alto impacto, tales como saludo, finanza, o incluso la justicia. Siendo así que ha generado una necesidad de comprender como es que estos modelos toman las decisiones.
+La eXplainable Artificial Intelligence (XAI) es un campo que busca desarrollar técnicas y herramientas para hacer que los modelos de IA sean más transparentes y comprensibles para los humanos. Esto es crucial no solo para la confianza del usuario, sino también para cumplir con regulaciones y estándares éticos.
+En este taller se aplican dos técnicas complementarias de XAI:
+
+\textbf{LIME} (Local Interpretable Model-agnostic Explanations) genera explicaciones \textit{locales}, es decir, explica por qué un modelo tomó una decisión particular para una instancia específica. Lo hace perturbando la entrada, observando cómo cambian las predicciones y ajustando un modelo lineal interpretable en la vecindad de la instancia \cite{ribeiro2016should}. En este taller, LIME se aplica a un modelo de análisis de sentimiento (BETO) para identificar qué palabras determinan la clasificación de reseñas en español.
+
+\textbf{SHAP} (SHapley Additive exPlanations) utiliza los valores de Shapley, un concepto de teoría de juegos cooperativos, para asignar a cada feature una contribución justa a la predicción. A diferencia de LIME, SHAP puede ofrecer tanto explicaciones locales (por instancia) como globales (qué variables son más importantes en general). Aquí se aplica a un Random Forest entrenado para predecir enfermedad renal crónica (CKD).
+
+El objetivo del taller es doble: aplicar estas técnicas correctamente y reflexionar sobre qué tipo de explicaciones pueden generar, sus alcances y sus limitaciones en contextos donde las decisiones algorítmicas tienen consecuencias reales.
+
+% ─────────────────────────────────────────────
+\section{Parte I: LIME sobre análisis de sentimiento}
+
+\subsection{Contexto y motivación}
+
+Se analizaron 12 reseñas de productos y servicios escritas en español coloquial chileno, incluyendo modismos como ``la raja'', ``bacán'', ``caleta'' y ``piola''. Este enfoque tiene una motivación ética concreta: los modelos de NLP entrenados en corpus formales pueden fallar sistemáticamente con el lenguaje informal de ciertos grupos, generando sesgos de representación. Si una herramienta de monitoreo de opinión no entiende cómo se expresan ciertos usuarios, sus voces quedan invisibilizadas.
+
+Se buscó investigar con LIME si las palabras que dominan cada predicción son coherentes con el significado real de la frase, y cómo el modelo maneja tokens coloquiales que probablemente no están en sus datos de entrenamiento.
+
+\subsection{Resultados e interpretación}
+
+Se cargó el modelo \texttt{nlptown/bert-base-multilingual-uncased-sentiment} y se obtuvieron predicciones para las 12 frases. Se aplicó LIME a 4 frases representativas (positiva clara, negativa clara, modismo chileno positivo y negativa de servicio digital).
+
+Los resultados mostraron que:
+
+\begin{itemize}[leftmargin=1.5em, itemsep=2pt]
+    \item En frases con sentimiento claro (``pésimo servicio'', ``muy contento''), las palabras con mayor peso LIME coincidían con las que un humano identificaría como clave. La explicación es coherente.
+    \item En frases con modismos chilenos (``la raja'', ``piola''), el modelo tiende a asignar peso a palabras circundantes (``paciencia'', ``explicó'') en lugar del modismo mismo, que no reconoce como indicador de sentimiento. LIME visibiliza este punto ciego.
+    \item En frases mixtas (``demoró caleta pero el producto era justo lo que buscaba''), LIME muestra la tensión entre tokens negativos y positivos, lo que permite entender por qué el modelo asigna una calificación intermedia.
+\end{itemize}
+
+Estos hallazgos confirman que LIME es útil para auditar modelos de NLP en contextos lingüísticos específicos, detectando sesgos culturales que no serían visibles solo con métricas de accuracy.
+
+% ─────────────────────────────────────────────
+\section{Parte II: SHAP sobre predicción de CKD}
+
+\subsection{Preparación de datos}
+
+El dataset de enfermedad renal crónica (UCI, 400 entradas, 24 variables) presentaba valores faltantes en múltiples columnas y algunas variables numéricas mal tipadas como texto. Se realizó la siguiente preparación:
+
+\begin{enumerate}[leftmargin=1.5em, itemsep=2pt]
+    \item Se convirtieron las columnas numéricas con \texttt{pd.to\_numeric} y se limpiaron caracteres espurios en las categóricas.
+    \item Los nulos numéricos se imputaron con la \textbf{mediana}, más robusta que la media ante valores extremos frecuentes en datos médicos. Los nulos categóricos se imputaron con la moda.
+    \item Las variables categóricas binarias se codificaron con mapeo manual (más legible que LabelEncoder para este caso).
+\end{enumerate}
+
+\subsection{Random Forest y evaluación}
+
+Se separaron los datos en 80\% entrenamiento y 20\% test con estratificación. La estandarización con MinMaxScaler se aplicó \textbf{después} de la separación para evitar data leakage, y solo sobre las variables numéricas (las binarias ya están en $[0,1]$). Se eligió MinMaxScaler porque, aunque Random Forest no es sensible a la escala, los SHAP values son más interpretables visualmente cuando las features tienen rangos comparables.
+
+El modelo obtuvo un accuracy elevado, con la matriz de confusión mostrando pocos falsos negativos, lo cual es crítico en diagnóstico médico: un falso negativo significa no detectar la enfermedad a tiempo.
+
+\subsection{Resultados SHAP}
+
+Se calcularon los SHAP values con \texttt{TreeExplainer} y se generaron tres visualizaciones:
+
+\begin{itemize}[leftmargin=1.5em, itemsep=2pt]
+    \item \textbf{Summary plot:} Muestra que las features más influyentes para predecir CKD son hemoglobina, densidad relativa (sg), albúmina y creatinina sérica. Valores bajos de hemoglobina y altos de albúmina empujan fuertemente hacia la predicción de CKD, lo cual es clínicamente coherente.
+    \item \textbf{Force plot:} Para un paciente individual clasificado como CKD, se visualiza cómo cada feature contribuye a alejarlo del valor base. Esto permitiría a un médico entender \textit{por qué} el modelo sugiere ese diagnóstico.
+    \item \textbf{Dependence plot:} Muestra la relación no lineal entre las features top y su impacto en la predicción, revelando umbrales clínicos que el modelo ha aprendido de los datos.
+\end{itemize}
+
+SHAP como herramienta tiene la ventaja de ofrecer explicaciones con garantías teóricas (consistencia, eficiencia) derivadas de la teoría de Shapley. Sin embargo, tiene limitaciones: asume independencia entre features, lo cual en datos médicos es problemático (hemoglobina y glóbulos rojos están correlacionados). Además, la interpretación de los SHAP values requiere conocimiento del dominio; un valor SHAP alto para ``albúmina'' no significa nada sin saber que la albúmina en orina es un marcador de daño renal.
+
+% ─────────────────────────────────────────────
+\section{Análisis comparativo: LIME vs SHAP}
+
+\begin{table}[h!]
+\centering
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Dimensión} & \textbf{LIME} & \textbf{SHAP} \\
+\midrule
+Alcance & Local & Local y global \\
+Método & Perturbación & Valores de \\
+ & + mod. lineal & Shapley \\
+Agnóstico & Sí & Sí (TreeExpl. \\
+ & & optimizado) \\
+Garantías & Fidelidad & Consistencia, \\
+ & local & eficiencia \\
+Costo & Bajo & Alto \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Desde mis propios resultados:}
+
+En la Parte I, LIME permitió identificar que el modelo BETO no reconoce modismos chilenos como indicadores de sentimiento, asignando peso a palabras circundantes. Esta es una explicación puramente \textit{local}: me dice por qué \textit{esta frase} fue clasificada así, pero no puedo generalizar a ``el modelo siempre ignora los modismos''. Para eso necesitaría aplicar LIME a muchas frases similares y agregar los resultados, algo que LIME no hace nativamente.
+
+En la Parte II, SHAP ofreció ambas perspectivas. El summary plot (global) me mostró que hemoglobina y albúmina son las features más importantes \textit{en general}, mientras que el force plot (local) me explicó por qué un paciente específico fue clasificado como CKD. Esta doble vista es una ventaja concreta de SHAP sobre LIME.
+
+Sin embargo, LIME tiene una fortaleza que SHAP no: es completamente agnóstico al modelo. LIME podría aplicarse a BETO (un transformer) sin ningún adaptador especial, mientras que para SHAP tuve que usar \texttt{TreeExplainer}, específico para modelos de árboles. Si quisiera aplicar SHAP a BETO, necesitaría una aproximación más costosa computacionalmente.
+
+\textbf{¿Qué tipo de explicaciones podemos generar?} Con LIME, explicaciones orientadas al usuario final: ``tu reseña fue clasificada como negativa principalmente por las palabras `pésimo' y `nunca'\,''. Con SHAP, explicaciones orientadas al profesional o auditor: ``en este dataset, la hemoglobina baja es el factor que más contribuye a la predicción de CKD; revise este paciente porque su creatinina está empujando la predicción''.
+
+Ninguna herramienta es suficiente por sí sola. LIME y SHAP son complementarias: LIME para auditorías puntuales y comunicación con usuarios no técnicos, SHAP para análisis global y validación con expertos del dominio.
+
+% ─────────────────────────────────────────────
+\section*{Referencias}
+
+\begin{enumerate}[leftmargin=1.5em, label={[\arabic*]}, itemsep=2pt]
+    \item Ribeiro, M. T., Singh, S. y Guestrin, C. (2016). ``Why should I trust you?'': Explaining the predictions of any classifier. \textit{Proceedings of the 22nd ACM SIGKDD}, 1135--1144.
+
+    \item Lundberg, S. M. y Lee, S.-I. (2017). A unified approach to interpreting model predictions. \textit{Advances in Neural Information Processing Systems}, 30, 4765--4774.
+
+    \item Molnar, C. (2022). \textit{Interpretable Machine Learning} (2nd ed.). \url{https://christophm.github.io/interpretable-ml-book/}
+\end{enumerate}
+
+\end{multicols}
+\end{document}

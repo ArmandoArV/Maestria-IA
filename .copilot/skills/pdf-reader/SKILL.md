@@ -1,3 +1,11 @@
+---
+name: pdf-reader
+description: >
+  Read and extract text content from PDF files using Python's pymupdf (fitz). Use this skill whenever
+  the user references a .pdf file, asks to read, open, parse, extract, or analyze a PDF, or needs the
+  text content of a PDF document (slides, papers, exams, reports). Also trigger on requests like
+  "what does this PDF say", "extract the text from", or "read the presentation".
+---
 # PDF Reader Skill
 
 ## Description
@@ -70,3 +78,4 @@ pip install pymupdf
 3. **Pipe output** through `Select-Object -First N` when only a preview is needed.
 4. **When the user asks to "read a PDF"**, extract the full text and summarize the content unless they ask for verbatim output.
 5. **For structured PDFs** (homework assignments, papers), identify sections, questions, or headings and present them clearly.
+

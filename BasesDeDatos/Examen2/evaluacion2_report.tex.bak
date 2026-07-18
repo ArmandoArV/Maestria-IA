@@ -1,0 +1,575 @@
+\documentclass[12pt,a4paper]{article}
+
+% --- Encoding & Language ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+
+% --- Fonts ---
+\usepackage{lmodern}
+\usepackage{microtype}
+
+% --- Math ---
+\usepackage{amsmath,amssymb}
+
+% --- Layout ---
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{parskip}
+\usepackage{enumitem}
+
+% --- Header / Footer ---
+\usepackage{fancyhdr}
+\setlength{\headheight}{15pt}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small Bases de Datos --- Evaluación 2}
+\fancyhead[R]{\small Armando Arredondo Valle}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% --- Graphics ---
+\usepackage{graphicx}
+
+% --- Colors & Boxes ---
+\usepackage[dvipsnames]{xcolor}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable,listings}
+
+% --- Code Listings ---
+\usepackage{listings}
+\lstdefinestyle{sqlstyle}{
+  language=SQL,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\bfseries\color{MidnightBlue},
+  commentstyle=\itshape\color{gray!70},
+  stringstyle=\color{OliveGreen},
+  showstringspaces=false,
+  breaklines=true,
+  frame=none,
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  numbersep=8pt,
+  tabsize=4,
+  morekeywords={RETURNS,LANGUAGE,DECLARE,EXECUTE,BEGIN,END,FORMAT,FUNCTION,
+                REPLACE,TRIGGER,AFTER,FOR,EACH,ROW,PROCEDURE,RETURN,QUERY,
+                BOOLEAN,SERIAL,VARCHAR,DATE,INT,TEXT,IF,EXISTS,CURRENT\_DATE,
+                TO\_CHAR,COALESCE,RAISE,NOTICE,plpgsql,TRUE,FALSE}
+}
+
+% --- TikZ for ERD ---
+\usepackage{tikz}
+\usetikzlibrary{positioning,shapes.multipart,arrows.meta,fit,backgrounds,calc,babel}
+
+% --- Hyperlinks ---
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=MidnightBlue, urlcolor=MidnightBlue}
+
+% =====================================================================
+% Custom tcolorbox styles
+% =====================================================================
+\newtcolorbox{schemabox}{
+  colback=gray!5,
+  colframe=gray!60,
+  fonttitle=\bfseries,
+  title=Esquema de la Base de Datos,
+  boxrule=0.6pt,
+  arc=3pt,
+  left=10pt, right=10pt, top=6pt, bottom=6pt
+}
+
+\newtcolorbox{querybox}[1]{
+  colback=MidnightBlue!3,
+  colframe=MidnightBlue!70,
+  fonttitle=\bfseries\sffamily,
+  title={#1},
+  boxrule=0.5pt,
+  arc=3pt,
+  left=10pt, right=10pt, top=6pt, bottom=8pt,
+  breakable
+}
+
+\newtcolorbox{sqlbox}[1]{
+  colback=gray!4,
+  colframe=MidnightBlue!50,
+  fonttitle=\bfseries\ttfamily\small,
+  title={#1},
+  boxrule=0.5pt,
+  arc=3pt,
+  left=4pt, right=4pt, top=4pt, bottom=4pt,
+  breakable
+}
+
+\newtcolorbox{answerbox}{
+  colback=OliveGreen!5,
+  colframe=OliveGreen!60,
+  boxrule=0.5pt,
+  arc=3pt,
+  left=10pt, right=10pt, top=6pt, bottom=6pt,
+  breakable
+}
+
+% =====================================================================
+\begin{document}
+
+% --- Title Page ---
+\begin{titlepage}
+  \centering
+  \vspace*{1cm}
+
+  \includegraphics[width=0.35\textwidth]{../../Logo.png}
+
+  \vspace{1cm}
+
+  {\Large\scshape Pontificia Universidad Católica de Chile}
+
+  \vspace{0.4cm}
+  {\large Magíster en Inteligencia Artificial}
+
+  \vspace{2.5cm}
+
+  {\Huge\bfseries Evaluación 2}
+
+  \vspace{0.5cm}
+  {\LARGE BDD: Lógica y Formas Normales}
+
+  \vspace{2.5cm}
+
+  \begin{tabular}{r l}
+    \textbf{Curso:}    & Bases de Datos \\[4pt]
+    \textbf{Profesor:}  & Ariel Leandro Reyes Pardo \\[4pt]
+    \textbf{Alumno:}    & Armando Arredondo Valle \\
+  \end{tabular}
+
+  \vfill
+  {\large Mayo 2026}
+\end{titlepage}
+
+% =====================================================================
+% Schema
+% =====================================================================
+\section*{Esquema de la Base de Datos}
+
+\begin{schemabox}
+\begin{align*}
+  \textbf{Categoria}&(\underline{id\_cate},\;
+    nombre\_cate,\; descripcion\_cate,\; activo)\\[4pt]
+  \textbf{Producto}&(\underline{id\_prod},\;
+    sku,\; nombre\_prod,\; descripcion\_prod,\;
+    \textit{id\_cate},\; activo)\\[4pt]
+  \textbf{Lista\_Precios}&(\underline{id\_lista},\;
+    inicio\_vigencia,\; fin\_vigencia,\; tipo)\\[4pt]
+  \textbf{Producto\_Lista}&(\underline{\textit{id\_prod}},\;
+    \underline{\textit{id\_lista}},\; precio)
+\end{align*}
+\smallskip
+\footnotesize
+\textbf{Nota:} Llaves primarias \underline{subrayadas}. Llaves foráneas en
+\textit{itálica}.
+\texttt{Producto.id\_cate} $\to$ \texttt{Categoria.id\_cate};\quad
+\texttt{Producto\_Lista.id\_prod} $\to$ \texttt{Producto.id\_prod};\quad
+\texttt{Producto\_Lista.id\_lista} $\to$ \texttt{Lista\_Precios.id\_lista}.
+\end{schemabox}
+
+\vspace{1cm}
+
+% =====================================================================
+% ERD
+% =====================================================================
+\section*{Diagrama Entidad--Relación}
+
+\begin{center}
+\begin{tikzpicture}[
+  % Entity header style
+  hdr/.style={
+    draw=MidnightBlue, fill=MidnightBlue!18, thick,
+    minimum width=3.8cm, minimum height=0.65cm,
+    font=\bfseries\sffamily\small, text centered
+  },
+  % Entity attribute row style
+  row/.style={
+    draw=MidnightBlue!50, fill=white,
+    minimum width=3.8cm, minimum height=0.55cm,
+    font=\ttfamily\footnotesize, text width=3.6cm,
+    inner sep=2pt, text centered
+  },
+  % PK attribute row
+  pkrow/.style={
+    row, fill=MidnightBlue!6,
+    font=\ttfamily\footnotesize\bfseries
+  },
+  % FK attribute row
+  fkrow/.style={
+    row, fill=OliveGreen!8,
+    font=\ttfamily\footnotesize\itshape
+  },
+  % Relationship line
+  rel/.style={thick, MidnightBlue!70},
+  >=Latex
+]
+
+% ---- CATEGORIA (top-left) ----
+\node[hdr]                       (C0) at (0,0)      {Categoria};
+\node[pkrow, below=0pt of C0]    (C1)               {\underline{id\_cate} \, PK};
+\node[row,   below=0pt of C1]    (C2)               {nombre\_cate};
+\node[row,   below=0pt of C2]    (C3)               {descripcion\_cate};
+\node[row,   below=0pt of C3]    (C4)               {activo};
+
+% ---- PRODUCTO (bottom-left) ----
+\node[hdr]                       (P0) at (0,-5)     {Producto};
+\node[pkrow, below=0pt of P0]    (P1)               {\underline{id\_prod} \, PK};
+\node[row,   below=0pt of P1]    (P2)               {sku};
+\node[row,   below=0pt of P2]    (P3)               {nombre\_prod};
+\node[row,   below=0pt of P3]    (P4)               {descripcion\_prod};
+\node[fkrow, below=0pt of P4]    (P5)               {id\_cate \, FK};
+\node[row,   below=0pt of P5]    (P6)               {activo};
+
+% ---- LISTA_PRECIOS (top-right) ----
+\node[hdr]                       (L0) at (8,0)      {Lista\_Precios};
+\node[pkrow, below=0pt of L0]    (L1)               {\underline{id\_lista} \, PK};
+\node[row,   below=0pt of L1]    (L2)               {inicio\_vigencia};
+\node[row,   below=0pt of L2]    (L3)               {fin\_vigencia};
+\node[row,   below=0pt of L3]    (L4)               {tipo};
+
+% ---- PRODUCTO_LISTA (bottom-right, bridge table) ----
+\node[hdr]                       (PL0) at (8,-5)    {Producto\_Lista};
+\node[pkrow, below=0pt of PL0]   (PL1)              {\underline{id\_prod} \, PK/FK};
+\node[pkrow, below=0pt of PL1]   (PL2)              {\underline{id\_lista} \, PK/FK};
+\node[row,   below=0pt of PL2]   (PL3)              {precio};
+
+% ---- Relationship: Categoria 1 ---< Producto ----
+\draw[rel]
+  (C4.south) -- ++(0,-0.3)
+  -- ($(P5.north)+(0,0.3)$)
+  -- (P5.north);
+% cardinality labels
+\node[font=\footnotesize\bfseries, text=MidnightBlue] at (-0.85,-2.5) {1};
+\node[font=\footnotesize\bfseries, text=MidnightBlue] at ( 0.85,-2.5) {N};
+
+% ---- Relationship: Producto 1 ---< Producto_Lista ----
+\draw[rel]
+  (P1.east) -- ++(0.3,0)
+  -- ($(PL1.west)+(-0.3,0)$)
+  -- (PL1.west);
+\node[font=\footnotesize\bfseries, text=MidnightBlue] at (3.2,-5.0)  {1};
+\node[font=\footnotesize\bfseries, text=MidnightBlue] at (4.8,-5.0)  {N};
+
+% ---- Relationship: Lista_Precios 1 ---< Producto_Lista ----
+\draw[rel]
+  (L4.south) -- ++(0,-0.3)
+  -- ($(PL2.north)+(0,0.3)$)
+  -- (PL2.north);
+\node[font=\footnotesize\bfseries, text=MidnightBlue] at (7.15,-2.5) {1};
+\node[font=\footnotesize\bfseries, text=MidnightBlue] at (8.85,-2.5) {N};
+
+% ---- Legend ----
+\begin{scope}[shift={(3.5,-9)}]
+  \node[hdr,    minimum width=1cm, minimum height=0.45cm,
+        font=\sffamily\scriptsize] (leg0) at (0,0)    {Entidad};
+  \node[pkrow,  minimum width=2.2cm, minimum height=0.42cm,
+        font=\ttfamily\scriptsize, right=0.4cm of leg0] (leg1)  {\underline{X} Llave primaria};
+  \node[fkrow,  minimum width=2.2cm, minimum height=0.42cm,
+        font=\ttfamily\scriptsize\itshape, right=0.3cm of leg1] (leg2)  {X Llave foránea};
+\end{scope}
+
+\end{tikzpicture}
+\end{center}
+
+\newpage
+
+% =====================================================================
+% P1. Lógica en la BDD
+% =====================================================================
+\section*{P1. Lógica en la BDD}
+
+% =====================================================================
+% P1.1 — Stored Procedure
+% =====================================================================
+\begin{querybox}{P1.1 --- Stored Procedure: precio vigente por fecha y categoría}
+
+El procedimiento recibe una \textbf{fecha} y un \textbf{id\_cate}.
+Retorna el precio vigente de todos los productos activos en esa categoría
+para la fecha indicada.
+Si el producto pertenece a una lista de oferta vigente (\texttt{tipo=1}),
+se usa ese precio; de lo contrario se usa el precio base (\texttt{tipo=0}).
+
+\vspace{0.4cm}
+
+\begin{sqlbox}{PostgreSQL --- obtener\_precios\_vigentes(p\_fecha, p\_id\_cate)}
+\begin{lstlisting}[style=sqlstyle]
+CREATE OR REPLACE FUNCTION obtener_precios_vigentes(
+    p_fecha   DATE,
+    p_id_cate INT
+)
+RETURNS TABLE (
+    id_prod      INT,
+    nombre_prod  VARCHAR,
+    precio       INT,
+    tipo_precio  TEXT
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    RETURN QUERY
+    WITH oferta AS (
+        -- Productos con lista de OFERTA vigente en la fecha dada
+        SELECT pl.id_prod, pl.precio
+        FROM   Producto_Lista pl
+        JOIN   Lista_Precios  lp ON pl.id_lista = lp.id_lista
+        WHERE  lp.tipo = 1
+          AND  p_fecha BETWEEN lp.inicio_vigencia AND lp.fin_vigencia
+    ),
+    base AS (
+        -- Precio BASE vigente para cada producto
+        SELECT pl.id_prod, pl.precio
+        FROM   Producto_Lista pl
+        JOIN   Lista_Precios  lp ON pl.id_lista = lp.id_lista
+        WHERE  lp.tipo = 0
+          AND  p_fecha BETWEEN lp.inicio_vigencia AND lp.fin_vigencia
+    )
+    SELECT
+        p.id_prod,
+        p.nombre_prod,
+        COALESCE(o.precio, b.precio)                         AS precio,
+        CASE WHEN o.precio IS NOT NULL THEN 'oferta'
+             ELSE 'base' END                                 AS tipo_precio
+    FROM   Producto p
+    LEFT JOIN oferta o ON p.id_prod = o.id_prod
+    LEFT JOIN base   b ON p.id_prod = b.id_prod
+    WHERE  p.activo   = TRUE
+      AND  p.id_cate  = p_id_cate
+      AND  COALESCE(o.precio, b.precio) IS NOT NULL;
+END;
+$$;
+
+-- Ejemplo de uso
+SELECT * FROM obtener_precios_vigentes('2026-05-15', 1);
+\end{lstlisting}
+\end{sqlbox}
+
+\vspace{0.3cm}
+\textbf{Lógica principal:}
+\begin{itemize}[leftmargin=1.5em]
+  \item Se calculan dos CTE: \texttt{oferta} (listas con \texttt{tipo=1} vigentes)
+        y \texttt{base} (listas con \texttt{tipo=0} vigentes).
+  \item Se usa \texttt{COALESCE(o.precio, b.precio)} para priorizar el precio
+        de oferta sobre el base.
+  \item Solo se retornan productos activos de la categoría solicitada que
+        tengan al menos un precio en una lista vigente.
+\end{itemize}
+
+\end{querybox}
+
+\vspace{0.6cm}
+
+% =====================================================================
+% P1.2 — Trigger
+% =====================================================================
+\begin{querybox}{P1.2 --- Trigger: crear tabla \texttt{Productos\_Sin\_Precio\_YYYYMMDD}}
+
+Al insertar un registro en \texttt{Lista\_Precios}, se crea la tabla
+\texttt{Productos\_Sin\_Precio\_YYYYMMDD} (con la fecha actual) y se insertan
+todos los productos \textbf{activos} que \textbf{no} pertenecen a ninguna
+lista de oferta (\texttt{tipo = 1}).
+
+La tabla creada contiene: \texttt{id\_prod}, \texttt{sku},
+\texttt{nombre\_prod}, \texttt{id\_cate}.
+
+\vspace{0.4cm}
+
+\begin{sqlbox}{PostgreSQL --- Función + Trigger}
+\begin{lstlisting}[style=sqlstyle]
+CREATE OR REPLACE FUNCTION fn_productos_sin_precio()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_tabla TEXT;
+BEGIN
+    -- Nombre dinamico con fecha de hoy
+    v_tabla := 'Productos_Sin_Precio_'
+               || TO_CHAR(CURRENT_DATE, 'YYYYMMDD');
+
+    -- Crear la tabla si aun no existe
+    EXECUTE format('
+        CREATE TABLE IF NOT EXISTS %I (
+            id_prod     INT,
+            sku         VARCHAR(50),
+            nombre_prod VARCHAR(100),
+            id_cate     INT
+        )', v_tabla);
+
+    -- Insertar productos activos que NO estan en ninguna oferta
+    EXECUTE format('
+        INSERT INTO %I (id_prod, sku, nombre_prod, id_cate)
+        SELECT p.id_prod, p.sku, p.nombre_prod, p.id_cate
+        FROM   Producto p
+        WHERE  p.activo = TRUE
+          AND  p.id_prod NOT IN (
+                   SELECT pl.id_prod
+                   FROM   Producto_Lista pl
+                   JOIN   Lista_Precios  lp
+                          ON pl.id_lista = lp.id_lista
+                   WHERE  lp.tipo = 1
+               )', v_tabla);
+
+    RETURN NEW;
+END;
+$$;
+
+-- Asociar el trigger a la tabla Lista_Precios
+CREATE TRIGGER trg_lista_precios_insert
+AFTER INSERT ON Lista_Precios
+FOR EACH ROW
+EXECUTE FUNCTION fn_productos_sin_precio();
+\end{lstlisting}
+\end{sqlbox}
+
+\vspace{0.3cm}
+\textbf{Decisiones de diseño:}
+\begin{itemize}[leftmargin=1.5em]
+  \item Se usa \texttt{CREATE TABLE IF NOT EXISTS} para tolerar múltiples
+        inserciones en el mismo día sin error.
+  \item \texttt{format(\ldots, v\_tabla)} con \texttt{\%I} previene inyección SQL
+        al citar el nombre de tabla dinámicamente.
+  \item El trigger es \texttt{AFTER INSERT} para que el nuevo registro en
+        \texttt{Lista\_Precios} ya esté disponible al momento de evaluar
+        la condición de oferta.
+\end{itemize}
+
+\end{querybox}
+
+\newpage
+
+% =====================================================================
+% P3. Formas Normales
+% =====================================================================
+\section*{P3. Formas Normales}
+
+Relación analizada:
+\[
+  \textbf{Libros}(\underline{ISBN},\; Titulo,\; AutorID,\;
+  NombreAutor,\; CiudadAutor)
+\]
+
+% =====================================================================
+% P3.1
+% =====================================================================
+\begin{querybox}{P3.1 --- Dependencias Funcionales}
+
+A partir de las restricciones del enunciado (ISBN es PK, cada autor tiene
+un único nombre y vive en una única ciudad), se identifican las siguientes
+dependencias funcionales:
+
+\vspace{0.3cm}
+\begin{center}
+\begin{tabular}{cl p{7cm}}
+  \hline
+  \textbf{\#} & \textbf{Dependencia} & \textbf{Justificación} \\
+  \hline
+  1 & $ISBN \to Titulo$      & Cada ISBN identifica un único título. \\
+  2 & $ISBN \to AutorID$     & Cada libro tiene un único autor. \\
+  3 & $AutorID \to NombreAutor$ & Cada autor tiene un único nombre. \\
+  4 & $AutorID \to CiudadAutor$ & Cada autor vive en una única ciudad. \\
+  5 & $ISBN \to NombreAutor$ & Transitiva: $ISBN \to AutorID \to NombreAutor$. \\
+  6 & $ISBN \to CiudadAutor$ & Transitiva: $ISBN \to AutorID \to CiudadAutor$. \\
+  \hline
+\end{tabular}
+\end{center}
+
+\vspace{0.2cm}
+\footnotesize\textbf{Nota:} No existe la DF $NombreAutor \to CiudadAutor$ porque
+dos autores distintos podrían compartir nombre pero vivir en ciudades distintas;
+la dependencia se ancla en \texttt{AutorID}.
+
+\end{querybox}
+
+\vspace{0.6cm}
+
+% =====================================================================
+% P3.2
+% =====================================================================
+\begin{querybox}{P3.2 --- ¿Está en Tercera Forma Normal (3NF)?}
+
+\textbf{No}, la relación \textbf{no está en 3NF}.
+
+Para cumplir con 3NF, toda dependencia funcional no trivial $X \to A$ debe
+satisfacer al menos una de estas condiciones:
+\begin{enumerate}[label=(\arabic*),leftmargin=2em]
+  \item $X$ es superclave de la relación, \textbf{o}
+  \item $A$ es un atributo primo (pertenece a alguna llave candidata).
+\end{enumerate}
+
+\vspace{0.3cm}
+La única llave candidata es $\{ISBN\}$, por lo que los únicos atributos primos
+son $\{ISBN\}$. Los demás atributos son \textbf{no-primos}.
+
+\vspace{0.3cm}
+Las dependencias problemáticas son:
+\[
+  AutorID \;\to\; NombreAutor
+  \qquad\text{y}\qquad
+  AutorID \;\to\; CiudadAutor
+\]
+
+En ambas: $AutorID$ \textbf{no es superclave} y $NombreAutor$, $CiudadAutor$
+\textbf{no son atributos primos}. Son dependencias \textbf{transitivas}
+($ISBN \to AutorID \to \{NombreAutor, CiudadAutor\}$), lo que viola la 3NF.
+
+\end{querybox}
+
+\vspace{0.6cm}
+
+% =====================================================================
+% P3.3
+% =====================================================================
+\begin{querybox}{P3.3 --- Descomposición en 3NF y BCNF}
+
+Para eliminar las dependencias transitivas descomponemos en dos relaciones:
+
+\vspace{0.3cm}
+
+\begin{answerbox}
+\begin{align*}
+  \textbf{Libros}&(\underline{ISBN},\; Titulo,\; AutorID)
+    &&\text{FK: } AutorID \to Autores\\[4pt]
+  \textbf{Autores}&(\underline{AutorID},\; NombreAutor,\; CiudadAutor)
+\end{align*}
+\end{answerbox}
+
+\vspace{0.4cm}
+\textbf{¿Por qué cumple 3NF y BCNF?}
+
+\begin{center}
+\begin{tabular}{lll}
+  \hline
+  \textbf{Tabla} & \textbf{DFs no triviales} & \textbf{¿Cumple BCNF?} \\
+  \hline
+  \textbf{Libros}  & $ISBN \to \{Titulo, AutorID\}$                 &
+    \checkmark\ $ISBN$ es superclave \\
+  \textbf{Autores} & $AutorID \to \{NombreAutor, CiudadAutor\}$     &
+    \checkmark\ $AutorID$ es superclave \\
+  \hline
+\end{tabular}
+\end{center}
+
+\vspace{0.3cm}
+En BCNF el determinante de toda DF no trivial debe ser superclave. Ambas
+tablas lo cumplen, por lo que la descomposición satisface tanto
+\textbf{3NF} como \textbf{BCNF}.
+
+\vspace{0.4cm}
+\textbf{Propiedades adicionales:}
+\begin{itemize}[leftmargin=1.5em]
+  \item \textbf{Lossless-join:} el atributo común $AutorID$ es llave primaria
+        en \texttt{Autores}, por lo que el JOIN recupera exactamente la
+        relación original sin tuplas espurias.
+  \item \textbf{Dependency-preserving:} las DFs $(1)$--$(4)$ del punto 3.1
+        quedan preservadas en las tablas resultantes ($1$--$2$ en
+        \texttt{Libros}; $3$--$4$ en \texttt{Autores}).
+\end{itemize}
+
+\end{querybox}
+
+\end{document}

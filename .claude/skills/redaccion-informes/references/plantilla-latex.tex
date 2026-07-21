@@ -1,0 +1,148 @@
+% ─────────────────────────────────────────────────────────────────────────
+% Plantilla de informe — estilo de la casa (Magíster en IA, PUC Chile)
+% Estructura según rúbrica: Portada, Introducción, Objetivos, Marco teórico,
+% Resultados (EDA + >=2 técnicas + selección + técnica del marco teórico),
+% Conclusión, Anexos (con co-evaluación).
+% Compilar: pdflatex -> bibtex -> pdflatex -> pdflatex
+% NOTA: no usar siunitx (no instalado). Formatear números a mano:
+%   miles con punto (1.296.675), decimales con coma (0,873).
+% Requiere: Logo.png en el directorio, y referencias.bib para natbib.
+% ─────────────────────────────────────────────────────────────────────────
+\documentclass[12pt, a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{parskip}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage[numbers]{natbib}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\geometry{margin=2.5cm}
+\onehalfspacing
+\graphicspath{{figures/}{./}}
+
+% ── Colores UC ──
+\definecolor{accent}{RGB}{0, 90, 130}
+\definecolor{ucblue}{RGB}{0, 75, 135}
+\definecolor{ucgold}{RGB}{198, 166, 80}
+
+% ── Formato de secciones ──
+\titleformat{\section}{\large\bfseries\color{accent}}{\thesection.\ }{0.3em}{}[\vspace{-0.5em}\color{accent}\rule{\textwidth}{0.4pt}]
+\titleformat{\subsection}{\normalsize\bfseries\color{accent!80!black}}{\thesubsection\ }{0.3em}{}
+
+% ── Encabezado ──
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{[TÍTULO CORTO DEL INFORME]}}
+\fancyhead[R]{\small\textit{[NOMBRE DEL CURSO]}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\captionsetup{font=small,labelfont=bf}
+\newcommand{\code}[1]{\texttt{#1}}
+
+\hypersetup{colorlinks=true, linkcolor=accent, urlcolor=accent!70!black, citecolor=accent}
+
+\begin{document}
+
+% ── Portada ──
+\begin{titlepage}
+    \begin{tikzpicture}[remember picture, overlay]
+        \fill[ucblue] (current page.north west) rectangle ([yshift=-4cm]current page.north east);
+        \fill[ucgold] ([yshift=-4cm]current page.north west) rectangle ([yshift=-4.15cm]current page.north east);
+        \fill[ucblue] (current page.south west) rectangle ([yshift=2cm]current page.south east);
+        \fill[ucgold] ([yshift=2cm]current page.south west) rectangle ([yshift=2.15cm]current page.south east);
+    \end{tikzpicture}
+    \centering
+    \vspace*{1.2cm}
+    \includegraphics[width=5.5cm]{Logo.png}
+    \vspace{1.5cm}
+
+    {\color{ucblue}\rule{0.6\textwidth}{0.8pt}}
+    \vspace{0.8cm}
+
+    {\LARGE\bfseries\color{ucblue} [TÍTULO DEL INFORME]}
+    \vspace{0.8cm}
+
+    {\Large\color{black} [Subtítulo opcional]}
+    \vspace{0.8cm}
+
+    {\color{ucblue}\rule{0.6\textwidth}{0.8pt}}
+    \vspace{1.3cm}
+
+    {\large\bfseries Integrantes del grupo}
+    \vspace{0.4cm}
+
+    {\normalsize [INTEGRANTE 1]\\[0.15em] [INTEGRANTE 2]\\[0.15em] [INTEGRANTE 3]}
+    \vspace{1.0cm}
+
+    {\normalsize Maestría en Inteligencia Artificial\\[0.2em]
+    [CÓDIGO]: [NOMBRE DEL CURSO]\\[0.2em]
+    Prof. [PROFESOR]\\[0.2em]
+    Pontificia Universidad Católica de Chile}
+    \vfill
+    {\normalsize [FECHA DE ENTREGA]}
+    \vspace{1.5cm}
+\end{titlepage}
+
+\section{Introducción}
+% Descripción breve del contenido y contexto. Cierra anunciando la organización del documento.
+
+\section{Objetivos}
+\subsection{Objetivo general} % ligado al contexto de los datos
+\subsection{Objetivos específicos}
+\begin{enumerate}[leftmargin=2em]
+  \item ...
+\end{enumerate}
+
+\section{Marco teórico}
+% Describe las técnicas de clase y, en especial, la técnica moderna/de investigación
+% (ECOD, Isolation Forest, etc.) que luego se aplica en Resultados.
+
+\section{Resultados}
+\subsection{Descripción de la base y consideraciones éticas}
+\subsection{Análisis exploratorio de datos} % indicadores + tablas + figuras (sin código)
+\subsection{Metodología y preprocesamiento}
+\subsection{Modelos y selección del mejor modelo} % >=2 técnicas de clase + criterios de selección
+\subsection{Evaluación comparativa} % incluye la técnica del marco teórico
+
+\section{Conclusión}
+% Relacionada explícitamente con resultados y objetivos.
+
+\section{Anexos}
+\subsection*{Anexo A. Reproducibilidad}
+\subsection*{Anexo B. Co-evaluación del grupo}
+\begin{table}[H]
+\centering
+\caption{Co-evaluación entre integrantes (escala 1--5).}
+\small
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{@{}p{3.2cm}*{3}{c}p{3.5cm}@{}}
+\toprule
+\textbf{Evalúa $\downarrow$ / a $\rightarrow$} & \textbf{Int.\ 1} & \textbf{Int.\ 2} & \textbf{Int.\ 3} & \textbf{Comentario} \\
+\midrule
+Integrante 1 & & & & \\
+Integrante 2 & & & & \\
+Integrante 3 & & & & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\bibliographystyle{plainnat}
+\bibliography{referencias}
+\end{document}

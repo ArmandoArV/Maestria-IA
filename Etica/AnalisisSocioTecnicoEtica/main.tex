@@ -1,0 +1,220 @@
+\documentclass[11pt, a4paper]{article}
+
+% ── Paquetes ──
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{mathptmx} % Times New Roman (tipografía aprobada por la rúbrica)
+\usepackage[spanish]{babel}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{parskip}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage[natbibapa]{apacite}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{booktabs}
+\usepackage{float}
+
+\geometry{margin=2.5cm}
+\onehalfspacing
+\graphicspath{{figures/}{./}}
+
+% ── Colores ──
+\definecolor{accent}{RGB}{0, 90, 130}
+\definecolor{ucblue}{RGB}{0, 75, 135}
+\definecolor{ucgold}{RGB}{198, 166, 80}
+
+% ── Formato de secciones ──
+\titleformat{\section}{\large\bfseries\color{accent}}{}{0em}{}[\vspace{-0.5em}\color{accent}\rule{\textwidth}{0.4pt}]
+\titleformat{\subsection}{\normalsize\bfseries\color{accent!80!black}}{}{0em}{}
+
+% ── Encabezado ──
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{Análisis Sociotécnico -- Reconocimiento facial}}
+\fancyhead[R]{\small\textit{Ética en IA}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=accent,
+    urlcolor=accent!70!black,
+    citecolor=accent,
+    pdftitle={Análisis Sociotécnico: IA para vigilancia y reconocimiento facial en espacios públicos},
+    pdfauthor={Armando Arredondo Valle; Bastián Hernández Silva; Diego De La Vega Pérez; Eduardo Albornoz Venegas; Julynho Toledo Rios; Sebastián Mancilla Vargas; Thyare Parra Santander},
+    pdfsubject={Ética en Inteligencia Artificial},
+    pdfkeywords={IA, reconocimiento facial, vigilancia, privacidad, sesgo algorítmico, ética}
+}
+
+% ══════════════════════════════════════════════════════════════════════
+\begin{document}
+
+% ── Portada ──
+\begin{titlepage}
+    \begin{tikzpicture}[remember picture, overlay]
+        % Barra superior azul UC
+        \fill[ucblue] (current page.north west) rectangle ([yshift=-4cm]current page.north east);
+        % Línea dorada decorativa
+        \fill[ucgold] ([yshift=-4cm]current page.north west) rectangle ([yshift=-4.15cm]current page.north east);
+        % Barra inferior
+        \fill[ucblue] (current page.south west) rectangle ([yshift=2cm]current page.south east);
+        \fill[ucgold] ([yshift=2cm]current page.south west) rectangle ([yshift=2.15cm]current page.south east);
+    \end{tikzpicture}
+
+    \centering
+    \vspace*{0.6cm}
+
+    \includegraphics[width=4cm]{Logo.png}
+
+    \vspace{0.9cm}
+
+    {\color{ucblue}\rule{0.6\textwidth}{0.8pt}}
+
+    \vspace{0.5cm}
+
+    {\LARGE\bfseries\color{ucblue} Análisis Sociotécnico}
+
+    \vspace{0.6cm}
+
+    {\Large\color{black} IA para vigilancia y reconocimiento\\[0.2em]
+    facial en espacios públicos}
+
+    \vspace{0.5cm}
+
+    {\color{ucblue}\rule{0.6\textwidth}{0.8pt}}
+
+    \vspace{0.8cm}
+
+    {\large\bfseries Integrantes del grupo}
+
+    \vspace{0.3cm}
+
+    {\normalsize Armando Arredondo Valle\\[0.1em]
+    Bastián Segundo Hernández Silva\\[0.1em]
+    Diego Nicolás Raúl De La Vega Pérez\\[0.1em]
+    Eduardo Alberto Albornoz Venegas\\[0.1em]
+    Julynho Merlin Toledo Rios\\[0.1em]
+    Sebastián Enrique Mancilla Vargas\\[0.1em]
+    Thyare Graciela Parra Santander}
+
+    \vspace{0.6cm}
+
+    {\normalsize Maestría en Inteligencia Artificial\\[0.15em]
+    Ética en Inteligencia Artificial\\[0.4em]
+    Pontificia Universidad Católica de Chile}
+
+    \vfill
+
+    {\normalsize 19 de julio de 2026}
+
+    \vspace{0.8cm}
+\end{titlepage}
+
+% ══════════════════════════════════════════════════════════════════════
+\section{Descripción del tema}
+
+El despliegue de sistemas de inteligencia artificial para la vigilancia y el reconocimiento facial en espacios públicos representa un debate central en la ética aplicada a la inteligencia artificial, ya que enfrenta la promesa de mayor seguridad con riesgos sustanciales para la privacidad, la igualdad ante la ley, las libertades civiles y el control democrático sobre el espacio público \citep{schmechel2021, martinez2024}. Por ello, la literatura especializada indica que estos sistemas exigen altos estándares de transparencia, evaluación de impacto, auditoría y control institucional, debido a su capacidad para identificar personas a gran escala y modificar la relación entre ciudadanía y Estado \citep{gimenez2022, silva2020}.
+
+El reconocimiento facial opera mediante la captura de una imagen del rostro, la extracción de rasgos biométricos y su comparación con bases de datos para verificar o identificar a una persona \citep{silva2020}. Sin embargo, el uso del reconocimiento facial en espacios públicos difiere, ética y jurídicamente, de aplicaciones más limitadas, como el desbloqueo de dispositivos, ya que puede aplicarse a grandes volúmenes de personas sin interacción directa ni consentimiento informado \citep{martinez2024, gimenez2022}.
+
+En contextos como la vigilancia urbana, el transporte, las fronteras, los estadios o las protestas, estos sistemas pueden emplearse para la detección en tiempo real, la búsqueda retrospectiva o el seguimiento de individuos de interés \citep{gimenez2022, schmechel2021}. Esta capacidad incrementa el poder de monitoreo institucional y, por ello, exige analizar no solo la precisión técnica, sino también la legitimidad del propósito, la proporcionalidad de la medida y los mecanismos de rendición de cuentas \citep{silva2020, schmechel2021}.
+
+% ══════════════════════════════════════════════════════════════════════
+\section{Problema ético}
+
+Los problemas éticos asociados al reconocimiento facial en espacios públicos pueden organizarse jerárquicamente. La privacidad se sitúa en el centro, ya que constituye la base de los demás problemas: la captura masiva y continua de datos biométricos sin consentimiento posibilita tanto la discriminación algorítmica como la asimetría de poder. Sin la erosión previa de la esfera privada en el espacio público, los demás daños carecerían del mismo alcance y gravedad.
+
+En consecuencia, el principal problema ético radica en que el reconocimiento facial en espacios públicos puede erosionar la privacidad en contextos donde las personas mantienen una expectativa legítima de anonimato, incluso fuera del ámbito doméstico \citep{silva2020, martinez2024}. La vigilancia constante puede ejercer un efecto inhibidor sobre la libertad de expresión, reunión y asociación, especialmente cuando las personas perciben que cada desplazamiento o interacción es observado y registrado por el Estado o por actores privados, lo que vuelve más costosa la participación pública \citep{schmechel2021}.
+
+Además, un segundo problema, derivado del anterior, es el riesgo de sesgo y discriminación algorítmica: dado que la captura masiva alcanza a todos los presentes en el espacio, los errores del sistema, más frecuentes en ciertos grupos demográficos, se traducen en identificaciones erróneas, controles desproporcionados e impactos más severos sobre comunidades vulnerables \citep{schmechel2021, grother2019}. Cuando estos errores se incorporan a procesos policiales o administrativos, la consecuencia ética trasciende lo técnico, pues compromete la igualdad de trato, la presunción de inocencia y la confianza pública, con impactos concretos en la vida de las personas afectadas \citep{gimenez2022, schmechel2021}.
+
+Por otra parte, un tercer problema es la asimetría de poder y la opacidad institucional, que emergen precisamente porque la vigilancia opera sin conocimiento ni control por parte de los vigilados: muchas personas desconocen cuándo están siendo analizadas, qué datos se almacenan, por cuánto tiempo, con qué finalidad y cómo pueden impugnar una identificación errónea \citep{martinez2024, silva2020}. La falta de explicabilidad y de mecanismos efectivos de reclamación debilita la autonomía individual y dificulta la exigencia de responsabilidad ante abusos o errores, dejando a los afectados con menos herramientas para responder \citep{gimenez2022}.
+
+% ══════════════════════════════════════════════════════════════════════
+\section{Actores involucrados}
+
+Los transeúntes y ciudadanos que habitan o circulan por espacios vigilados constituyen los actores directamente expuestos al sistema: generan los datos biométricos que el sistema captura, procesa y almacena, sin haberlo elegido ni poder impedirlo en ausencia de marcos regulatorios que los protejan. Su rol en el ecosistema es involuntario, ya que son la fuente de datos y, simultáneamente, los potenciales afectados por errores o abusos. Se relacionan directamente con el problema de la privacidad, al carecer de control sobre su información biométrica, y con la discriminación algorítmica, dado que las tasas de error diferencial los afectan de manera desigual según su pertenencia a distintos grupos demográficos \citep{schmechel2021, laux2024}.
+
+Las municipalidades, fuerzas policiales y agencias de seguridad actúan como contratantes y operadores del sistema: deciden dónde y con qué finalidad se despliega la tecnología, autorizan el acceso a las bases de datos, definen protocolos de revisión humana y responden por el uso de las identificaciones \citep{gimenez2022, gikay2023}. Por ello, su diferencia respecto a los demás actores radica en que ostentan autoridad legal sobre el espacio público y, por tanto, la capacidad de ampliar o restringir los derechos de los ciudadanos vigilados. Se vinculan especialmente con el problema de la opacidad y la asimetría de poder: son ellos quienes definen los límites de acceso, retención y uso de los datos, y quienes deben establecer, o no, los mecanismos de reclamación e impugnación disponibles para los afectados \citep{martinez2024, silva2020}.
+
+Las empresas que desarrollan los algoritmos, las cámaras y la infraestructura biométrica determinan las características técnicas del sistema antes de que este llegue a los operadores: definen los conjuntos de datos de entrenamiento, los umbrales de decisión, la arquitectura del modelo y las condiciones de desempeño \citep{martinez2024, gikay2023}. Su rol es especialmente relevante respecto al problema del sesgo, ya que las decisiones de diseño, como la composición demográfica de los datos de entrenamiento, tienen consecuencias directas sobre la precisión diferencial del sistema por grupos. Sus equipos de ciencia de datos, desarrollo y cumplimiento normativo son quienes pueden prevenir o perpetuar esas disparidades desde la fase de desarrollo.
+
+Finalmente, organizaciones de derechos civiles, periodistas, académicos y auditores independientes cumplen una función correctiva y fiscalizadora dentro del ecosistema: contribuyen a documentar abusos, evaluar impactos sociales y reducir la asimetría de información entre quienes operan el sistema y quienes son vigilados por él \citep{schmechel2021, laux2024}.
+
+% ══════════════════════════════════════════════════════════════════════
+\section{Postura a desarrollar}
+
+Desde la ética aplicada a la inteligencia artificial, la postura más sólida sostiene que el uso del reconocimiento facial en espacios públicos debe restringirse estrictamente y considerarse aceptable solo en circunstancias excepcionales, claramente delimitadas, con base legal específica y supervisión independiente \citep{gimenez2022, gikay2023}. No basta con que la tecnología sea útil o eficiente; por ello, es imprescindible demostrar que su uso es necesario, proporcionado y menos invasivo que las alternativas existentes \citep{gimenez2022, ploeg2003}.
+
+Desde esta perspectiva, los sistemas de vigilancia biométrica no deben implementarse como infraestructura permanente de monitoreo masivo, porque este modelo normaliza la vigilancia y transforma estructuralmente el ejercicio de derechos en el espacio público \citep{schmechel2021, lyon2021}. Asimismo, si un Estado o institución busca justificar su uso, debe demostrar, con evidencia, que existe una finalidad legítima concreta, que los riesgos han sido evaluados previamente y que existen límites verificables sobre el acceso, la retención, la reutilización y la revisión humana de las decisiones \citep{gikay2023, silva2020}.
+
+Asimismo, toda identificación automatizada con potencial de afectar derechos debe estar sujeta a intervención humana significativa, a la posibilidad de apelación y a auditorías periódicas sobre la precisión, el sesgo, la ciberseguridad y el cumplimiento legal \citep{martinez2024, grother2019}. En ausencia de estas condiciones, la implementación resulta éticamente problemática y debe descartarse, aun cuando se presente como una herramienta de seguridad pública \citep{schmechel2021, ploeg2003}.
+
+% ══════════════════════════════════════════════════════════════════════
+\section{Evidencia técnica necesaria}
+
+Para comprender el origen de los impactos sociales, es necesario entender cómo operan estos sistemas en su funcionamiento técnico. Un sistema de reconocimiento facial en espacios públicos opera típicamente en tres fases: captura, extracción y comparación. En la fase de captura, las cámaras registran imágenes o vídeo continuo de las personas que transitan el espacio, sin que estas deban interactuar con el sistema ni ser conscientes de su activación. En la fase de extracción, un modelo de aprendizaje profundo, generalmente una red neuronal convolucional, detecta el rostro en la imagen y genera una representación matemática de alta dimensionalidad, denominada \textit{embedding} o plantilla biométrica, que codifica los rasgos geométricos únicos del rostro. Por último, en la fase de comparación, esta plantilla se coteja contra una base de datos de referencia: en modalidad de identificación (1:N), el sistema busca la identidad más probable entre todos los registros disponibles, a diferencia de la verificación (1:1), en la que solo se comprueba si una persona coincide con una identidad ya conocida \citep{silva2020, grother2019}.
+
+Estas características técnicas generan impactos sociales intrínsecos al sistema, independientemente del uso que los operadores le den. La operación continua y pasiva implica que todos los presentes en el campo visual son procesados por defecto, lo que transforma el anonimato en excepción y la identificación en norma. El efecto inhibidor sobre la libertad de expresión y de reunión no depende de errores del sistema, sino de su mera existencia y funcionamiento. La búsqueda 1:N en bases de datos extensas amplifica los errores: incluso con una precisión del 99,9~\%, al aplicarse sobre poblaciones de millones de personas el sistema produce un número considerable de coincidencias erróneas en términos absolutos, lo que afecta de manera directa a individuos inocentes \citep{grother2019, schmechel2021}.
+
+Para fundamentar o cuestionar éticamente un sistema de este tipo, se requiere, por tanto, evidencia técnica sobre su desempeño real, más allá de los resultados promocionales del proveedor \citep{grother2019, silva2020}. Esto abarca las tasas de falsos positivos y negativos, la precisión en condiciones reales de iluminación y movimiento, y la comparación del rendimiento entre diferentes grupos demográficos para identificar sesgos sistemáticos \citep{grother2019, schmechel2021}.
+
+También son necesarias evaluaciones de impacto en la protección de datos y de los derechos humanos, ya que la literatura especializada sostiene que los despliegues de alto riesgo deben ir acompañados de evaluaciones sobre la privacidad y los derechos fundamentales \citep{martinez2024, gimenez2022}. Dichas evaluaciones deben detallar la finalidad, la base legal, el tipo de datos tratados, las medidas de minimización, los plazos de retención, los controles de acceso, los protocolos de seguridad y los procedimientos para la eliminación de datos biométricos \citep{silva2020, gikay2023}.
+
+Otra evidencia indispensable es la trazabilidad operativa del sistema, que debe incluir quién lo activó, con qué objetivo, sobre qué base de datos, bajo qué criterios y con qué revisión posterior \citep{gikay2023, schmechel2021}. En ausencia de registros auditables, documentación técnica, controles de acceso y revisión independiente, no es posible verificar la responsabilidad institucional ni corregir abusos de manera efectiva \citep{martinez2024, silva2020}.
+
+% ══════════════════════════════════════════════════════════════════════
+\section{Cierre analítico}
+
+Desde la ética aplicada a la inteligencia artificial, este tema evidencia que la discusión trasciende el funcionamiento tecnológico e involucra el modelo de sociedad que se configura al implementar estas tecnologías en el espacio público \citep{arriagada_nd}. Por lo tanto, la evaluación ética del reconocimiento facial debe integrar la exactitud técnica, la justicia distributiva, la protección de los derechos, la gobernanza institucional y la posibilidad efectiva de un control democrático sobre sistemas de alto impacto social \citep{perez_nd}.
+
+% ══════════════════════════════════════════════════════════════════════
+% SECCIONES PENDIENTES (encabezados; el contenido se agregará después)
+% ══════════════════════════════════════════════════════════════════════
+
+\section{Análisis crítico}
+% [Pendiente: contenido]
+
+\section{Conclusiones}
+% [Pendiente: contenido]
+
+% ══════════════════════════════════════════════════════════════════════
+\bibliographystyle{apacite}
+\bibliography{referencias}
+
+% ══════════════════════════════════════════════════════════════════════
+\section*{Declaración de uso de inteligencia artificial}
+\addcontentsline{toc}{section}{Declaración de uso de inteligencia artificial}
+% [Pendiente: contenido]
+
+\section*{Anexos}
+\addcontentsline{toc}{section}{Anexos}
+
+\subsection*{Anexo A. Co-evaluación del grupo}
+% [Pendiente: completar valoraciones]
+\begin{table}[H]
+\centering
+\caption{Co-evaluación entre integrantes (escala 1--5).}
+\small
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{@{}p{4.8cm}*{7}{c}@{}}
+\toprule
+\textbf{Evalúa $\downarrow$ / a $\rightarrow$} & \textbf{1} & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5} & \textbf{6} & \textbf{7} \\
+\midrule
+1. Armando Arredondo Valle & & & & & & & \\
+2. Bastián Hernández Silva & & & & & & & \\
+3. Diego De La Vega Pérez & & & & & & & \\
+4. Eduardo Albornoz Venegas & & & & & & & \\
+5. Julynho Toledo Rios & & & & & & & \\
+6. Sebastián Mancilla Vargas & & & & & & & \\
+7. Thyare Parra Santander & & & & & & & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{document}

@@ -1,0 +1,245 @@
+\documentclass[12pt, a4paper]{article}
+
+% ── Paquetes ──
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{parskip}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{caption}
+
+\geometry{margin=2.5cm}
+\onehalfspacing
+\graphicspath{{graficos/}{./}}
+
+% ── Colores ──
+\definecolor{accent}{RGB}{0, 90, 130}
+\definecolor{ucblue}{RGB}{0, 75, 135}
+\definecolor{ucgold}{RGB}{198, 166, 80}
+
+% ── Formato de secciones ──
+\titleformat{\section}{\large\bfseries\color{accent}}{}{0em}{}[\vspace{-0.5em}\color{accent}\rule{\textwidth}{0.4pt}]
+\titleformat{\subsection}{\normalsize\bfseries\color{accent!80!black}}{}{0em}{}
+
+% ── Encabezado ──
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{Control 1 -- Semanas 01 y 02}}
+\fancyhead[R]{\small\textit{Recuperación de Información}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=accent,
+    urlcolor=accent!70!black,
+    citecolor=accent,
+    pdftitle={Control 1 - INF3841 Recuperación de Información},
+    pdfauthor={Armando Arredondo Valle},
+    pdfsubject={Recuperación de Información}
+}
+
+% celda vacía en las matrices de resultado
+\newcommand{\vacia}{\phantom{0000}}
+
+% ══════════════════════════════════════════════════════════════════════
+\begin{document}
+
+% ── Portada ──
+\begin{titlepage}
+    \begin{tikzpicture}[remember picture, overlay]
+        \fill[ucblue] (current page.north west) rectangle ([yshift=-4cm]current page.north east);
+        \fill[ucgold] ([yshift=-4cm]current page.north west) rectangle ([yshift=-4.15cm]current page.north east);
+        \fill[ucblue] (current page.south west) rectangle ([yshift=2cm]current page.south east);
+        \fill[ucgold] ([yshift=2cm]current page.south west) rectangle ([yshift=2.15cm]current page.south east);
+    \end{tikzpicture}
+
+    \centering
+    \vspace*{1.2cm}
+
+    \includegraphics[width=5.5cm]{Logo.png}
+
+    \vspace{1.5cm}
+
+    {\color{ucblue}\rule{0.6\textwidth}{0.8pt}}
+
+    \vspace{0.8cm}
+
+    {\LARGE\bfseries\color{ucblue} Control 1}
+
+    \vspace{1.2cm}
+
+    {\Large\color{black} Procesamiento de imágenes, detección de bordes\\[0.2em]
+    y descriptores globales de gris}
+
+    \vspace{0.8cm}
+
+    {\color{ucblue}\rule{0.6\textwidth}{0.8pt}}
+
+    \vspace{1.5cm}
+
+    {\large\bfseries Armando Arredondo Valle}
+
+    \vspace{0.6cm}
+
+    {\normalsize Magíster en Inteligencia Artificial\\[0.2em]
+    INF3841 Recuperación de Información\\[0.2em]
+    Profesor: Juan Manuel Barrios\\[0.5em]
+    Pontificia Universidad Católica de Chile}
+
+    \vfill
+
+    {\normalsize 23 de agosto de 2026}
+
+    \vspace{1.5cm}
+\end{titlepage}
+
+% ══════════════════════════════════════════════════════════════════════
+\section{Semana 01}
+
+\subsection{a) i. Convolución $A * K$}
+
+Las celdas vacías son las posiciones donde la máscara de $3 \times 3$ no queda completamente contenida en la imagen.
+
+\[
+A * K =
+\begin{bmatrix}
+\vacia & \vacia & \vacia & \vacia & \vacia \\
+\vacia & 1200 & -900 & 450 & \vacia \\
+\vacia & -900 & 900 & -900 & \vacia \\
+\vacia & 450 & -900 & 1200 & \vacia \\
+\vacia & \vacia & \vacia & \vacia & \vacia
+\end{bmatrix}
+\]
+
+\subsection{a) ii. Umbral $U_t$ con $t = 1000$}
+
+\[
+U_{1000}(A * K) =
+\begin{bmatrix}
+\vacia & \vacia & \vacia & \vacia & \vacia \\
+\vacia & 255 & 0 & 0 & \vacia \\
+\vacia & 0 & 0 & 0 & \vacia \\
+\vacia & 0 & 0 & 255 & \vacia \\
+\vacia & \vacia & \vacia & \vacia & \vacia
+\end{bmatrix}
+\]
+
+\subsection{a) iii. Filtro de mediana de $3 \times 3$ sobre $A$}
+
+\[
+\text{mediana}_{3\times3}(A) =
+\begin{bmatrix}
+\vacia & \vacia & \vacia & \vacia & \vacia \\
+\vacia & 200 & 50 & 50 & \vacia \\
+\vacia & 50 & 50 & 50 & \vacia \\
+\vacia & 50 & 50 & 200 & \vacia \\
+\vacia & \vacia & \vacia & \vacia & \vacia
+\end{bmatrix}
+\]
+
+\subsection{b) i--iv. Gradiente de la imagen $B$}
+
+\textbf{[Pendiente: ingresar la matriz $B$ de $7 \times 7$ del enunciado en \texttt{main.py}.]}
+
+% ══════════════════════════════════════════════════════════════════════
+\section{Semana 02}
+
+\subsection{i. Histograma global de 256 bins}
+
+Cada bin representa un tono de gris; el bin $k$ cuenta los pixeles de valor $k-1$. Los 253 bins no listados tienen altura 0.
+
+\begin{table}[H]
+\centering
+\caption{Bins distintos de cero del histograma global de $I$.}
+\begin{tabular}{clrr}
+\toprule
+\textbf{Bin} & \textbf{Tono que representa} & \textbf{Pixeles} & \textbf{Altura} \\
+\midrule
+1 & 0 & 22 & 0,3438 \\
+128 & 127 & 18 & 0,2812 \\
+256 & 255 & 24 & 0,3750 \\
+\midrule
+\multicolumn{2}{l}{\textbf{Total}} & \textbf{64} & \textbf{1,0000} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{semana02-i-histograma-global.png}
+\caption{Histograma de grises de $I$ con 256 bins normalizados.}
+\end{figure}
+
+\subsection{ii. Histograma de 256 bins en $2 \times 2$ zonas}
+
+Cada zona cubre $4 \times 4 = 16$ pixeles y su histograma se normaliza por separado. El descriptor completo es la concatenación de los cuatro histogramas: $4 \times 256 = 1024$ dimensiones.
+
+\begin{table}[H]
+\centering
+\caption{Bins distintos de cero de cada zona de $I$.}
+\begin{tabular}{llrr}
+\toprule
+\textbf{Zona} & \textbf{Bin (tono)} & \textbf{Pixeles} & \textbf{Altura} \\
+\midrule
+Fila 1, columna 1 & 1 (0) & 6 & 0,3750 \\
+                  & 128 (127) & 10 & 0,6250 \\
+\midrule
+Fila 1, columna 2 & 1 (0) & 8 & 0,5000 \\
+                  & 256 (255) & 8 & 0,5000 \\
+\midrule
+Fila 2, columna 1 & 1 (0) & 8 & 0,5000 \\
+                  & 256 (255) & 8 & 0,5000 \\
+\midrule
+Fila 2, columna 2 & 128 (127) & 8 & 0,5000 \\
+                  & 256 (255) & 8 & 0,5000 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{semana02-ii-histograma-zonas.png}
+\caption{Histogramas de 256 bins de cada zona de $I$, con la misma escala vertical.}
+\end{figure}
+
+\subsection{iii. HOG en $2 \times 2$ zonas}
+
+Gradiente por Sobel calculado dentro de cada zona (división estricta), pixeles con magnitud mayor o igual a 200, ángulos llevados al rango $(-90^\circ, 90^\circ]$ y acumulados en 9 bins de $20^\circ$ cada uno.
+
+\begin{table}[H]
+\centering
+\caption{Ángulos de los pixeles de borde de cada zona y bin en que se acumulan.}
+\begin{tabular}{llcl}
+\toprule
+\textbf{Zona} & \textbf{Ángulos de borde} & \textbf{Pixeles} & \textbf{Bin resultante} \\
+\midrule
+Fila 1, columna 1 & $-45^\circ$ (tres veces) & 3 & bin 3: $(-50^\circ, -30^\circ]$, altura 1,00 \\
+Fila 1, columna 2 & ninguno & 0 & histograma nulo \\
+Fila 2, columna 1 & $90^\circ$ (cuatro veces) & 4 & bin 9: $(70^\circ, 90^\circ]$, altura 1,00 \\
+Fila 2, columna 2 & $0^\circ$ (cuatro veces) & 4 & bin 5: $(-10^\circ, 10^\circ]$, altura 1,00 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{semana02-iii-hog-zonas.png}
+\caption{HOG de cada zona de $I$: 9 bins que cubren el rango $(-90^\circ, 90^\circ]$.}
+\end{figure}
+
+En la zona de la fila 1, columna 2 (tablero de ajedrez de periodo 2) las respuestas de Sobel se cancelan y la magnitud del gradiente es 0 en los cuatro pixeles interiores, por lo que ningún pixel alcanza el umbral y el histograma queda nulo.
+
+\end{document}

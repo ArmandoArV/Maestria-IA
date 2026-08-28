@@ -23,7 +23,8 @@ from Functions.validateConvolution import validateConvolution
 
 # si es True guarda los gráficos como PNG en graficos/; si es False los muestra en pantalla
 GUARDAR_GRAFICOS = True
-CARPETA_GRAFICOS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "graficos")
+# los gráficos se guardan dentro de Informe/ para que el .tex los encuentre
+CARPETA_GRAFICOS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Informe", "graficos")
 
 
 def archivo(nombre):
@@ -71,11 +72,16 @@ print(padToSize(threshold(A_K, t=1000), (A.rows, A.cols)))
 print("\na) iii.  mediana 3x3 de A:")
 print(padToSize(medianFilter(A, 3), (A.rows, A.cols)))
 
-# =====================================================================
 # SEMANA 01 - b)  imagen B de 7x7
-# =====================================================================
-# TODO: copiar la matriz B de 7x7 del enunciado
-B = None
+
+B = Matrix(np.array([[255, 255, 255, 255, 127, 127, 127],
+                 [255, 255, 255, 127, 127, 127, 127],
+                 [255, 255, 127, 127, 127, 127, 127],
+                 [255, 127, 127, 127, 127, 127,   0],
+                 [127, 127, 127, 127, 127,   0,   0],
+                 [127, 127, 127, 127,   0,   0,   0],
+                 [127, 127, 127,   0,   0,   0,   0]], dtype=np.float32))
+
 
 if B is not None:
     B = B if isinstance(B, Matrix) else Matrix(B)
@@ -94,7 +100,7 @@ if B is not None:
     print(padToSize(gradientAngle(Bx, By), (B.rows, B.cols)).display(decimal_places=1))
 
 # SEMANA 02 - imagen I de 8x8
-I = np.array([[127, 127, 127, 127,   0, 255,   0, 255],
+I = Matrix(np.array([[127, 127, 127, 127,   0, 255,   0, 255],
                  [  0, 127, 127, 127, 255,   0, 255,   0],
                  [  0,   0, 127, 127,   0, 255,   0, 255],
                  [  0,   0,   0, 127, 255,   0, 255,   0],
@@ -102,7 +108,7 @@ I = np.array([[127, 127, 127, 127,   0, 255,   0, 255],
                  [255, 255, 255, 255, 127, 127, 255, 255],
                  [  0,   0,   0,   0, 127, 127, 255, 255],
                  [  0,   0,   0,   0, 127, 127, 255, 255]], 
-dtype=np.float32)
+dtype=np.float32))
 
 if I is not None:
     I = I if isinstance(I, Matrix) else Matrix(I)

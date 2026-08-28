@@ -7,6 +7,7 @@ Expert skills for the Magíster en IA (PUC Chile). Each folder is a self-contain
 - `aprendizaje-supervisado` — EPG4001
 - `aprendizaje-no-supervisado` — EPG4002
 - `fundamentos-matematicos-ia` — IMT3850
+- `recuperacion-informacion` — INF3841
 - `pdf-reader` — utility for extracting PDF text
 
 ## Install on another computer

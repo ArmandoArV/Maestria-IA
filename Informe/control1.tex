@@ -1,0 +1,432 @@
+\documentclass[12pt, a4paper]{article}
+
+% ── Paquetes ──
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{parskip}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage[numbers]{natbib}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{caption}
+
+\geometry{margin=2.5cm}
+\onehalfspacing
+\graphicspath{{../graficos/}{./}}
+
+% ── Colores ──
+\definecolor{accent}{RGB}{0, 90, 130}
+\definecolor{ucblue}{RGB}{0, 75, 135}
+\definecolor{ucgold}{RGB}{198, 166, 80}
+
+% ── Formato de secciones ──
+\titleformat{\section}{\large\bfseries\color{accent}}{}{0em}{}[\vspace{-0.5em}\color{accent}\rule{\textwidth}{0.4pt}]
+\titleformat{\subsection}{\normalsize\bfseries\color{accent!80!black}}{}{0em}{}
+
+% ── Encabezado ──
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{Control 1 -- Semanas 01 y 02}}
+\fancyhead[R]{\small\textit{Recuperación de Información}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=accent,
+    urlcolor=accent!70!black,
+    citecolor=accent,
+    pdftitle={Control 1 - INF3841 Recuperación de Información},
+    pdfauthor={Armando Arredondo Valle},
+    pdfsubject={Recuperación de Información},
+    pdfkeywords={convolución, Sobel, gradiente, histograma, HOG}
+}
+
+% celda vacía en las matrices de resultado
+\newcommand{\vacia}{\phantom{0000}}
+
+% ══════════════════════════════════════════════════════════════════════
+\begin{document}
+
+% ── Portada ──
+\begin{titlepage}
+    \begin{tikzpicture}[remember picture, overlay]
+        \fill[ucblue] (current page.north west) rectangle ([yshift=-4cm]current page.north east);
+        \fill[ucgold] ([yshift=-4cm]current page.north west) rectangle ([yshift=-4.15cm]current page.north east);
+        \fill[ucblue] (current page.south west) rectangle ([yshift=2cm]current page.south east);
+        \fill[ucgold] ([yshift=2cm]current page.south west) rectangle ([yshift=2.15cm]current page.south east);
+    \end{tikzpicture}
+
+    \centering
+    \vspace*{1.2cm}
+
+    \includegraphics[width=5.5cm]{Logo.png}
+
+    \vspace{1.5cm}
+
+    {\color{ucblue}\rule{0.6\textwidth}{0.8pt}}
+
+    \vspace{0.8cm}
+
+    {\LARGE\bfseries\color{ucblue} Control 1}
+
+    \vspace{1.2cm}
+
+    {\Large\color{black} Procesamiento de imágenes, detección de bordes\\[0.2em]
+    y descriptores globales de gris}
+
+    \vspace{0.8cm}
+
+    {\color{ucblue}\rule{0.6\textwidth}{0.8pt}}
+
+    \vspace{1.5cm}
+
+    {\large\bfseries Armando Arredondo Valle}
+
+    \vspace{0.6cm}
+
+    {\normalsize Magíster en Inteligencia Artificial\\[0.2em]
+    INF3841 Recuperación de Información\\[0.2em]
+    Profesor: Juan Manuel Barrios\\[0.5em]
+    Pontificia Universidad Católica de Chile}
+
+    \vfill
+
+    {\normalsize 23 de agosto de 2026}
+
+    \vspace{1.5cm}
+\end{titlepage}
+
+% ══════════════════════════════════════════════════════════════════════
+\section{Introducción}
+
+Este documento presenta el desarrollo del Control 1 del curso INF3841, correspondiente a las semanas 01 y 02. Los ejercicios cubren los tres tipos de operadores de procesamiento de imágenes vistos en clase (punto a punto, lineales y no lineales), el cálculo del gradiente mediante los filtros de Sobel, y dos descriptores globales para imágenes en escala de gris: el histograma de intensidades y el histograma de orientaciones del gradiente (HOG).
+
+En todos los casos se sigue la convención del enunciado: las operaciones de vecindad (convolución y filtro de mediana) se calculan únicamente donde la máscara está completamente contenida en la imagen, por lo que las matrices de resultado quedan con el borde vacío. Las matrices intermedias se representan con profundidad 32f, es decir, admiten valores negativos y no acotados a $[0, 255]$.
+
+El documento se organiza siguiendo el orden del enunciado: la sección \ref{sec:semana01} desarrolla los ejercicios de la semana 01 sobre las imágenes $A$ y $B$, la sección \ref{sec:semana02} los de la semana 02 sobre la imagen $I$, y el anexo detalla el procedimiento de verificación de los cálculos.
+
+% ══════════════════════════════════════════════════════════════════════
+\section{Semana 01}
+\label{sec:semana01}
+
+\subsection{a) Operadores sobre la imagen $A$}
+
+La imagen de entrada es la siguiente matriz de $5 \times 5$ pixeles en escala de gris de 8 bits:
+
+\[
+A =
+\begin{bmatrix}
+200 & 50 & 200 & 50 & 50 \\
+50 & 200 & 50 & 50 & 50 \\
+200 & 50 & 200 & 50 & 200 \\
+50 & 50 & 50 & 200 & 50 \\
+50 & 50 & 200 & 50 & 200
+\end{bmatrix}
+\qquad
+K =
+\begin{bmatrix}
+1 & -2 & 1 \\
+-2 & 4 & -2 \\
+1 & -2 & 1
+\end{bmatrix}
+\]
+
+\subsubsection*{i. Convolución $A * K$}
+
+La convolución bidimensional discreta corresponde a la suma ponderada de una ventana de pixeles por el kernel reflejado en $180^\circ$:
+
+\begin{equation}
+(A * K)(x,y) = \sum_{i}\sum_{j} K(i,j)\, A(x-i,\, y-j)
+\end{equation}
+
+En este caso el kernel $K$ es simétrico respecto de su centro, de modo que reflejarlo no altera el resultado y la convolución coincide con la correlación. Aplicando la máscara solo donde queda completamente contenida en la imagen se obtienen $3 \times 3$ valores definidos:
+
+\[
+A * K =
+\begin{bmatrix}
+\vacia & \vacia & \vacia & \vacia & \vacia \\
+\vacia & 1200 & -900 & 450 & \vacia \\
+\vacia & -900 & 900 & -900 & \vacia \\
+\vacia & 450 & -900 & 1200 & \vacia \\
+\vacia & \vacia & \vacia & \vacia & \vacia
+\end{bmatrix}
+\]
+
+Las celdas vacías corresponden a las posiciones del borde, donde la máscara de $3 \times 3$ sobresale de la imagen. Los valores llegan a $\pm 1200$, muy por fuera del rango de 8 bits, lo que justifica que el enunciado pida una profundidad de 32f para la imagen resultante.
+
+\subsubsection*{ii. Umbral $U_t$ con $t = 1000$}
+
+La función umbral opera pixel a pixel sobre el valor absoluto del resultado anterior:
+
+\begin{equation}
+U_t(x) =
+\begin{cases}
+255 & \text{si } |x| \geq t \\
+0 & \text{en otro caso}
+\end{cases}
+\end{equation}
+
+Se toma el valor absoluto porque un borde con respuesta negativa es igualmente un borde. Con $t = 1000$ solo dos posiciones superan el umbral, las dos que valen $1200$:
+
+\[
+U_{1000}(A * K) =
+\begin{bmatrix}
+\vacia & \vacia & \vacia & \vacia & \vacia \\
+\vacia & 255 & 0 & 0 & \vacia \\
+\vacia & 0 & 0 & 0 & \vacia \\
+\vacia & 0 & 0 & 255 & \vacia \\
+\vacia & \vacia & \vacia & \vacia & \vacia
+\end{bmatrix}
+\]
+
+\subsubsection*{iii. Filtro de mediana de $3 \times 3$}
+
+A diferencia de la convolución, el filtro de mediana es un operador no lineal: se desliza una ventana de $3 \times 3$ y el nuevo valor del pixel central es la mediana de los nueve valores de la ventana, es decir, el quinto valor al ordenarlos de menor a mayor. Manteniendo la misma restricción de borde:
+
+\[
+\text{mediana}_{3\times3}(A) =
+\begin{bmatrix}
+\vacia & \vacia & \vacia & \vacia & \vacia \\
+\vacia & 200 & 50 & 50 & \vacia \\
+\vacia & 50 & 50 & 50 & \vacia \\
+\vacia & 50 & 50 & 200 & \vacia \\
+\vacia & \vacia & \vacia & \vacia & \vacia
+\end{bmatrix}
+\]
+
+El resultado ilustra dos propiedades del filtro: siempre selecciona un valor de gris que ya existía en la imagen (aquí solo aparecen 50 y 200, nunca un promedio intermedio) y tiende a producir regiones planas de un mismo tono, eliminando los pixeles aislados del patrón original.
+
+\subsection{b) Gradiente de la imagen $B$}
+
+\textbf{[Pendiente: ingresar la matriz $B$ de $7 \times 7$ del enunciado en \texttt{main.py} para generar los resultados de esta subsección.]}
+
+El procedimiento es el siguiente. Las derivadas parciales se obtienen por convolución con los filtros de Sobel,
+
+\[
+S_x =
+\begin{bmatrix}
+-1 & 0 & 1 \\
+-2 & 0 & 2 \\
+-1 & 0 & 1
+\end{bmatrix}
+\qquad
+S_y =
+\begin{bmatrix}
+-1 & -2 & -1 \\
+0 & 0 & 0 \\
+1 & 2 & 1
+\end{bmatrix}
+\]
+
+de donde $B_x = B * S_x$ y $B_y = B * S_y$. A diferencia del kernel $K$ del ejercicio anterior, $S_x$ y $S_y$ \emph{no} son simétricos, por lo que aquí sí es necesario reflejar el kernel: usar la correlación en lugar de la convolución invierte el signo de todas las respuestas y, en consecuencia, rota los ángulos del gradiente en $180^\circ$.
+
+A partir de ambas derivadas se calculan la magnitud y la orientación del gradiente en cada pixel:
+
+\begin{equation}
+|\nabla B| = \sqrt{B_x^2 + B_y^2}
+\qquad
+\theta = \operatorname{atan2}(B_y,\, B_x)
+\end{equation}
+
+La magnitud queda indefinida en el borde, donde no se puede calcular el gradiente. El ángulo, además, queda indefinido en los pixeles donde la magnitud es cero, ya que un punto sin variación de intensidad no tiene una dirección asociada.
+
+% ══════════════════════════════════════════════════════════════════════
+\section{Semana 02}
+\label{sec:semana02}
+
+Los tres ejercicios de esta sección se calculan sobre la misma imagen $I$ de $8 \times 8$ pixeles:
+
+\[
+I =
+\begin{bmatrix}
+127 & 127 & 127 & 127 & 0 & 255 & 0 & 255 \\
+0 & 127 & 127 & 127 & 255 & 0 & 255 & 0 \\
+0 & 0 & 127 & 127 & 0 & 255 & 0 & 255 \\
+0 & 0 & 0 & 127 & 255 & 0 & 255 & 0 \\
+255 & 255 & 255 & 255 & 127 & 127 & 255 & 255 \\
+255 & 255 & 255 & 255 & 127 & 127 & 255 & 255 \\
+0 & 0 & 0 & 0 & 127 & 127 & 255 & 255 \\
+0 & 0 & 0 & 0 & 127 & 127 & 255 & 255
+\end{bmatrix}
+\]
+
+La imagen contiene solo tres tonos de gris (0, 127 y 255) distribuidos en cuatro regiones de $4 \times 4$ con estructuras distintas: un borde diagonal, un patrón de tablero de ajedrez, franjas horizontales y bloques verticales. Esa composición explica los resultados de las tres preguntas.
+
+\subsection{i. Histograma global de 256 bins}
+
+Con 256 bins cada bin representa exactamente un tono de gris, de modo que el bin $k$ cuenta los pixeles cuyo valor es $k-1$. La normalización divide cada contador por el total de $8 \times 8 = 64$ pixeles, de manera que las alturas suman 1 y se leen como la probabilidad de que un pixel tomado al azar tenga ese tono.
+
+Como la imagen solo usa tres tonos, únicamente tres bins son distintos de cero (Tabla \ref{tab:hist-global} y Fig. \ref{fig:hist-global}); los 253 bins restantes tienen altura 0.
+
+\begin{table}[H]
+\centering
+\caption{Bins distintos de cero del histograma global de $I$.}
+\label{tab:hist-global}
+\begin{tabular}{clrr}
+\toprule
+\textbf{Bin} & \textbf{Tono que representa} & \textbf{Pixeles} & \textbf{Altura} \\
+\midrule
+1 & 0 & 22 & 0,3438 \\
+128 & 127 & 18 & 0,2812 \\
+256 & 255 & 24 & 0,3750 \\
+\midrule
+\multicolumn{2}{l}{\textbf{Total}} & \textbf{64} & \textbf{1,0000} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{semana02-i-histograma-global.png}
+\caption{Histograma de grises de $I$ con 256 bins normalizados. El eje horizontal recorre los 256 tonos posibles y la altura de cada barra es la fracción de pixeles con ese tono.}
+\label{fig:hist-global}
+\end{figure}
+
+\subsection{ii. Histograma de 256 bins en $2 \times 2$ zonas}
+
+Un histograma global descarta por completo la ubicación espacial de los pixeles: dos imágenes con los mismos tonos distribuidos de forma distinta producen el mismo vector. Para conservar parte de esa información se divide la imagen en zonas y se calcula un histograma independiente por zona, normalizando \emph{dentro} de cada una.
+
+Con una división de $2 \times 2$ cada zona es un bloque de $4 \times 4 = 16$ pixeles, y el descriptor completo es la concatenación de los cuatro histogramas, es decir, un vector de $4 \times 256 = 1024$ dimensiones. Los bins distintos de cero se resumen en la Tabla \ref{tab:hist-zonas} y se grafican en la Fig. \ref{fig:hist-zonas}.
+
+\begin{table}[H]
+\centering
+\caption{Bins distintos de cero de cada zona de $I$. Cada zona cubre 16 pixeles y su histograma suma 1 por separado.}
+\label{tab:hist-zonas}
+\begin{tabular}{llrr}
+\toprule
+\textbf{Zona} & \textbf{Bin (tono)} & \textbf{Pixeles} & \textbf{Altura} \\
+\midrule
+Fila 1, columna 1 & 1 (0) & 6 & 0,3750 \\
+                  & 128 (127) & 10 & 0,6250 \\
+\midrule
+Fila 1, columna 2 & 1 (0) & 8 & 0,5000 \\
+                  & 256 (255) & 8 & 0,5000 \\
+\midrule
+Fila 2, columna 1 & 1 (0) & 8 & 0,5000 \\
+                  & 256 (255) & 8 & 0,5000 \\
+\midrule
+Fila 2, columna 2 & 128 (127) & 8 & 0,5000 \\
+                  & 256 (255) & 8 & 0,5000 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{semana02-ii-histograma-zonas.png}
+\caption{Histogramas de 256 bins de cada una de las cuatro zonas de $I$, con la misma escala vertical para poder compararlos.}
+\label{fig:hist-zonas}
+\end{figure}
+
+Se aprecia el efecto buscado: las zonas de la fila 1 columna 2 y de la fila 2 columna 1 tienen histogramas idénticos aunque sus contenidos son muy distintos (un tablero de ajedrez y un par de franjas horizontales), lo que muestra que el histograma por zonas conserva información espacial gruesa pero sigue siendo ciego a la estructura dentro de cada zona.
+
+\subsection{iii. HOG en $2 \times 2$ zonas}
+
+El descriptor HOG resume las orientaciones del gradiente en los pixeles de borde. El procedimiento aplicado es:
+
+\begin{enumerate}[leftmargin=*]
+    \item calcular $I_x = I * S_x$ e $I_y = I * S_y$ con los filtros de Sobel;
+    \item calcular la magnitud $\sqrt{I_x^2 + I_y^2}$ y conservar solo los pixeles con magnitud mayor o igual a 200;
+    \item obtener el ángulo $\operatorname{atan2}(I_y, I_x)$ en grados y llevarlo al rango $(-90^\circ, 90^\circ]$, sumando $180^\circ$ si es menor o igual a $-90^\circ$ y restando $180^\circ$ si es mayor a $90^\circ$;
+    \item acumular esos ángulos en un histograma de 9 bins por zona, cada bin cubriendo $20^\circ$, y normalizar.
+\end{enumerate}
+
+La división de zonas es estricta: el gradiente de cada zona se calcula únicamente con pixeles de esa zona, sin usar los vecinos. Como cada zona mide $4 \times 4$ y la máscara de Sobel es de $3 \times 3$, en cada zona quedan a lo más $2 \times 2 = 4$ pixeles con gradiente definido.
+
+\begin{table}[H]
+\centering
+\caption{Ángulos de los pixeles de borde de cada zona y bin en que se acumulan.}
+\label{tab:hog}
+\begin{tabular}{llcl}
+\toprule
+\textbf{Zona} & \textbf{Ángulos de borde} & \textbf{Pixeles} & \textbf{Bin resultante} \\
+\midrule
+Fila 1, columna 1 & $-45^\circ$ (tres veces) & 3 & bin 3: $(-50^\circ, -30^\circ]$, altura 1,00 \\
+Fila 1, columna 2 & ninguno & 0 & histograma nulo \\
+Fila 2, columna 1 & $90^\circ$ (cuatro veces) & 4 & bin 9: $(70^\circ, 90^\circ]$, altura 1,00 \\
+Fila 2, columna 2 & $0^\circ$ (cuatro veces) & 4 & bin 5: $(-10^\circ, 10^\circ]$, altura 1,00 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{semana02-iii-hog-zonas.png}
+\caption{HOG de cada zona de $I$: 9 bins que cubren el rango $(-90^\circ, 90^\circ]$ en tramos de $20^\circ$.}
+\label{fig:hog}
+\end{figure}
+
+Cada resultado es coherente con la estructura de su zona. La zona superior izquierda contiene un borde diagonal, cuyo gradiente es perpendicular a él y cae en el bin de $-45^\circ$. La zona inferior izquierda tiene franjas horizontales, que producen un gradiente vertical de $90^\circ$. La zona inferior derecha tiene bloques verticales, con gradiente horizontal de $0^\circ$.
+
+El caso interesante es la zona superior derecha, cuyo histograma queda \textbf{completamente nulo}. Esa zona es un tablero de ajedrez de periodo 2 alternando 0 y 255:
+
+\[
+\begin{bmatrix}
+0 & 255 & 0 & 255 \\
+255 & 0 & 255 & 0 \\
+0 & 255 & 0 & 255 \\
+255 & 0 & 255 & 0
+\end{bmatrix}
+\longrightarrow
+I_x =
+\begin{bmatrix}
+0 & 0 \\
+0 & 0
+\end{bmatrix}
+\quad
+I_y =
+\begin{bmatrix}
+0 & 0 \\
+0 & 0
+\end{bmatrix}
+\]
+
+Sobre este patrón los pesos positivos y negativos de la máscara de Sobel se cancelan exactamente en los cuatro pixeles interiores, de manera que la magnitud del gradiente es 0 en toda la zona y ningún pixel alcanza el umbral de 200. Es decir, la zona con mayor contraste visual de la imagen es también la única sin bordes detectados: el operador de Sobel actúa como un filtro pasa-bajos en la dirección perpendicular a la derivada y es ciego a las frecuencias espaciales del orden del tamaño de la máscara. Es un buen recordatorio de que conviene suavizar la imagen antes de derivar, tal como se hace en los ejemplos de clase con un filtro gaussiano previo.
+
+% ══════════════════════════════════════════════════════════════════════
+\section{Conclusión}
+
+El desarrollo cubre los tres tipos de operadores de procesamiento de imágenes. Los operadores punto a punto (el umbral $U_t$) actúan sobre cada pixel de forma independiente; los lineales (la convolución con $K$ y con los filtros de Sobel) calculan una suma ponderada de una vecindad; y los no lineales (el filtro de mediana) seleccionan un valor de la vecindad sin promediar, lo que preserva los tonos originales.
+
+Sobre los descriptores, el ejercicio de la semana 02 muestra con claridad el compromiso entre invarianza e información espacial. El histograma global describe la distribución de tonos con un vector compacto pero ignora completamente dónde está cada pixel; la división en zonas recupera parte de esa ubicación a costa de multiplicar la dimensionalidad del descriptor; y el HOG describe la forma en lugar del brillo, resumiendo la orientación dominante de los bordes de cada zona.
+
+Finalmente, el caso del tablero de ajedrez confirma que la elección de los parámetros (tamaño de la máscara, umbral de magnitud y tamaño de las zonas) determina qué estructuras el descriptor es capaz de representar, y que un descriptor puede resultar completamente ciego frente a un patrón que para el ojo humano es evidente.
+
+% ══════════════════════════════════════════════════════════════════════
+\section*{Anexo A. Verificación de los cálculos}
+\addcontentsline{toc}{section}{Anexo A}
+
+Todos los resultados fueron desarrollados a mano y contrastados con una implementación propia en Python, organizada en un módulo de clases y funciones que reproduce paso a paso los métodos vistos en clase. La convolución se implementó de forma explícita (suma ponderada sobre la ventana, con el kernel reflejado) y se contrastó con \texttt{cv2.filter2D()} de OpenCV, recortando el margen del kernel para comparar solo la región válida, y con \texttt{scipy.signal.convolve2d()} en modo \texttt{valid}. El filtro de mediana se contrastó con \texttt{scipy.signal.medfilt2d()}.
+
+El entorno de ejecución es Python 3.14 con NumPy 2.5.2, OpenCV 5.0.0, SciPy 1.18.1 y Matplotlib 3.11.1; las versiones exactas están fijadas en el archivo \texttt{requirements.txt} del curso.
+
+% ── Bibliografía ──
+\begin{thebibliography}{9}
+
+\bibitem{gonzalez2008}
+Gonzalez, R. C. y Woods, R. E. (2008). \textit{Digital Image Processing}, tercera edición. Pearson Prentice Hall. Capítulos 3 y 10.
+
+\bibitem{barrios2026a}
+Barrios, J. M. (2026). \textit{Slides 01.2 -- Procesamiento de imágenes}. INF3841 Recuperación de Información, Magíster en Inteligencia Artificial, Pontificia Universidad Católica de Chile.
+
+\bibitem{barrios2026b}
+Barrios, J. M. (2026). \textit{Slides 02.1 -- Detección de bordes}. INF3841 Recuperación de Información, Magíster en Inteligencia Artificial, Pontificia Universidad Católica de Chile.
+
+\bibitem{barrios2026c}
+Barrios, J. M. (2026). \textit{Slides 02.2 y 02.3 -- Descriptores globales gris}. INF3841 Recuperación de Información, Magíster en Inteligencia Artificial, Pontificia Universidad Católica de Chile.
+
+\end{thebibliography}
+
+\end{document}

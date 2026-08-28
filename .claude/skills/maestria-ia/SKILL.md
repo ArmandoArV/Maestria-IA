@@ -4,12 +4,15 @@ description: >
   Umbrella index/router for @ArmandoArV's Magíster en Inteligencia Artificial (PUC Chile,
   Maestria-IA repo), spanning ALL courses: Aprendizaje Supervisado (EPG4001), Aprendizaje No
   Supervisado (EPG4002), Fundamentos Matemáticos de IA (IMT3850), Bases de Datos, Introducción a
-  Data Science (IMT3860), and Ética en IA. Use for broad or cross-course questions about the
-  maestría, when unsure which course a topic belongs to, for a program overview, or when working in
-  the Maestria-IA repo without naming a course. Routes to the per-course skills for depth and
-  directly covers courses lacking one (Bases de Datos, Data Science, Ética). Also trigger on
-  maestría, magíster IA, MIA, EPG4001, EPG4002, IMT3850, IMT3860, álgebra relacional, SQL, ciencia
-  de datos, inferencia estadística, EDA, ética de la IA, sesgo algorítmico, XAI, SHAP, LIME.
+  Data Science (IMT3860), Ética en IA, and Recuperación de Información (INF3841). Use for broad or
+  cross-course questions about the maestría, when unsure which course a topic belongs to, for a
+  program overview, or when working in the Maestria-IA repo without naming a course. Routes to the
+  per-course skills for depth and directly covers courses lacking one (Bases de Datos, Data Science,
+  Ética). Also trigger on maestría, magíster IA, MIA, EPG4001, EPG4002,
+  IMT3850, IMT3860, INF3841, álgebra relacional, SQL, ciencia de datos, inferencia estadística, EDA,
+  ética de la IA, sesgo algorítmico, XAI, SHAP, LIME, recuperación de información, information
+  retrieval, descriptores de imágenes, procesamiento de imágenes, convolución, detección de bordes,
+  Sobel, Canny, histograma, HOG, EHD, búsqueda por similitud, OpenCV.
   Respond in Spanish when the user writes in Spanish.
 ---
 
@@ -37,6 +40,7 @@ single-course question, the specific skill below usually triggers on its own —
 | Bases de Datos | — | A. L. Reyes | — | 📄 cubierta aquí (§1) |
 | Introducción a Data Science | IMT3860 | A. Cataldo | — | 📄 cubierta aquí (§2) |
 | Ética en IA | — | — | — | 📄 cubierta aquí (§3) |
+| Recuperación de Información | INF3841 | J. M. Barrios | `recuperacion-informacion` (global) | ✅ completa (Sesiones 01–03) |
 
 > Repo: `D:\Maestria-IA`. Dedicated skills marked "(repo)" live under `.copilot/skills/` and load
 > when working inside the repository; "(global)" skills load anywhere.
@@ -54,6 +58,9 @@ single-course question, the specific skill below usually triggers on its own —
   EDA → **IMT3860 / Data Science** (§2).
 - Sesgo algorítmico, justicia, responsabilidad, sistemas sociotécnicos, explicabilidad (SHAP/LIME)
   → **Ética en IA** (§3).
+- Recuperación de información (IR/RIM), descriptores de contenido, procesamiento de imágenes,
+  convolución/kernels, detección de bordes (Sobel, Canny, LoG/DoG), histogramas/OMD, HOG/EHD,
+  búsqueda por similitud k-NN, OpenCV → **INF3841** (`recuperacion-informacion`, resumen en §4).
 
 ---
 
@@ -153,10 +160,38 @@ decisiones de modelos opacos. Herramientas usadas en laboratorio (Python):
 
 ---
 
+## 4. Recuperación de Información (INF3841, Prof. Juan Manuel Barrios)
+
+> **Skill dedicada:** `recuperacion-informacion`. Cárgala para cualquier pregunta de INF3841 —
+> tiene los apuntes por clase, las recetas de OpenCV y el formato de las evaluaciones.
+
+Curso de **Recuperación de Información (multimedia)**: cómo representar, indexar y buscar contenido
+(imágenes, audio, texto) por *similitud*, no por metadatos. 9 sesiones (03-ago a 05-oct 2026) en 3
+partes: **(1) Descriptores de contenido** (imágenes, audio, texto, 5 sesiones), **(2) Búsquedas por
+similitud** (índices multidimensionales, evaluación de efectividad, alta dimensionalidad, 2 sesiones),
+**(3) Descriptores avanzados** (deep features de imágenes y texto, 2 sesiones). Trabajo en **Python +
+OpenCV** (`cv2`, imágenes como matrices NumPy; también C++ con `cv::Mat`).
+
+- **Evaluación:** individual, sin copia ni IA generativa. NF = (C1 + C2 + T1 + T2)/4, aprueba con
+  NF ≥ 4.0. **Tareas** (T1, T2) en Python — solo `.py`, hay evaluador automático con hasta +10 décimas
+  bonus. **Controles** (C1, C2) en papel/Excel/PDF (no se programa). Entregas parciales cada domingo
+  con feedback; no se aceptan atrasos.
+- **Temas cubiertos:** fundamentos de IR (relevancia, ranking, IR vs. BD, RIM), procesamiento de
+  imágenes (operadores punto a punto, histograma, ecualización, Otsu, convolución, blur gaussiano,
+  mediana, morfología), detección de bordes (Prewitt, Sobel, Scharr, Laplaciano, LoG, DoG, Canny),
+  descriptores globales de gris (vector de intensidades, OMD, histogramas por zona, spatial pyramid,
+  HOG, EHD, descriptor basado en Canny), color (sistema visual humano, cubo RGB, histogramas 3×1D vs
+  3D, división regular de bins, CIE LAB, EMD) y búsqueda por similitud k-NN.
+- **Bibliografía:** Gonzalez & Woods, *Digital Image Processing* (2008); Baeza-Yates & Ribeiro-Neto,
+  *Modern Information Retrieval* (2011); Knees et al., *Music Similarity and Retrieval* (2016);
+  Chollet, *Deep Learning with Python* 2ª ed. (2021).
+
+---
+
 ## Notas del programa
 
 - **Institución:** Pontificia Universidad Católica de Chile, Magíster en Inteligencia Artificial.
 - **Idioma:** cursos en español; responder en español salvo que el usuario escriba en inglés.
 - **Utilidad:** `pdf-reader` (global) extrae texto de PDFs y `md_to_pdf.py` (repo) genera PDFs desde Markdown.
-- **Para profundizar** en EPG4001/EPG4002/IMT3850, deja que su skill dedicada (global) tome el control;
-  este índice solo enruta y cubre los cursos sin skill propia.
+- **Para profundizar** en EPG4001/EPG4002/IMT3850/INF3841, deja que su skill dedicada (global) tome el
+  control; este índice solo enruta y cubre los cursos sin skill propia.

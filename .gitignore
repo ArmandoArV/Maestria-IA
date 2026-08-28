@@ -1,4 +1,5 @@
 # Large data files
+datasets/
 *.csv
 
 # Binary geospatial files

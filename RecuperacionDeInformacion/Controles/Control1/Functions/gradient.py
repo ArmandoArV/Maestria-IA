@@ -5,11 +5,16 @@ from Functions.validateConvolution import validateConvolution
 
 
 def gradient(image, kernel_x=SOBEL_X, kernel_y=SOBEL_Y):
-    """Devuelve (Ix, Iy) como numpy arrays, sólo en la zona válida."""
+    """Devuelve (Ix, Iy) como numpy arrays, sólo en la zona válida.
+
+    Usa correlación (reflect_kernel=False), que es lo que hace cv2.Sobel() y
+    lo que usa el código del curso. Con convolución (kernel volteado) el signo
+    de Ix e Iy se invierte y el ángulo del gradiente sale girado en 180°.
+    """
     ix = np.asarray(validateConvolution(np.asarray(image, dtype=np.float32), kernel_x,
-                                        reflect_kernel=True))
+                                        reflect_kernel=False))
     iy = np.asarray(validateConvolution(np.asarray(image, dtype=np.float32), kernel_y,
-                                        reflect_kernel=True))
+                                        reflect_kernel=False))
     return ix, iy
 
 

@@ -1,0 +1,229 @@
+INF3841 - RECUPERACION DE INFORMACION - TAREA 1
+Alumno:   Armando Arredondo Valle
+Profesor: Juan Manuel Barrios
+Magister en Inteligencia Artificial - Pontificia Universidad Catolica de Chile
+
+
+1. SISTEMA OPERATIVO Y ENTORNO
+--------------------------------------------------------------------------------
+
+  Sistema operativo : macOS 26.4 (build 25E246)
+  Arquitectura      : arm64 (Apple M5 Pro)
+  Python            : 3.14.7
+  Librerias         : opencv-contrib-python 5.0.0
+                      numpy 2.5.2
+                      scipy 1.18.1
+
+5. SALIDA DE evaluarTarea1.py EN MI COMPUTADORA
+--------------------------------------------------------------------------------
+
+  [parte1] 1600 imágenes en datasets/dataset_a/r
+  [parte1] descriptor: ColorZoneDescriptor(8704 dimensiones)
+    procesadas 200/1600 imágenes...
+    procesadas 400/1600 imágenes...
+    procesadas 600/1600 imágenes...
+    procesadas 800/1600 imágenes...
+    procesadas 1000/1600 imágenes...
+    procesadas 1200/1600 imágenes...
+    procesadas 1400/1600 imágenes...
+    procesadas 1600/1600 imágenes...
+  [parte1] DescriptorIndex(1600 imágenes x 8704 dimensiones) en 4.4 s
+  [parte1] descriptores guardados en: evaluacion_tarea1/dataset_a/descriptores_r
+  [parte2] R: DescriptorIndex(1600 imágenes x 8704 dimensiones)
+  [parte2] 2000 imágenes en datasets/dataset_a/q
+    procesadas 200/2000 imágenes...
+    procesadas 400/2000 imágenes...
+    procesadas 600/2000 imágenes...
+    procesadas 800/2000 imágenes...
+    procesadas 1000/2000 imágenes...
+    procesadas 1200/2000 imágenes...
+    procesadas 1400/2000 imágenes...
+    procesadas 1600/2000 imágenes...
+    procesadas 1800/2000 imágenes...
+    procesadas 2000/2000 imágenes...
+  [parte2] Q: DescriptorIndex(2000 imágenes x 8704 dimensiones) en 7.1 s
+  [parte2] búsqueda terminada en 14.4 s
+  [parte2] resultados escritos en: evaluacion_tarea1/dataset_a/resultados.dataset_a.txt
+  [parte1] 1600 imágenes en datasets/dataset_b/r
+  [parte1] descriptor: ColorZoneDescriptor(8704 dimensiones)
+    procesadas 200/1600 imágenes...
+    procesadas 400/1600 imágenes...
+    procesadas 600/1600 imágenes...
+    procesadas 800/1600 imágenes...
+    procesadas 1000/1600 imágenes...
+    procesadas 1200/1600 imágenes...
+    procesadas 1400/1600 imágenes...
+    procesadas 1600/1600 imágenes...
+  [parte1] DescriptorIndex(1600 imágenes x 8704 dimensiones) en 4.5 s
+  [parte1] descriptores guardados en: evaluacion_tarea1/dataset_b/descriptores_r
+  [parte2] R: DescriptorIndex(1600 imágenes x 8704 dimensiones)
+  [parte2] 2000 imágenes en datasets/dataset_b/q
+    procesadas 200/2000 imágenes...
+    procesadas 400/2000 imágenes...
+    procesadas 600/2000 imágenes...
+    procesadas 800/2000 imágenes...
+    procesadas 1000/2000 imágenes...
+    procesadas 1200/2000 imágenes...
+    procesadas 1400/2000 imágenes...
+    procesadas 1600/2000 imágenes...
+    procesadas 1800/2000 imágenes...
+    procesadas 2000/2000 imágenes...
+  [parte2] Q: DescriptorIndex(2000 imágenes x 8704 dimensiones) en 7.2 s
+  [parte2] búsqueda terminada en 14.7 s
+  [parte2] resultados escritos en: evaluacion_tarea1/dataset_b/resultados.dataset_b.txt
+  [parte1] 1600 imágenes en datasets/dataset_c/r
+  [parte1] descriptor: ColorZoneDescriptor(8704 dimensiones)
+    procesadas 200/1600 imágenes...
+    procesadas 400/1600 imágenes...
+    procesadas 600/1600 imágenes...
+    procesadas 800/1600 imágenes...
+    procesadas 1000/1600 imágenes...
+    procesadas 1200/1600 imágenes...
+    procesadas 1400/1600 imágenes...
+    procesadas 1600/1600 imágenes...
+  [parte1] DescriptorIndex(1600 imágenes x 8704 dimensiones) en 4.4 s
+  [parte1] descriptores guardados en: evaluacion_tarea1/dataset_c/descriptores_r
+  [parte2] R: DescriptorIndex(1600 imágenes x 8704 dimensiones)
+  [parte2] 2000 imágenes en datasets/dataset_c/q
+    procesadas 200/2000 imágenes...
+    procesadas 400/2000 imágenes...
+    procesadas 600/2000 imágenes...
+    procesadas 800/2000 imágenes...
+    procesadas 1000/2000 imágenes...
+    procesadas 1200/2000 imágenes...
+    procesadas 1400/2000 imágenes...
+    procesadas 1600/2000 imágenes...
+    procesadas 1800/2000 imágenes...
+    procesadas 2000/2000 imágenes...
+  [parte2] Q: DescriptorIndex(2000 imágenes x 8704 dimensiones) en 7.2 s
+  [parte2] búsqueda terminada en 14.8 s
+  [parte2] resultados escritos en: evaluacion_tarea1/dataset_c/resultados.dataset_c.txt
+  INF3841 - Recuperación de Información
+  Evaluación Tarea 1 2026
+  
+  ------- EVALUACION EN dataset_a -------
+    2000 archivos en datasets/dataset_a/q
+    1600 archivos en datasets/dataset_a/r
+  
+  Ejecutando:
+  [30-08-2026 19:44:34] /Users/armandoav/Maestria-IA/RecuperacionDeInformacion/.venv/bin/python tarea1-parte1.py datasets/dataset_a/r evaluacion_tarea1/dataset_a/descriptores_r
+  
+    2000 archivos en datasets/dataset_a/q
+    1600 archivos en datasets/dataset_a/r
+  
+  Ejecutando:
+  [30-08-2026 19:44:40] /Users/armandoav/Maestria-IA/RecuperacionDeInformacion/.venv/bin/python tarea1-parte2.py datasets/dataset_a/q evaluacion_tarea1/dataset_a/descriptores_r evaluacion_tarea1/dataset_a/resultados.dataset_a.txt
+  
+    2000 archivos en datasets/dataset_a/q
+    1600 archivos en datasets/dataset_a/r
+  
+  ---------
+  Comparando evaluacion_tarea1/dataset_a/resultados.dataset_a.txt con respuestas correctas en datasets/dataset_a/gt.txt
+  2000 detecciones en evaluacion_tarea1/dataset_a/resultados.dataset_a.txt
+  
+  Resultado general en dataset_a:
+    De 1600 casos, 1248 se detectaron correctamente (78%)
+        GAMMA       = 289 correctas (72%)
+        CROP        = 299 correctas (75%)
+        FRAMED      = 262 correctas (66%)
+        FLIP        = 398 correctas (100%)
+  
+    Las 5 respuestas incorrectas de menor distancia:
+       q0853.jpg	r0532.jpg	8.3816	(según GT es r1317.jpg) (tipo=GAMMA)
+       q1380.jpg	r1565.jpg	8.5668	(según GT es -)
+       q0569.jpg	r0754.jpg	9.2727	(según GT es r1074.jpg) (tipo=GAMMA)
+       q1626.jpg	r1529.jpg	9.3176	(según GT es r1254.jpg) (tipo=CROP)
+       q1505.jpg	r0439.jpg	9.3423	(según GT es -)
+  
+    Mejor F1-score con umbral  19.273
+      respuestas_evaluadas=1561 correctas=1133 incorrectas=428
+      precision=0.726  recall=0.708  F1=0.717
+    tiempo: 27.9 segundos
+  
+  ------- EVALUACION EN dataset_b -------
+    2000 archivos en datasets/dataset_b/q
+    1600 archivos en datasets/dataset_b/r
+  
+  Ejecutando:
+  [30-08-2026 19:45:02] /Users/armandoav/Maestria-IA/RecuperacionDeInformacion/.venv/bin/python tarea1-parte1.py datasets/dataset_b/r evaluacion_tarea1/dataset_b/descriptores_r
+  
+    2000 archivos en datasets/dataset_b/q
+    1600 archivos en datasets/dataset_b/r
+  
+  Ejecutando:
+  [30-08-2026 19:45:07] /Users/armandoav/Maestria-IA/RecuperacionDeInformacion/.venv/bin/python tarea1-parte2.py datasets/dataset_b/q evaluacion_tarea1/dataset_b/descriptores_r evaluacion_tarea1/dataset_b/resultados.dataset_b.txt
+  
+    2000 archivos en datasets/dataset_b/q
+    1600 archivos en datasets/dataset_b/r
+  
+  ---------
+  Comparando evaluacion_tarea1/dataset_b/resultados.dataset_b.txt con respuestas correctas en datasets/dataset_b/gt.txt
+  2000 detecciones en evaluacion_tarea1/dataset_b/resultados.dataset_b.txt
+  
+  Resultado general en dataset_b:
+    De 1600 casos, 1265 se detectaron correctamente (79%)
+        GAMMA       = 285 correctas (71%)
+        CROP        = 313 correctas (78%)
+        FRAMED      = 269 correctas (67%)
+        FLIP        = 398 correctas (100%)
+  
+    Las 5 respuestas incorrectas de menor distancia:
+       q0493.jpg	r1123.jpg	7.7695	(según GT es r0648.jpg) (tipo=GAMMA)
+       q1065.jpg	r0679.jpg	8.0894	(según GT es -)
+       q1389.jpg	r0679.jpg	8.2362	(según GT es r0514.jpg) (tipo=GAMMA)
+       q0309.jpg	r0679.jpg	8.2943	(según GT es r1502.jpg) (tipo=GAMMA)
+       q0809.jpg	r0679.jpg	8.8262	(según GT es r1162.jpg) (tipo=GAMMA)
+  
+    Mejor F1-score con umbral  20.461
+      respuestas_evaluadas=1729 correctas=1202 incorrectas=527
+      precision=0.695  recall=0.751  F1=0.722
+    tiempo: 27.8 segundos
+  
+  ------- EVALUACION EN dataset_c -------
+    2000 archivos en datasets/dataset_c/q
+    1600 archivos en datasets/dataset_c/r
+  
+  Ejecutando:
+  [30-08-2026 19:45:30] /Users/armandoav/Maestria-IA/RecuperacionDeInformacion/.venv/bin/python tarea1-parte1.py datasets/dataset_c/r evaluacion_tarea1/dataset_c/descriptores_r
+  
+    2000 archivos en datasets/dataset_c/q
+    1600 archivos en datasets/dataset_c/r
+  
+  Ejecutando:
+  [30-08-2026 19:45:35] /Users/armandoav/Maestria-IA/RecuperacionDeInformacion/.venv/bin/python tarea1-parte2.py datasets/dataset_c/q evaluacion_tarea1/dataset_c/descriptores_r evaluacion_tarea1/dataset_c/resultados.dataset_c.txt
+  
+    2000 archivos en datasets/dataset_c/q
+    1600 archivos en datasets/dataset_c/r
+  
+  ---------
+  Comparando evaluacion_tarea1/dataset_c/resultados.dataset_c.txt con respuestas correctas en datasets/dataset_c/gt.txt
+  2000 detecciones en evaluacion_tarea1/dataset_c/resultados.dataset_c.txt
+  
+  Resultado general en dataset_c:
+    De 1600 casos, 1256 se detectaron correctamente (78%)
+        GAMMA       = 300 correctas (75%)
+        CROP        = 277 correctas (69%)
+        FRAMED      = 280 correctas (70%)
+        FLIP        = 399 correctas (100%)
+  
+    Las 5 respuestas incorrectas de menor distancia:
+       q1214.jpg	r0219.jpg	8.6942	(según GT es r1098.jpg) (tipo=CROP)
+       q1293.jpg	r0219.jpg	8.7164	(según GT es r1209.jpg) (tipo=GAMMA)
+       q0533.jpg	r1081.jpg	9.4946	(según GT es r0115.jpg) (tipo=GAMMA)
+       q0489.jpg	r1081.jpg	9.6429	(según GT es r1371.jpg) (tipo=GAMMA)
+       q1805.jpg	r1349.jpg	9.8049	(según GT es -)
+  
+    Mejor F1-score con umbral  18.925
+      respuestas_evaluadas=1497 correctas=1104 incorrectas=393
+      precision=0.737  recall=0.690  F1=0.713
+    tiempo: 27.7 segundos
+  
+  --------------------------------------------
+  Resultado evaluación:
+      F1-score en dataset_a: 0.717   (tiempo=27.9 segundos)
+      F1-score en dataset_b: 0.722   (tiempo=27.8 segundos)
+      F1-score en dataset_c: 0.713   (tiempo=27.7 segundos)
+      ==> Promedio F1-score: 0.717
+  
+      ==> Nota tarea 1 = 6.6
+

@@ -157,3 +157,24 @@ def plotHOGByZones(zones, title="HOG por zonas", range180=False, zonesX=2, zones
         ax.set_ylim(0, max(1e-9, maximo) * 1.28)
     fig.suptitle(title, fontsize=11, color=TEXT_PRIMARY, x=0.01, ha="left")
     _cerrar(fig, savePath)
+
+
+def plotChannelHistograms(histograms, title="Histograma por canal", bins=4,
+                          maxValue=256, savePath=None):
+    """Los tres histogramas 3x1D (R, G, B) uno al lado del otro.
+
+    `histograms` es lo que devuelve channelHistograms(): [histR, histG, histB].
+    Cada canal conserva su color propio porque aquí la serie SÍ significa algo.
+    """
+    colores = {"R": "#c0392b", "G": "#27865a", "B": "#2a78d6"}
+    maximo = max(np.asarray(h).max() for h in histograms)
+    fig, axes = plt.subplots(1, 3, figsize=(13.5, 3.2), squeeze=False)
+    for eje, nombre, histograma in zip(axes[0], "RGB", histograms):
+        _dibujar_histograma(eje, histograma, _ticks_grises(bins, maxValue),
+                            "canal {} ({} bins)".format(nombre, bins),
+                            "valor en que comienza el bin")
+        for barra in eje.patches:
+            barra.set_facecolor(colores[nombre])
+        eje.set_ylim(0, max(1e-9, maximo) * 1.28)
+    fig.suptitle(title, fontsize=11, color=TEXT_PRIMARY, x=0.01, ha="left")
+    _cerrar(fig, savePath)

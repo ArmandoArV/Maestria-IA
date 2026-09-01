@@ -1,0 +1,123 @@
+% ─────────────────────────────────────────────────────────────────────────
+% Informe Taller 1 — INF3820 Procesamiento de Lenguaje Natural
+% Word Embeddings (Word2Vec) y Modelado de Tópicos
+% Formato: carátula + 2 páginas. Preguntas y respuestas tal cual el notebook.
+% El cuerpo se genera con build_informe.py -> cuerpo_generado.tex
+% Compilar: tectonic informe_taller1_w2v.tex
+% ─────────────────────────────────────────────────────────────────────────
+\documentclass[10pt, a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{parskip}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{multicol}
+\usepackage{microtype}
+
+\geometry{top=1.5cm, bottom=1.5cm, left=1.5cm, right=1.5cm, headsep=0.4cm}
+\linespread{0.97}\selectfont
+\setlength{\parskip}{0.45em}
+\setlength{\columnsep}{0.7cm}
+
+% ── Colores UC ──
+\definecolor{accent}{RGB}{0, 90, 130}
+\definecolor{ucblue}{RGB}{0, 75, 135}
+\definecolor{ucgold}{RGB}{198, 166, 80}
+
+% ── Formato de secciones ──
+\titleformat{\section}{\normalsize\bfseries\color{accent}}{}{0em}{}[\vspace{-0.4em}\color{accent}\rule{\columnwidth}{0.4pt}]
+\titlespacing*{\section}{0pt}{0.9em}{0.5em}
+
+% ── Encabezado ──
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{Taller 1: Word Embeddings y Modelado de Tópicos}}
+\fancyhead[R]{\small\textit{INF3820}}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\pregunta}[2]{%
+  \vspace{0.15em}%
+  {\color{accent}\textbf{Pregunta #1.}}\ \textit{#2}\par\vspace{0.15em}}
+
+\begin{document}
+
+% ── Carátula ──
+\begin{titlepage}
+    \thispagestyle{empty}
+    \begin{tikzpicture}[remember picture, overlay]
+        \fill[ucblue] (current page.north west) rectangle ([yshift=-4cm]current page.north east);
+        \fill[ucgold] ([yshift=-4cm]current page.north west) rectangle ([yshift=-4.15cm]current page.north east);
+        \fill[ucblue] (current page.south west) rectangle ([yshift=2cm]current page.south east);
+        \fill[ucgold] ([yshift=2cm]current page.south west) rectangle ([yshift=2.15cm]current page.south east);
+    \end{tikzpicture}
+
+    \centering
+    \singlespacing
+    \vspace*{1.6cm}
+
+    \includegraphics[width=4.8cm]{Logo.png}
+
+    \vspace{1.4cm}
+
+    {\color{ucblue}\rule{0.6\textwidth}{0.8pt}}
+
+    \vspace{0.9cm}
+
+    {\LARGE\bfseries\color{ucblue} Taller 1\\[0.35em]
+    Word Embeddings (Word2Vec)\\[0.25em] y Modelado de Tópicos}
+
+    \vspace{1.0cm}
+
+    {\large\color{black} CBOW frente a Skip-gram, analogías vectoriales,\\[0.3em]
+    proyección PCA y agrupamiento de documentos\\[0.3em]
+    sobre un corpus de economía chilena}
+
+    \vspace{0.9cm}
+
+    {\color{ucblue}\rule{0.6\textwidth}{0.8pt}}
+
+    \vspace{1.3cm}
+
+    {\large\bfseries Integrantes del grupo}
+
+    \vspace{0.5cm}
+
+    {\normalsize Julynho Merlin Toledo Rios\\[0.2em]
+    Armando Arredondo Valle\\[0.2em]
+    Thyare Graciela Parra Santander}
+
+    \vspace{1.2cm}
+
+    {\normalsize Maestría en Inteligencia Artificial\\[0.25em]
+    INF3820 -- Procesamiento de Lenguaje Natural\\[0.25em]
+    Prof. Rodrigo Andres Sandoval Urrich\\[0.25em]
+    Pontificia Universidad Católica de Chile}
+
+    \vfill
+
+    {\normalsize Agosto de 2026}
+
+    \vspace{1.5cm}
+\end{titlepage}
+
+\setcounter{page}{1}
+\begin{multicols}{2}
+\input{cuerpo_generado.tex}
+\end{multicols}
+
+\newpage
+\begin{multicols}{2}
+\input{cuerpo_reflexion.tex}
+\end{multicols}
+
+\end{document}

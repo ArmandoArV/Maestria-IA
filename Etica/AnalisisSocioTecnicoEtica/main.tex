@@ -13,7 +13,7 @@
 \usepackage{titlesec}
 \usepackage{fancyhdr}
 \usepackage{xcolor}
-\usepackage[natbibapa]{apacite}
+\usepackage[numbers]{natbib}
 \usepackage{graphicx}
 \usepackage{tikz}
 \usepackage{booktabs}
@@ -124,10 +124,37 @@ El reconocimiento facial opera mediante la captura de una imagen del rostro, la 
 
 En contextos como la vigilancia urbana, el transporte, las fronteras, los estadios o las protestas, estos sistemas pueden emplearse para la detección en tiempo real, la búsqueda retrospectiva o el seguimiento de individuos de interés \citep{gimenez2022, schmechel2021}. Esta capacidad incrementa el poder de monitoreo institucional y, por ello, exige analizar no solo la precisión técnica, sino también la legitimidad del propósito, la proporcionalidad de la medida y los mecanismos de rendición de cuentas \citep{silva2020, schmechel2021}.
 
+Por ejemplo, el proyecto guiado por Buolamwini \citep{buolamwini2018}, cuyo conjunto de datos se titula \textit{Pilot Parliaments Benchmark} (PPB), reúne las imágenes de más de mil parlamentarios en seis países. Como se puede ver en la Figura~\ref{fig:ppb}, existen diferencias razonablemente significativas entre las personas de distintos países al agruparlas por fototipo de Fitzpatrick, un esquema de clasificación del tono de piel humana.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{ppb_fitzpatrick.png}
+    \caption{Imágenes de muestra del PPB ordenadas por fototipo de Fitzpatrick.}
+    \label{fig:ppb}
+\end{figure}
+
+Cuando Buolamwini probó este conjunto de imágenes con las API de distintos modelos de reconocimiento facial, los resultados fueron categóricos (Tabla~\ref{tab:gendershades}).
+
+\begin{table}[H]
+    \centering
+    \includegraphics[width=\textwidth]{gender_shades_metrics.png}
+    \caption{Evaluación de Valor Predictivo Positivo (PPV), Tasa de Verdaderos Positivos (TPR), Falsos Positivos (FPR) y Porcentaje de Error (1-TPR) de tres modelos clasificadores, desagregada por mujeres de piel oscura (DF), hombres de piel oscura (DM), mujeres de piel clara (LF) y hombres de piel clara (LM) \citep{buolamwini2018}.}
+    \label{tab:gendershades}
+\end{table}
+
+Como se puede apreciar, los tres modelos presentaron las mayores tasas de error en mujeres de piel oscura, con una proporción variable entre el 20{,}8~\% y el 34{,}7~\% de tasa de error. Es este tipo de sesgo el que ejemplifica el siguiente problema ético.
+
 % ══════════════════════════════════════════════════════════════════════
 \section{Problema ético}
 
-Los problemas éticos asociados al reconocimiento facial en espacios públicos pueden organizarse jerárquicamente. La privacidad se sitúa en el centro, ya que constituye la base de los demás problemas: la captura masiva y continua de datos biométricos sin consentimiento posibilita tanto la discriminación algorítmica como la asimetría de poder. Sin la erosión previa de la esfera privada en el espacio público, los demás daños carecerían del mismo alcance y gravedad.
+Los problemas éticos asociados al reconocimiento facial en espacios públicos pueden organizarse jerárquicamente. La privacidad se sitúa en el centro, ya que constituye la base de los demás problemas: la captura masiva y continua de datos biométricos sin consentimiento posibilita tanto la discriminación algorítmica como la asimetría de poder. Sin la erosión previa de la esfera privada en el espacio público, los demás daños carecerían del mismo alcance y gravedad. La Figura~\ref{fig:dilema} resume las principales variables del dilema ético planteado y sus interrelaciones.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{dilema_etico_resumen.png}
+    \caption{Resumen de las principales variables sobre el dilema ético planteado.}
+    \label{fig:dilema}
+\end{figure}
 
 En consecuencia, el principal problema ético radica en que el reconocimiento facial en espacios públicos puede erosionar la privacidad en contextos donde las personas mantienen una expectativa legítima de anonimato, incluso fuera del ámbito doméstico \citep{silva2020, martinez2024}. La vigilancia constante puede ejercer un efecto inhibidor sobre la libertad de expresión, reunión y asociación, especialmente cuando las personas perciben que cada desplazamiento o interacción es observado y registrado por el Estado o por actores privados, lo que vuelve más costosa la participación pública \citep{schmechel2021}.
 
@@ -178,13 +205,33 @@ Desde la ética aplicada a la inteligencia artificial, este tema evidencia que l
 % ══════════════════════════════════════════════════════════════════════
 
 \section{Análisis crítico}
-% [Pendiente: contenido]
+
+La reciente promulgación de la Ley 21.719 \citep{ley21719}, que regula la protección y el tratamiento de los datos personales en Chile, establece un marco normativo que impacta directamente el despliegue de tecnologías de reconocimiento facial en espacios públicos. Esta legislación, cuya entrada en vigencia está programada para el 1 de diciembre de 2026, introduce restricciones significativas al tratamiento de datos biométricos y configura un nuevo escenario para la implementación de sistemas de vigilancia automatizada. El análisis de sus disposiciones permite comprender cómo el ordenamiento jurídico chileno se posiciona frente a los desafíos éticos y sociotécnicos que plantea el reconocimiento facial, estableciendo tanto salvaguardas para la protección de derechos fundamentales como excepciones que podrían facilitar su uso en contextos específicos.
+
+Un elemento central de la Ley 21.719 es la clasificación explícita de los datos biométricos como ``datos personales sensibles'' (artículo 2°, letra g). Esta categorización no es meramente nominal: implica que las plantillas faciales generadas por los sistemas de reconocimiento facial ---que constituyen representaciones matemáticas únicas derivadas de las características físicas de los individuos--- quedan sujetas a un régimen de protección reforzado. A diferencia de los datos personales ordinarios, cuyo tratamiento puede fundamentarse en diversas bases de licitud, los datos sensibles requieren justificaciones más estrictas y controles más rigurosos (artículo 14). Esta disposición refleja el reconocimiento legislativo de que la información biométrica posee un carácter particularmente invasivo, ya que permite la identificación inequívoca de las personas y, potencialmente, el rastreo continuo de sus movimientos y comportamientos en el espacio público.
+
+El artículo 8° bis de la Ley 21.719 introduce disposiciones específicas sobre decisiones individuales automatizadas que resultan particularmente relevantes para el reconocimiento facial. Este artículo establece el derecho de las personas ``a oponerse y a no ser objeto de decisiones basadas en el tratamiento automatizado de sus datos personales, incluida la elaboración de perfiles, que produzca efectos jurídicos en él o le afecte significativamente''. Dado que los sistemas de reconocimiento facial operan mediante algoritmos que procesan automáticamente características biométricas para identificar, verificar o clasificar individuos, estas tecnologías quedan comprendidas dentro del ámbito de aplicación de este artículo. La norma exige que, incluso cuando el tratamiento automatizado sea lícito por otras razones, el responsable debe ``adoptar las medidas necesarias para asegurar los derechos y libertades del titular'', incluyendo específicamente ``el derecho a la información y transparencia, el derecho a obtener una explicación, a la intervención humana, a expresar su punto de vista y a solicitar la revisión de la decisión''. Estas exigencias plantean desafíos técnicos y operativos significativos para los sistemas de reconocimiento facial, particularmente en lo que respecta a la explicabilidad de los algoritmos y la posibilidad de revisión humana efectiva de las identificaciones automatizadas.
+
+La Ley 21.719 establece como regla general que el tratamiento de datos personales requiere el consentimiento del titular (artículo 12), el cual debe ser ``libre, informado y específico en cuanto a su finalidad'', manifestado ``de manera inequívoca, mediante una declaración verbal, escrita o expresada a través de un medio electrónico equivalente''. Para datos sensibles como los biométricos, el artículo 14 eleva este estándar al exigir que el consentimiento sea ``expreso y escrito'', salvo excepciones taxativamente señaladas. Esta exigencia plantea una dificultad estructural para el reconocimiento facial en espacios públicos: resulta prácticamente imposible obtener consentimiento expreso y escrito de todas las personas cuyos rostros son capturados por cámaras de vigilancia. El simple tránsito por un espacio público no puede interpretarse como una manifestación inequívoca de voluntad para ceder datos biométricos, especialmente cuando el sujeto puede no estar consciente de la presencia de sistemas de reconocimiento facial o de las finalidades específicas del tratamiento. Esta tensión entre el requisito de consentimiento y la naturaleza ubicua del reconocimiento facial en espacios abiertos sugiere que, bajo este marco normativo, tales sistemas sólo podrían justificarse mediante las excepciones al consentimiento contempladas en la ley.
+
+En síntesis, la Ley 21.719 configura un marco regulatorio que, en principio, restringe significativamente el despliegue indiscriminado de reconocimiento facial en espacios públicos, especialmente por parte de actores privados. La clasificación de datos biométricos como sensibles, los principios de finalidad y proporcionalidad, las exigencias de consentimiento expreso y escrito, y las salvaguardas específicas para decisiones automatizadas, construyen un sistema de protección que prioriza los derechos a la privacidad, la protección de datos personales y la autonomía individual por sobre la conveniencia tecnológica. Sin embargo, las excepciones contempladas para organismos públicos y actividades de interés público introducen zonas de tensión normativa que podrían traducirse, en la práctica, en implementaciones problemáticas de vigilancia facial estatal. La efectividad de este marco regulatorio dependerá, en última instancia, de la capacidad de la Agencia de Protección de Datos Personales para interpretar restrictivamente las excepciones, exigir estándares rigurosos de necesidad y proporcionalidad, y garantizar mecanismos efectivos de supervisión y rendición de cuentas. Desde una perspectiva ética, la ley representa un avance al reconocer explícitamente los riesgos del tratamiento automatizado de datos biométricos, pero su implementación requerirá vigilancia ciudadana activa para evitar que las excepciones se conviertan en regla y que la protección formal de derechos no se traduzca en protección efectiva.
 
 \section{Conclusiones}
-% [Pendiente: contenido]
+
+El reconocimiento facial en espacios públicos representa un caso paradigmático de las tensiones entre innovación tecnológica, seguridad pública y derechos fundamentales. El presente análisis ha evidenciado que esta tecnología no es neutral: porta consigo sesgos algorítmicos que perpetúan discriminación racial y de género, vulnera el anonimato y la privacidad individual en espacios tradicionalmente considerados públicos, y habilita formas de vigilancia masiva que erosionan los fundamentos de una sociedad democrática.
+
+Desde una perspectiva sociotécnica, resulta ingenuo concebir el reconocimiento facial como una mera herramienta de identificación. Los estudios revisados demuestran que los sistemas comerciales exhiben tasas de error significativamente superiores al identificar personas de piel oscura y mujeres, lo que se traduce en riesgos concretos de identificaciones erróneas, detenciones arbitrarias y perpetuación de patrones históricos de discriminación. La arquitectura misma de estos sistemas---que requiere captura masiva, almacenamiento centralizado y procesamiento automatizado de datos biométricos---configura una infraestructura de vigilancia que trasciende los propósitos declarados de seguridad y posibilita formas de control social incompatibles con los valores democráticos.
+
+Éticamente, la postura desarrollada en este trabajo se fundamenta en tres pilares: el reconocimiento del anonimato en espacios públicos como derecho fundamental, el rechazo a la instrumentalización de las personas mediante el procesamiento no consensuado de sus características biométricas, y la preocupación por el efecto disuasivo (chilling effect) que la vigilancia facial ejerce sobre el ejercicio de libertades como la manifestación, la asociación y la expresión. La tecnología de reconocimiento facial no solo identifica; también modifica comportamientos al generar autocensura anticipada, transformando el espacio público en un espacio vigilado donde los individuos internalizan la mirada panóptica del Estado o de actores corporativos.
+
+El análisis jurídico de la Ley 21.719 revela que el marco regulatorio chileno, si bien avanzado en comparación con la legislación precedente, establece salvaguardas robustas pero no absolutas. La clasificación de datos biométricos como sensibles, los principios de finalidad y proporcionalidad, las exigencias de consentimiento expreso y escrito, y las garantías específicas para decisiones automatizadas, constituyen barreras normativas significativas para el despliegue indiscriminado de reconocimiento facial. Sin embargo, las excepciones contempladas para organismos públicos que invoquen ``interés legítimo'' o ``función pública'' introducen fisuras que podrían ser explotadas para implementar vigilancia facial estatal sin el escrutinio adecuado.
+
+En consecuencia, se concluye que el reconocimiento facial en espacios públicos---tal como se encuentra configurado tecnológicamente y regulado jurídicamente en Chile---resulta éticamente problemático por default. Su implementación solo podría justificarse bajo condiciones extraordinariamente restrictivas: contextos de amenaza inmediata y concreta a la seguridad pública, proporcionalidad estricta entre el fin buscado y los medios empleados, limitación temporal explícita, supervisión independiente y transparente, y garantías efectivas de no discriminación algorítmica. Estas condiciones raramente se cumplen en los despliegues reales documentados en la literatura.
+
+La efectividad de este marco regulatorio dependerá críticamente de tres factores: (1) la capacidad institucional y la independencia de la Agencia de Protección de Datos Personales para interpretar restrictivamente las excepciones y sancionar incumplimientos; (2) la existencia de mecanismos de rendición de cuentas y escrutinio público sobre los sistemas de reconocimiento facial desplegados por organismos estatales; y (3) la vigilancia ciudadana activa para evitar la normalización de la vigilancia facial como práctica cotidiana. Sin estas condiciones, el reconocimiento facial corre el riesgo de convertirse en una tecnología de control social que erosiona, de manera silenciosa pero sistemática, los fundamentos de la privacidad, la autonomía individual y la deliberación democrática en el espacio público.
 
 % ══════════════════════════════════════════════════════════════════════
-\bibliographystyle{apacite}
+\bibliographystyle{apalike}
 \bibliography{referencias}
 
 % ══════════════════════════════════════════════════════════════════════
@@ -194,27 +241,4 @@ Desde la ética aplicada a la inteligencia artificial, este tema evidencia que l
 
 \section*{Anexos}
 \addcontentsline{toc}{section}{Anexos}
-
-\subsection*{Anexo A. Co-evaluación del grupo}
-% [Pendiente: completar valoraciones]
-\begin{table}[H]
-\centering
-\caption{Co-evaluación entre integrantes (escala 1--5).}
-\small
-\renewcommand{\arraystretch}{1.4}
-\begin{tabular}{@{}p{4.8cm}*{7}{c}@{}}
-\toprule
-\textbf{Evalúa $\downarrow$ / a $\rightarrow$} & \textbf{1} & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5} & \textbf{6} & \textbf{7} \\
-\midrule
-1. Armando Arredondo Valle & & & & & & & \\
-2. Bastián Hernández Silva & & & & & & & \\
-3. Diego De La Vega Pérez & & & & & & & \\
-4. Eduardo Albornoz Venegas & & & & & & & \\
-5. Julynho Toledo Rios & & & & & & & \\
-6. Sebastián Mancilla Vargas & & & & & & & \\
-7. Thyare Parra Santander & & & & & & & \\
-\bottomrule
-\end{tabular}
-\end{table}
-
 \end{document}

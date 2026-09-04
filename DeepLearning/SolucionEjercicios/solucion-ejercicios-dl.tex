@@ -1,0 +1,433 @@
+% ─────────────────────────────────────────────────────────────────────────
+% Solución de ejercicios — Deep Learning (Magíster en IA, PUC Chile)
+% Estilo de la casa: portada tikz azul/dorado UC, titlesec, fancyhdr.
+% Compilar: pdflatex -> pdflatex
+% ─────────────────────────────────────────────────────────────────────────
+\documentclass[12pt, a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{parskip}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\geometry{margin=2.5cm}
+\onehalfspacing
+\graphicspath{{figures/}{./}}
+
+% ── Colores UC ──
+\definecolor{accent}{RGB}{0, 90, 130}
+\definecolor{ucblue}{RGB}{0, 75, 135}
+\definecolor{ucgold}{RGB}{198, 166, 80}
+
+% ── Formato de secciones ──
+\titleformat{\section}{\large\bfseries\color{accent}}{\thesection.\ }{0.3em}{}[\vspace{-0.5em}\color{accent}\rule{\textwidth}{0.4pt}]
+\titleformat{\subsection}{\normalsize\bfseries\color{accent!80!black}}{\thesubsection\ }{0.3em}{}
+
+% ── Encabezado ──
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{Solución de ejercicios}}
+\fancyhead[R]{\small\textit{Deep Learning}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\captionsetup{font=small,labelfont=bf}
+
+% ── Entorno para el enunciado de cada pregunta ──
+\newenvironment{enunciado}
+  {\begin{quote}\itshape\color{black!75}}
+  {\end{quote}}
+
+\hypersetup{colorlinks=true, linkcolor=accent, urlcolor=accent!70!black, citecolor=accent}
+
+\begin{document}
+
+% ── Portada ──
+\begin{titlepage}
+    \begin{tikzpicture}[remember picture, overlay]
+        \fill[ucblue] (current page.north west) rectangle ([yshift=-4cm]current page.north east);
+        \fill[ucgold] ([yshift=-4cm]current page.north west) rectangle ([yshift=-4.15cm]current page.north east);
+        \fill[ucblue] (current page.south west) rectangle ([yshift=2cm]current page.south east);
+        \fill[ucgold] ([yshift=2cm]current page.south west) rectangle ([yshift=2.15cm]current page.south east);
+    \end{tikzpicture}
+    \centering
+    \vspace*{1.2cm}
+    \includegraphics[width=5.5cm]{Logo.png}
+    \vspace{1.5cm}
+
+    {\color{ucblue}\rule{0.6\textwidth}{0.8pt}}
+    \vspace{0.8cm}
+
+    {\LARGE\bfseries\color{ucblue} Solución de ejercicios}
+    \vspace{0.8cm}
+
+    {\Large\color{black} Teoría, diseño de arquitecturas y detección de anomalías}
+    \vspace{0.8cm}
+
+    {\color{ucblue}\rule{0.6\textwidth}{0.8pt}}
+    \vspace{1.3cm}
+
+    {\large\bfseries Autor}
+    \vspace{0.4cm}
+
+    {\normalsize Armando Arredondo Valle}
+    \vspace{1.0cm}
+
+    {\normalsize Maestría en Inteligencia Artificial\\[0.2em]
+    Deep Learning\\[0.2em]
+    Pontificia Universidad Católica de Chile}
+    \vfill
+    {\normalsize Septiembre de 2026}
+    \vspace{1.5cm}
+\end{titlepage}
+
+\section{Preguntas de teoría}
+
+\subsection{Invarianza al reescalado y regularización L2}
+
+\begin{enunciado}
+Considere una red sin sesgos definida por $f(\mathbf{x}) = W_2\,\mathrm{ReLU}(W_1\mathbf{x})$.
+Para algún $\alpha > 0$, se reemplaza $W_1$ por $\alpha W_1$ y $W_2$ por $W_2/\alpha$.
+¿Cambian las predicciones de la red? ¿Cambia el efecto de una regularización L2 aplicada a
+ambas matrices? Justifique.
+\end{enunciado}
+
+\textbf{Las predicciones no cambian.} La ReLU es positivamente homogénea: para todo
+$\alpha > 0$ se cumple $\mathrm{ReLU}(\alpha z) = \alpha\,\mathrm{ReLU}(z)$, ya que la
+multiplicación por una constante positiva no altera el signo de $z$. Por lo tanto:
+\begin{equation}
+\frac{W_2}{\alpha}\,\mathrm{ReLU}(\alpha W_1 \mathbf{x})
+= \frac{W_2}{\alpha}\,\alpha\,\mathrm{ReLU}(W_1 \mathbf{x})
+= W_2\,\mathrm{ReLU}(W_1 \mathbf{x}) = f(\mathbf{x}),
+\end{equation}
+es decir, la red reescalada calcula exactamente la misma función para toda entrada.
+
+\textbf{El efecto de la regularización L2 sí cambia.} La penalización pasa de
+$\|W_1\|_F^2 + \|W_2\|_F^2$ a:
+\begin{equation}
+\alpha^2\,\|W_1\|_F^2 + \frac{1}{\alpha^2}\,\|W_2\|_F^2,
+\end{equation}
+que depende de $\alpha$ aunque la función representada sea idéntica. En consecuencia, la
+regularización L2 no es invariante ante esta reparametrización: entre infinitas redes que
+calculan la misma función, L2 asigna penalizaciones distintas y prefiere la configuración
+de normas balanceadas. Esto ilustra que L2 penaliza los parámetros y no directamente la
+función que la red computa.
+
+\paragraph{Desarrollo: el $\alpha$ que minimiza la penalización.} Nótese que $\alpha > 0$
+no se despeja, sino que es hipótesis del enunciado, necesaria porque la homogeneidad
+$\mathrm{ReLU}(\alpha z) = \alpha\,\mathrm{ReLU}(z)$ solo vale para constantes positivas.
+Lo que sí puede despejarse es el $\alpha$ óptimo. Escribiendo la penalización como función
+de $\alpha$, con $a = \|W_1\|_F^2$ y $b = \|W_2\|_F^2$:
+\begin{equation}
+g(\alpha) = \alpha^2\,a + \frac{b}{\alpha^2}, \qquad \alpha > 0.
+\end{equation}
+Derivando e igualando a cero:
+\begin{equation}
+g'(\alpha) = 2\alpha\,a - \frac{2b}{\alpha^3} = 0
+\;\;\Longrightarrow\;\; \alpha^4 = \frac{b}{a}
+\;\;\Longrightarrow\;\; \alpha^\star = \left(\frac{b}{a}\right)^{1/4}
+= \sqrt{\frac{\|W_2\|_F}{\|W_1\|_F}},
+\end{equation}
+donde en el segundo paso se multiplicó por $\alpha^3/2$ (válido pues $\alpha > 0$) y en el
+despeje final se tomó la única raíz real positiva, que es la admisible en el dominio. Se
+trata de un mínimo porque $g''(\alpha) = 2a + 6b/\alpha^4 > 0$ (la función es convexa en
+$\alpha > 0$). Sustituyendo $\alpha^\star$ se verifica el balance de normas:
+\begin{equation}
+\|\alpha^\star W_1\|_F^2 = (\alpha^\star)^2 a = \sqrt{ab}
+\qquad\text{y}\qquad
+\left\|\frac{W_2}{\alpha^\star}\right\|_F^2 = \frac{b}{(\alpha^\star)^2} = \sqrt{ab},
+\end{equation}
+es decir, ambas capas quedan con igual norma y la penalización mínima vale
+$g(\alpha^\star) = 2\|W_1\|_F\|W_2\|_F$. Alternativamente, sin cálculo diferencial, la
+desigualdad aritmético-geométrica da directamente
+$\alpha^2 a + b/\alpha^2 \geq 2\sqrt{ab}$, con igualdad si y solo si
+$\alpha^2 a = b/\alpha^2$, la misma condición de normas balanceadas.
+
+\subsection{Permutación aleatoria de píxeles: CNN vs.\ MLP}
+
+\begin{enunciado}
+Todas las imágenes de un conjunto de datos son transformadas utilizando la misma permutación
+aleatoria de sus píxeles, aplicada tanto en entrenamiento como en evaluación. ¿Qué modelo
+debería verse más afectado, una CNN o un MLP? Explique por qué, considerando los supuestos
+que incorpora cada arquitectura.
+\end{enunciado}
+
+\textbf{La CNN se ve más afectada; el MLP no se ve afectado.}
+
+El \textbf{MLP} trata la entrada como un vector plano sin estructura: no incorpora ningún
+supuesto sobre el orden de las componentes. Permutar los píxeles equivale a permutar las
+columnas de la matriz de pesos de la primera capa, de modo que para cada solución del
+problema original existe una solución exactamente equivalente en el problema permutado.
+Su clase de hipótesis es invariante al reordenamiento de la entrada, por lo que el MLP
+puede aprender igual de bien en ambos casos.
+
+La \textbf{CNN}, en cambio, incorpora dos supuestos arquitectónicos (sesgos inductivos)
+sobre la estructura espacial de la imagen: \emph{localidad} (los píxeles cercanos están
+correlacionados y forman patrones locales como bordes y texturas, capturables con filtros
+pequeños) y \emph{equivarianza a la traslación} (un mismo patrón puede aparecer en cualquier
+posición, lo que justifica compartir los pesos del filtro por toda la imagen, junto con el
+\emph{pooling} que agrega información de vecindarios). Una permutación aleatoria destruye
+precisamente esa estructura: los píxeles vecinos dejan de tener relación entre sí, de modo
+que los filtros locales y el \emph{pooling} ya no capturan patrones significativos. Aunque
+la información sigue presente (no se pierde nada), la arquitectura ya no puede explotarla,
+y la CNN pierde justamente la ventaja que la hace superior en imágenes naturales.
+
+\subsection{Dropout y valor esperado de la predicción}
+
+\begin{enunciado}
+En la formulación original de Dropout, durante la inferencia se multiplican las activaciones
+por $1-p$ para conservar el valor esperado que tenían durante el entrenamiento. Explique por
+qué igualar el valor esperado de las activaciones intermedias no implica necesariamente
+igualar el valor esperado de la predicción final. Considere en su respuesta la presencia de
+transformaciones no lineales.
+\end{enunciado}
+
+El escalamiento por $1-p$ garantiza la igualdad del valor esperado \emph{a la entrada de
+cada capa}: si $m \sim \mathrm{Bernoulli}(1-p)$ es la máscara, entonces
+$\mathbb{E}[m \cdot a] = (1-p)\,a$. Sin embargo, esa activación pasa luego por
+transformaciones no lineales $g$ (ReLU, sigmoide, softmax), y en general la esperanza no
+conmuta con una función no lineal:
+\begin{equation}
+\mathbb{E}[g(z)] \neq g(\mathbb{E}[z]).
+\end{equation}
+(Para funciones convexas o cóncavas, la desigualdad de Jensen indica incluso la dirección
+del sesgo.)
+
+Durante el entrenamiento, la predicción es una variable aleatoria $f(\mathbf{x}, m)$ que
+depende de la máscara, y lo que se quisiera reproducir en inferencia es el promedio del
+ensamble $\mathbb{E}_m[f(\mathbf{x}, m)]$, tomado sobre exponencialmente muchas subredes.
+La regla de escalar las activaciones introduce la esperanza \emph{dentro} de las no
+linealidades, capa por capa; en cada capa se comete un error de aproximación que además se
+propaga y se compone a través de la red. Por eso igualar el valor esperado de las
+activaciones intermedias no garantiza igualar el valor esperado de la salida: la regla de
+inferencia de Dropout es solo una aproximación al verdadero promedio del ensamble, que
+sería exacta únicamente si la red fuera lineal.
+
+\subsection{Convolución de $7\times 7$ vs.\ tres convoluciones de $3\times 3$}
+
+\begin{enunciado}
+Considere una CNN en que todas las capas tienen $C$ canales, utilizan stride 1 y no incluyen
+sesgo. Compare el uso de una única convolución de $7\times 7$ con una secuencia de tres
+convoluciones de $3\times 3$. Analice el campo receptivo, el número de parámetros y la
+capacidad de representar transformaciones no lineales.
+\end{enunciado}
+
+\begin{table}[H]
+\centering
+\caption{Comparación entre una convolución de $7\times 7$ y tres de $3\times 3$.}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Criterio} & \textbf{Una conv.\ $7\times 7$} & \textbf{Tres conv.\ $3\times 3$} \\
+\midrule
+Campo receptivo   & $7\times 7$ & $7\times 7$ \\
+Parámetros        & $7\cdot 7\cdot C\cdot C = 49\,C^2$ & $3\cdot(3\cdot 3\cdot C\cdot C) = 27\,C^2$ \\
+No linealidades   & 1 & 3 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Campo receptivo.} Es idéntico. Con stride 1, cada convolución de $3\times 3$
+adicional expande el campo receptivo en 2 píxeles por lado: $3 \to 5 \to 7$. Ambas
+alternativas permiten que cada salida dependa de una vecindad de $7\times 7$ de la entrada.
+
+\textbf{Número de parámetros.} La secuencia de $3\times 3$ usa $27\,C^2$ parámetros frente
+a $49\,C^2$ de la convolución única, una reducción cercana al 45\,\%, con el consiguiente
+ahorro de memoria y cómputo y un menor riesgo de sobreajuste.
+
+\textbf{Capacidad no lineal.} Si entre las convoluciones se intercalan activaciones (ReLU),
+la secuencia de tres capas compone tres transformaciones no lineales sobre el mismo campo
+receptivo, dando lugar a una función más expresiva y ``más profunda''; la convolución de
+$7\times 7$ aplica una única transformación lineal seguida de una sola no linealidad. Cabe
+notar que, sin activaciones intermedias, las tres convoluciones de $3\times 3$ colapsarían
+en una única transformación lineal equivalente a una de $7\times 7$ (con rango restringido),
+por lo que la ventaja expresiva depende de las no linealidades.
+
+\textbf{Conclusión.} Apilar convoluciones de $3\times 3$ domina en ambos ejes (menos
+parámetros y mayor expresividad para el mismo campo receptivo); este es el principio de
+diseño introducido por VGG.
+
+\section{Diseño de arquitecturas}
+
+\subsection{Estimación de precios en comercio electrónico}
+
+\begin{enunciado}
+Una plataforma de comercio electrónico desea estimar el precio de publicación de sus
+productos. Para cada producto dispone de variables numéricas, variables categóricas de alta
+cardinalidad (marca, vendedor) y un conjunto de etiquetas descriptivas de número variable;
+en operación pueden aparecer marcas, vendedores o etiquetas no vistas en entrenamiento.
+Proponga un modelo de Deep Learning: cómo representaría cada tipo de variable, cómo
+obtendría una entrada de tamaño fijo a partir de las etiquetas y cómo combinaría las
+representaciones para producir la estimación final.
+\end{enunciado}
+
+\textbf{Representación de cada tipo de variable.}
+\begin{itemize}[leftmargin=2em]
+  \item \emph{Variables numéricas}: se normalizan (estandarización; transformación
+        logarítmica para las de distribución sesgada) y se ingresan directamente al modelo.
+  \item \emph{Categóricas de alta cardinalidad (marca, vendedor)}: se representan con
+        \emph{embeddings} aprendidos, una tabla que asigna a cada categoría un vector denso
+        de dimensión moderada. La codificación one-hot sería inviable por la cardinalidad y
+        no capturaría similitud entre categorías (marcas de gama parecida quedan cercanas en
+        el espacio de embeddings).
+  \item \emph{Categorías nuevas en operación}: se reserva un token \emph{UNK} (desconocido)
+        por campo, cuyo embedding se entrena reemplazando aleatoriamente una fracción de las
+        categorías durante el entrenamiento; alternativamente puede usarse \emph{feature
+        hashing}, que mapea cualquier cadena a un número fijo de buckets de embedding.
+\end{itemize}
+
+\textbf{Entrada de tamaño fijo desde las etiquetas.} Cada etiqueta se embebe con una misma
+tabla de embeddings y el conjunto resultante $\{\mathbf{e}_1,\dots,\mathbf{e}_k\}$ (con $k$
+variable) se agrega mediante una operación invariante al orden e independiente de $k$:
+promedio o suma (al estilo \emph{Deep Sets}) o, preferentemente, \emph{attention pooling},
+que aprende un peso por etiqueta y pondera las más informativas. El resultado es un vector
+de dimensión fija sin importar cuántas etiquetas tenga el producto. Las etiquetas nuevas se
+tratan con el mismo mecanismo UNK o hashing (o codificando la etiqueta a nivel de
+subpalabras para generalizar a partir de su texto).
+
+\textbf{Combinación y salida.} Se concatenan las características numéricas, el embedding de
+marca, el embedding de vendedor y el vector agregado de etiquetas, y el vector resultante se
+procesa con un MLP cuya salida es un escalar. El modelo se entrena como regresión (pérdida
+MSE o Huber), idealmente prediciendo $\log(\text{precio})$, dado que los precios presentan
+una distribución fuertemente sesgada.
+
+\subsection{Clasificación de severidad de accidentes con múltiples fotografías}
+
+\begin{enunciado}
+Se desea clasificar la gravedad de un accidente vehicular utilizando las fotografías tomadas
+en el lugar. Cada accidente puede tener un número diferente de imágenes, las fotografías no
+siguen un orden determinado y no todas entregan información igualmente relevante. Proponga
+una arquitectura: cómo procesaría las fotografías, cómo construiría una representación única
+del accidente independiente del número y del orden de las imágenes, y qué salida produciría
+el modelo.
+\end{enunciado}
+
+El problema tiene la estructura de \emph{multiple instance learning} sobre un conjunto (no
+una secuencia) de imágenes, y se resuelve en tres etapas:
+
+\begin{enumerate}[leftmargin=2em]
+  \item \textbf{Procesamiento por fotografía.} Un mismo encoder convolucional (una CNN o un
+        ViT preentrenado en ImageNet, con pesos compartidos entre todas las fotos) convierte
+        cada imagen $i$ en un vector de características $\mathbf{z}_i$.
+  \item \textbf{Representación única del accidente.} Los embeddings
+        $\{\mathbf{z}_1,\dots,\mathbf{z}_N\}$ se agregan con una operación invariante a
+        permutaciones e independiente de $N$. La opción más adecuada es \emph{attention
+        pooling}: el modelo aprende un peso $\alpha_i$ por imagen y produce
+        $\mathbf{z} = \sum_i \alpha_i\,\mathbf{z}_i$. Esto responde directamente al hecho de
+        que no todas las fotos son igualmente relevantes: las poco informativas reciben peso
+        bajo. (El promedio o el máximo también son agregaciones válidas, pero tratan todas
+        las imágenes por igual o consideran solo la más activada.) Al no depender ni del
+        orden ni de la cantidad de imágenes, se satisfacen ambos requisitos del enunciado.
+  \item \textbf{Salida.} Una capa densa con softmax sobre las clases de severidad, entrenada
+        con entropía cruzada. Dado que la severidad es una variable ordinal (leve $<$
+        moderada $<$ grave), una alternativa razonable es una formulación de regresión
+        ordinal, que penaliza más los errores entre clases lejanas.
+\end{enumerate}
+
+\section{Detección de anomalías en piezas mecánicas}
+
+\begin{enunciado}
+Una empresa dispone de una gran cantidad de fotografías de piezas que superaron todos los
+controles de calidad. Los defectos son poco frecuentes, muy diversos y cambian con los
+materiales y el proceso, por lo que no existe un conjunto representativo de imágenes
+defectuosas ni categorías de falla definidas de antemano. Se desea un sistema que reciba la
+fotografía de una nueva pieza e indique si su apariencia se aleja de lo que el modelo
+considera normal.
+\end{enunciado}
+
+\subsection{Formulación del problema de aprendizaje}
+
+Dado que solo se dispone de imágenes de piezas normales y que los defectos son raros,
+diversos y cambiantes (lo que hace inviable un clasificador supervisado con categorías de
+falla), el problema se formula como \textbf{detección de anomalías} o clasificación
+\emph{one-class}: modelar la distribución de la apariencia normal y señalar como sospechoso
+todo lo que se desvíe de ella.
+
+\begin{itemize}[leftmargin=2em]
+  \item \emph{Regularidades a aprender}: la textura, la geometría, el color y la estructura
+        típicos de las piezas que superaron el control de calidad, es decir, ``cómo se ve
+        una pieza buena''.
+  \item \emph{Señal de entrenamiento}: proviene de las propias imágenes, sin etiquetas
+        externas; el objetivo de aprendizaje se construye a partir de la entrada (por
+        ejemplo, reconstruirla).
+  \item \emph{Paradigma}: aprendizaje \textbf{no supervisado} (en su variante
+        auto-supervisada), del tipo \emph{one-class learning}.
+\end{itemize}
+
+\subsection{Modelo, entrenamiento y prevención de soluciones triviales}
+
+\textbf{Modelo.} Un \textbf{autoencoder convolucional}: un encoder CNN comprime la imagen a
+un código latente de baja dimensión y un decoder la reconstruye.
+
+\begin{itemize}[leftmargin=2em]
+  \item \emph{Entrada}: la fotografía de la pieza, normalizada (opcionalmente procesada por
+        parches, lo que además permite localizar el defecto).
+  \item \emph{Salida}: la reconstrucción $\hat{\mathbf{x}}$ de la misma imagen.
+  \item \emph{Pérdida}: el error de reconstrucción, por ejemplo el MSE por píxel
+        $\|\mathbf{x}-\hat{\mathbf{x}}\|^2$, o una pérdida basada en SSIM, que captura mejor
+        la estructura local que los píxeles individuales.
+\end{itemize}
+
+\textbf{Cómo evitar una solución inútil.} El riesgo central es que el modelo aprenda la
+función identidad: si tiene capacidad suficiente para copiar cualquier imagen, también
+reconstruirá perfectamente las piezas defectuosas y el error de reconstrucción dejará de
+discriminar. Se evita mediante:
+\begin{itemize}[leftmargin=2em]
+  \item un \emph{cuello de botella} latente suficientemente pequeño, que obliga a comprimir
+        y a retener solo las regularidades de las piezas normales;
+  \item variantes que rompen la copia trivial por construcción: \emph{denoising autoencoder}
+        (reconstruir a partir de una versión corrompida de la entrada) o \emph{inpainting}
+        (reconstruir regiones ocultas de la imagen);
+  \item regularización del espacio latente y verificación en validación de que el error
+        sobre piezas normales no se anule trivialmente.
+\end{itemize}
+De este modo el modelo solo puede reconstruir bien aquello que se parece a lo normal, y un
+defecto queda fuera de lo que sabe representar.
+
+\subsection{Puntaje de anomalía, umbral de decisión y caso de falla}
+
+\textbf{Puntaje de anomalía.} La imagen nueva se pasa por el autoencoder y se calcula el
+error de reconstrucción: un mapa de error por píxel $|\mathbf{x}-\hat{\mathbf{x}}|^2$ que se
+agrega a un escalar, por ejemplo tomando el máximo o el promedio de los $K$ píxeles con
+mayor error, criterio más sensible a defectos pequeños y localizados que el promedio global.
+El mapa de error, además, localiza espacialmente el defecto para el inspector.
+
+\textbf{Criterio de decisión.} Se calcula la distribución del puntaje sobre un conjunto de
+validación de piezas normales \emph{no vistas en entrenamiento} y se fija el umbral en un
+percentil alto de esa distribución (por ejemplo, el percentil 95 a 99) o en
+$\mu + k\sigma$. La elección concreta es una decisión de costos: un umbral bajo genera más
+falsas alarmas (revisiones innecesarias) y un umbral alto deja pasar defectos; en control de
+calidad usualmente se prefiere tolerar falsas alarmas antes que despachar piezas
+defectuosas.
+
+\textbf{Caso en que una pieza defectuosa sería considerada normal.} El sistema falla cuando
+el defecto resulta fácil de reconstruir para el modelo. Por ejemplo:
+\begin{itemize}[leftmargin=2em]
+  \item un defecto sutil y de baja frecuencia espacial (un leve cambio de tono, una
+        deformación suave) que el autoencoder reconstruye casi a la perfección porque
+        localmente se parece a texturas normales, quedando el error bajo el umbral;
+  \item un defecto estructural o global (una perforación faltante, un componente en posición
+        incorrecta) en el que cada parche local luce perfectamente normal: si el puntaje se
+        basa en apariencia local, la pieza pasa aunque su configuración global sea inválida;
+  \item de manera más general, un autoencoder con demasiada capacidad puede generalizar en
+        exceso y reproducir (o ``reparar'') patrones defectuosos que caen dentro de lo que
+        alcanza a representar.
+\end{itemize}
+Esta es la limitación de fondo del enfoque: un error de reconstrucción bajo es solo un
+\emph{proxy} de normalidad, no una garantía de ella.
+
+\end{document}

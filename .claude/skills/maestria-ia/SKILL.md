@@ -4,8 +4,8 @@ description: >
   Umbrella index/router for @ArmandoArV's Magíster en Inteligencia Artificial (PUC Chile,
   Maestria-IA repo), spanning ALL courses: Aprendizaje Supervisado (EPG4001), Aprendizaje No
   Supervisado (EPG4002), Fundamentos Matemáticos de IA (IMT3850), Bases de Datos, Introducción a
-  Data Science (IMT3860), Ética en IA, Recuperación de Información (INF3841), and Gobernanza de Datos.
-  Use for broad or
+  Data Science (IMT3860), Ética en IA, Recuperación de Información (INF3841), Gobernanza de Datos, and Deep Learning
+  (INF3812). Use for broad or
   cross-course questions about the maestría, when unsure which course a topic belongs to, for a
   program overview, or when working in the Maestria-IA repo without naming a course. Routes to the
   per-course skills for depth and directly covers courses lacking one (Bases de Datos, Data Science,
@@ -14,7 +14,9 @@ description: >
   ética de la IA, sesgo algorítmico, XAI, SHAP, LIME, recuperación de información, information
   retrieval, descriptores de imágenes, procesamiento de imágenes, convolución, detección de bordes,
   Sobel, Canny, histograma, HOG, EHD, búsqueda por similitud, OpenCV, gobernanza de datos, gobierno de
-  datos, DAMA, DMBOK, protección de datos personales, Ley 21.719, RAT, EIPD, ISO 42001, ISO 27001.
+  datos, DAMA, DMBOK, protección de datos personales, Ley 21.719, RAT, EIPD, ISO 42001, ISO 27001,
+  INF3812, deep learning, aprendizaje profundo, red neuronal, MLP, backpropagation, CNN, RNN, LSTM,
+  Transformer, atención, PyTorch, dropout, Adam, transfer learning.
   Respond in Spanish when the user writes in Spanish.
 ---
 
@@ -44,6 +46,7 @@ single-course question, the specific skill below usually triggers on its own —
 | Ética en IA | — | — | — | 📄 cubierta aquí (§3) |
 | Recuperación de Información | INF3841 | J. M. Barrios | `recuperacion-informacion` (global) | ✅ completa (Sesiones 01–03) |
 | Gobernanza de Datos | — | A. Pumarino | `gobernanza-datos` (repo) | ✅ completa (Clases 1–7) |
+| Deep Learning | INF3812 | H. Löbel | `deep-learning` (repo) | ✅ completa (Sesiones 1–9) |
 
 > Repo: `D:\Maestria-IA`. Dedicated skills marked "(repo)" live under `.copilot/skills/` and load
 > when working inside the repository; "(global)" skills load anywhere.
@@ -68,6 +71,9 @@ single-course question, the specific skill below usually triggers on its own —
   maestros, metadatos, calidad de datos, protección de datos personales, Ley 21.719, RAT, EIPD, ISO
   27001/42001, Modelo de Prevención de Infracciones, anonimización → **Gobernanza de Datos**
   (`gobernanza-datos`).
+- Redes neuronales, MLP, backpropagation, descenso de gradiente estocástico, Adam, dropout, batch
+  normalization, CNN/convolución, RNN/LSTM/GRU, embeddings, word2vec, seq2seq, atención, Transformer,
+  transfer learning, PyTorch → **INF3812 / Deep Learning** (`deep-learning`).
 
 ---
 

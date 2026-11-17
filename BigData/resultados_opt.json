@@ -1,0 +1,11 @@
+{
+  "Q2_literal": 0.049305577646009624,
+  "Q2_preparada": 0.005919053102843463,
+  "Q3_sin_cubriente": 232.65551270451397,
+  "Q3_con_cubriente": 44.24202924128622,
+  "Q4_strftime_sqlite": 350.93977914657444,
+  "Q4_materializada_sqlite": 245.94326242804527,
+  "Q4_strftime_duckdb": 4.933416564017534,
+  "Q4_materializada_duckdb": 1.375629147514701,
+  "Q4_tabla_resumen_sqlite": 0.01266415836289525
+}

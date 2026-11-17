@@ -1,0 +1,68 @@
+- generic [active] [ref=f8e1]:
+  - generic [ref=f8e3]:
+    - region "Notifications alt+T"
+    - generic [ref=f8e4]:
+      - navigation [ref=f8e7]:
+        - link [ref=f8e9] [cursor=pointer]:
+          - /url: /
+          - img "Dagster" [ref=f8e11]
+        - generic [ref=f8e22]:
+          - generic [ref=f8e23]:
+            - link "timeline Overview" [ref=f8e25] [cursor=pointer]:
+              - /url: /overview
+              - generic [ref=f8e26]:
+                - img "timeline" [ref=f8e28]
+                - generic [ref=f8e29]: Overview
+            - link "runs Runs" [ref=f8e31] [cursor=pointer]:
+              - /url: /runs
+              - generic [ref=f8e32]:
+                - img "runs" [ref=f8e34]
+                - generic [ref=f8e35]: Runs
+          - generic [ref=f8e36]:
+            - link "catalog_book Catalog" [ref=f8e38] [cursor=pointer]:
+              - /url: /assets
+              - generic [ref=f8e39]:
+                - img "catalog_book" [ref=f8e41]
+                - generic [ref=f8e42]: Catalog
+            - link "schedule Automation" [ref=f8e44] [cursor=pointer]:
+              - /url: /automation
+              - generic [ref=f8e45]:
+                - img "schedule" [ref=f8e47]
+                - generic [ref=f8e48]: Automation
+          - generic [ref=f8e49]:
+            - link "lineage Lineage" [ref=f8e51] [cursor=pointer]:
+              - /url: /asset-groups
+              - generic [ref=f8e52]:
+                - img "lineage" [ref=f8e54]
+                - generic [ref=f8e55]: Lineage
+            - link "deployment Deployment" [ref=f8e57] [cursor=pointer]:
+              - /url: /deployment
+              - generic [ref=f8e58]:
+                - img "deployment" [ref=f8e60]
+                - generic [ref=f8e61]: Deployment
+        - generic [ref=f8e62]:
+          - button "search Search" [ref=f8e65] [cursor=pointer]:
+            - generic [ref=f8e66]:
+              - img "search" [ref=f8e68]
+              - generic [ref=f8e69]: Search
+          - generic [ref=f8e70]:
+            - button "panel_show_right Hide navigation" [ref=f8e72] [cursor=pointer]:
+              - generic [ref=f8e73]:
+                - img "panel_show_right" [ref=f8e75]
+                - generic [ref=f8e76]: Hide navigation
+            - button "settings Settings" [ref=f8e78] [cursor=pointer]:
+              - generic [ref=f8e79]:
+                - img "settings" [ref=f8e81]
+                - generic [ref=f8e82]: Settings
+            - button "support Support" [ref=f8e85] [cursor=pointer]:
+              - generic [ref=f8e86]:
+                - img "support" [ref=f8e88]
+                - generic [ref=f8e89]: Support
+      - generic [ref=f8e93]:
+        - generic [ref=f8e95]:
+          - generic [ref=f8e96]: Global asset lineage
+          - button "reload_definitions Reload definitions" [disabled] [ref=f8e100]:
+            - img "reload_definitions" [ref=f8e101]
+            - generic [ref=f8e102]: Reload definitions
+        - progressbar "loading" [ref=f8e104]
+  - alert [ref=f8e108]

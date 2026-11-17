@@ -1,0 +1,105 @@
+- generic [active] [ref=f14e1]:
+  - generic [ref=f14e3]:
+    - region "Notifications alt+T"
+    - generic [ref=f14e4]:
+      - navigation [ref=f14e7]:
+        - link [ref=f14e9] [cursor=pointer]:
+          - /url: /
+          - img "Dagster" [ref=f14e11]
+        - generic [ref=f14e22]:
+          - generic [ref=f14e23]:
+            - link "timeline Overview" [ref=f14e25] [cursor=pointer]:
+              - /url: /overview
+              - generic [ref=f14e26]:
+                - img "timeline" [ref=f14e28]
+                - generic [ref=f14e29]: Overview
+            - link "runs Runs" [ref=f14e31] [cursor=pointer]:
+              - /url: /runs
+              - generic [ref=f14e32]:
+                - img "runs" [ref=f14e34]
+                - generic [ref=f14e35]: Runs
+          - generic [ref=f14e36]:
+            - link "catalog_book Catalog" [ref=f14e38] [cursor=pointer]:
+              - /url: /assets
+              - generic [ref=f14e39]:
+                - img "catalog_book" [ref=f14e41]
+                - generic [ref=f14e42]: Catalog
+            - link "schedule Automation" [ref=f14e44] [cursor=pointer]:
+              - /url: /automation
+              - generic [ref=f14e45]:
+                - img "schedule" [ref=f14e47]
+                - generic [ref=f14e48]: Automation
+          - generic [ref=f14e49]:
+            - link "lineage Lineage" [ref=f14e51] [cursor=pointer]:
+              - /url: /asset-groups
+              - generic [ref=f14e52]:
+                - img "lineage" [ref=f14e54]
+                - generic [ref=f14e55]: Lineage
+            - link "deployment Deployment" [ref=f14e57] [cursor=pointer]:
+              - /url: /deployment
+              - generic [ref=f14e58]:
+                - img "deployment" [ref=f14e60]
+                - generic [ref=f14e61]: Deployment
+        - generic [ref=f14e62]:
+          - button "search Search" [ref=f14e65] [cursor=pointer]:
+            - generic [ref=f14e66]:
+              - img "search" [ref=f14e68]
+              - generic [ref=f14e69]: Search
+          - generic [ref=f14e70]:
+            - button "panel_show_right Hide navigation" [ref=f14e72] [cursor=pointer]:
+              - generic [ref=f14e73]:
+                - img "panel_show_right" [ref=f14e75]
+                - generic [ref=f14e76]: Hide navigation
+            - button "settings Settings" [ref=f14e78] [cursor=pointer]:
+              - generic [ref=f14e79]:
+                - img "settings" [ref=f14e81]
+                - generic [ref=f14e82]: Settings
+            - button "support Support" [ref=f14e85] [cursor=pointer]:
+              - generic [ref=f14e86]:
+                - img "support" [ref=f14e88]
+                - generic [ref=f14e89]: Support
+      - generic [ref=f14e93]:
+        - generic [ref=f14e94]:
+          - generic [ref=f14e95]:
+            - generic [ref=f14e96]:
+              - generic [ref=f14e97]:
+                - list [ref=f14e99]:
+                  - listitem [ref=f14e100]:
+                    - link [ref=f14e102] [cursor=pointer]:
+                      - /url: /assets
+                      - generic "Assets" [ref=f14e103]
+                  - listitem [ref=f14e104]:
+                    - img "chevron_right" [ref=f14e105]
+                    - generic "ventas_limpias" [ref=f14e107]
+                - button [ref=f14e108] [cursor=pointer]:
+                  - img "copy_to_clipboard" [ref=f14e109]
+              - generic [ref=f14e110]: External Asset
+            - button "materialization Materialize" [disabled] [ref=f14e115]:
+              - img "materialization" [ref=f14e116]
+              - generic [ref=f14e117]: Materialize
+          - generic [ref=f14e120]:
+            - tablist [ref=f14e121]:
+              - tab "Overview" [expanded] [selected] [ref=f14e122] [cursor=pointer]
+              - tab "Events" [ref=f14e123] [cursor=pointer]
+              - tab "Checks" [ref=f14e124] [cursor=pointer]
+              - tab "Lineage" [disabled] [ref=f14e125] [cursor=pointer]
+            - button [ref=f14e128] [cursor=pointer]:
+              - img "refresh" [ref=f14e129]
+        - generic [ref=f14e130]:
+          - generic [ref=f14e131]:
+            - button "status Status arrow_drop_down" [expanded] [ref=f14e134] [cursor=pointer]:
+              - generic [ref=f14e135]:
+                - img "status" [ref=f14e136]
+                - generic [ref=f14e137]: Status
+                - img "arrow_drop_down" [ref=f14e138]
+            - button "sticky_note Description arrow_drop_down" [expanded] [ref=f14e146] [cursor=pointer]:
+              - generic [ref=f14e147]:
+                - img "sticky_note" [ref=f14e148]
+                - generic [ref=f14e149]: Description
+                - img "arrow_drop_down" [ref=f14e150]
+          - button "info Definition arrow_drop_down" [expanded] [ref=f14e160] [cursor=pointer]:
+            - generic [ref=f14e161]:
+              - img "info" [ref=f14e162]
+              - generic [ref=f14e163]: Definition
+              - img "arrow_drop_down" [ref=f14e164]
+  - alert [ref=f14e186]

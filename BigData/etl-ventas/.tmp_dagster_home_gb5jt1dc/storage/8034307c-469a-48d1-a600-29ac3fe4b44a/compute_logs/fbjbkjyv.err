@@ -1,0 +1,5 @@
+2026-11-11 19:30:00 -0600 - dagster - DEBUG - __ASSET_JOB - 8034307c-469a-48d1-a600-29ac3fe4b44a - 71361 - LOGS_CAPTURED - Capturing logs for process (pid: 71361).
+2026-11-11 19:30:00 -0600 - dagster - DEBUG - __ASSET_JOB - 8034307c-469a-48d1-a600-29ac3fe4b44a - 71361 - ventas_por_categoria_mes - STEP_START - Started execution of step "ventas_por_categoria_mes".
+2026-11-11 19:30:00 -0600 - dagster - DEBUG - __ASSET_JOB - 8034307c-469a-48d1-a600-29ac3fe4b44a - 71361 - ventas_por_categoria_mes - STEP_OUTPUT - Yielded output "result" of type "Any". (Type check passed).
+2026-11-11 19:30:00 -0600 - dagster - DEBUG - __ASSET_JOB - 8034307c-469a-48d1-a600-29ac3fe4b44a - 71361 - ventas_por_categoria_mes - ASSET_MATERIALIZATION - Materialized value ventas_por_categoria_mes.
+2026-11-11 19:30:00 -0600 - dagster - DEBUG - __ASSET_JOB - 8034307c-469a-48d1-a600-29ac3fe4b44a - 71361 - ventas_por_categoria_mes - STEP_SUCCESS - Finished execution of step "ventas_por_categoria_mes" in 90ms.

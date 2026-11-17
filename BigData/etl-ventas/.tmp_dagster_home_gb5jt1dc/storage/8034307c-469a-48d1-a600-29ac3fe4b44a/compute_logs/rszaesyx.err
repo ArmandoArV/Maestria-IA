@@ -1,0 +1,5 @@
+2026-11-11 19:29:58 -0600 - dagster - DEBUG - __ASSET_JOB - 8034307c-469a-48d1-a600-29ac3fe4b44a - 71140 - LOGS_CAPTURED - Capturing logs for process (pid: 71140).
+2026-11-11 19:29:58 -0600 - dagster - DEBUG - __ASSET_JOB - 8034307c-469a-48d1-a600-29ac3fe4b44a - 71140 - ventas_crudas - STEP_START - Started execution of step "ventas_crudas".
+2026-11-11 19:29:58 -0600 - dagster - DEBUG - __ASSET_JOB - 8034307c-469a-48d1-a600-29ac3fe4b44a - 71140 - ventas_crudas - STEP_OUTPUT - Yielded output "result" of type "Any". (Type check passed).
+2026-11-11 19:29:58 -0600 - dagster - DEBUG - __ASSET_JOB - 8034307c-469a-48d1-a600-29ac3fe4b44a - 71140 - ventas_crudas - ASSET_MATERIALIZATION - Materialized value ventas_crudas.
+2026-11-11 19:29:58 -0600 - dagster - DEBUG - __ASSET_JOB - 8034307c-469a-48d1-a600-29ac3fe4b44a - 71140 - ventas_crudas - STEP_SUCCESS - Finished execution of step "ventas_crudas" in 68ms.

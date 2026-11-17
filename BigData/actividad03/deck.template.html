@@ -1,0 +1,350 @@
+<title>Logs en Hadoop, stock en ACID</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+
+<style>
+:root{
+  /* Paleta institucional UC: azul y oro del escudo, en la gama de los informes del curso */
+  --uc-azul:#004B87;
+  --uc-azul-osc:#00315A;
+  --uc-azul-claro:#4B77B6;
+  --uc-azul-tinte:#E8EFF7;
+  --uc-oro:#C6A650;
+  --uc-oro-vivo:#FCD901;
+  --uc-oro-tinte:#F7F0DC;
+  --ladrillo:#A4262C;
+  --ladrillo-tinte:#F8E9E6;
+  --paper:#F5F7FA;
+  --card:#FFFFFF;
+  --ink:#10161E;
+  --slate:#58657A;
+  --hair:#D6DCE4;
+  --sans:"IBM Plex Sans","Helvetica Neue",Arial,sans-serif;
+  --cond:"IBM Plex Sans Condensed","IBM Plex Sans","Helvetica Neue",Arial,sans-serif;
+  --mono:"IBM Plex Mono","SFMono-Regular",Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
+     display:flex;flex-direction:column;align-items:center;gap:16px;padding:16px}
+
+.slide{
+  container-type:inline-size;
+  width:1280px;max-width:100%;aspect-ratio:16/9;
+  background:var(--card);color:var(--ink);
+  border:1px solid var(--hair);
+  display:flex;flex-direction:column;
+  padding:2.9cqw 3.4cqw 2.2cqw;
+  overflow:hidden;font-size:13px;
+}
+
+/* ---------- portada ---------- */
+.cover{padding:0;display:flex;flex-direction:column;position:relative}
+.cover .banda{background:var(--uc-azul);height:11%;flex:none;
+     border-bottom:0.42cqw solid var(--uc-oro);display:flex;align-items:center;
+     justify-content:space-between;padding:0 3.4cqw;font-family:var(--mono);
+     font-size:0.88cqw;letter-spacing:.17em;color:#FFFFFF}
+.cover .pie{background:var(--uc-azul);height:5.5%;flex:none;margin-top:auto;
+     border-top:0.45cqw solid var(--uc-oro);display:flex;align-items:center;
+     justify-content:space-between;padding:0 3.4cqw;
+     font-family:var(--mono);font-size:0.8cqw;letter-spacing:.1em;color:#CBD9E8}
+.cover .centro{flex:1;min-height:0;display:flex;align-items:center;
+     gap:4.2cqw;padding:3cqw 4cqw 2.4cqw}
+.cover .izq{flex:0 0 27%;display:flex;flex-direction:column;align-items:center;gap:1.2cqw;
+     border-right:1px solid var(--hair);padding-right:3.2cqw}
+.cover img{width:100%;height:auto}
+.cover .izq .curso{font-family:var(--mono);font-size:0.86cqw;letter-spacing:.14em;
+     text-transform:uppercase;color:var(--uc-azul);text-align:center;line-height:1.7}
+.cover .der{flex:1;min-width:0}
+.cover .eyebrow{font-family:var(--mono);font-size:0.95cqw;letter-spacing:.2em;
+     text-transform:uppercase;color:var(--uc-oro);margin:0 0 0.9cqw}
+.cover h1{font-family:var(--cond);font-weight:700;font-size:3.5cqw;line-height:1.04;
+     color:var(--uc-azul);margin:0;letter-spacing:-.01em;text-wrap:balance}
+.cover .sub{font-size:1.3cqw;line-height:1.45;color:var(--slate);margin:0.8cqw 0 1.2cqw;
+     max-width:56ch}
+.cover .regla{height:3px;width:9cqw;background:var(--uc-oro);margin-bottom:1.3cqw}
+.cover .meta{display:grid;grid-template-columns:auto 1fr;gap:0.35cqw 1.4cqw;
+     font-size:1.02cqw;line-height:1.5}
+.cover .meta dt{font-family:var(--mono);font-size:0.82cqw;letter-spacing:.1em;
+     text-transform:uppercase;color:var(--slate);padding-top:0.14cqw}
+.cover .meta dd{margin:0;font-weight:500}
+.cover .indice{display:flex;gap:1cqw;margin-top:1.9cqw}
+.cover .indice div{flex:1;background:var(--paper);border-top:3px solid var(--uc-azul-claro);
+     padding:0.85cqw 0.95cqw;font-size:0.95cqw;line-height:1.35;color:#2A3646}
+.cover .indice b{display:block;font-family:var(--mono);font-size:0.8cqw;letter-spacing:.12em;
+     color:var(--uc-azul);margin-bottom:0.25cqw}
+
+/* ---------- riel superior ---------- */
+.rail{display:flex;align-items:baseline;justify-content:space-between;
+      border-bottom:2px solid var(--uc-azul);padding-bottom:0.7cqw}
+.rail .course{font-family:var(--mono);font-size:0.92cqw;letter-spacing:.09em;
+      text-transform:uppercase;color:var(--uc-azul)}
+.rail .step{font-family:var(--mono);font-size:0.92cqw;letter-spacing:.09em;color:var(--slate)}
+.rail .step b{color:var(--uc-azul);background:var(--uc-oro-tinte);padding:0.1cqw 0.4cqw}
+
+h1{font-family:var(--cond);font-weight:700;font-size:2.65cqw;line-height:1.05;
+   margin:1.4cqw 0 0.45cqw;text-wrap:balance;letter-spacing:-.005em;color:var(--uc-azul-osc)}
+.dek{font-size:1.12cqw;line-height:1.45;color:var(--slate);max-width:78ch;margin:0 0 1.2cqw;
+   border-left:3px solid var(--uc-oro);padding-left:1cqw}
+.dek b{color:var(--ink);font-weight:600}
+
+.body{flex:1;min-height:0;display:flex;flex-direction:column;gap:1.1cqw}
+
+/* ---------- tabla comparativa ---------- */
+table{width:100%;border-collapse:collapse;font-size:1.02cqw;line-height:1.4}
+thead th{font-family:var(--cond);font-size:1.25cqw;font-weight:700;text-align:left;
+         padding:0.55cqw 0.8cqw;vertical-align:bottom;color:var(--uc-azul-osc)}
+thead th.crit{font-family:var(--mono);font-size:0.85cqw;font-weight:500;letter-spacing:.08em;
+         text-transform:uppercase;color:var(--slate)}
+th.pick{background:var(--uc-azul);color:#fff;border-top:4px solid var(--uc-oro)}
+td{padding:0.6cqw 0.8cqw;border-top:1px solid var(--hair);vertical-align:top}
+td.crit{font-family:var(--mono);font-size:0.85cqw;letter-spacing:.04em;text-transform:uppercase;
+        color:var(--slate);width:17%}
+td.pick{background:var(--uc-azul-tinte)}
+td b{font-weight:600}
+.chip{display:inline-block;font-family:var(--mono);font-size:0.72cqw;letter-spacing:.12em;
+      background:var(--uc-oro);color:#2B2208;padding:0.14cqw 0.5cqw;margin-left:0.5cqw;
+      vertical-align:0.18cqw;font-weight:600}
+code,.k{font-family:var(--mono);font-size:0.95em}
+
+/* ---------- cajas de cierre ---------- */
+.boxes{display:grid;grid-template-columns:1fr 1fr;gap:1.1cqw;margin-top:auto}
+.box{padding:0.95cqw 1.1cqw;background:var(--paper);border-left:4px solid var(--uc-azul)}
+.box.alt{border-left-color:var(--uc-oro)}
+.box h2{font-family:var(--cond);font-size:1.3cqw;font-weight:700;margin:0 0 0.4cqw;
+        color:var(--uc-azul-osc)}
+.box p{margin:0;font-size:0.99cqw;line-height:1.45;color:#22303B}
+.box p + p{margin-top:0.4cqw}
+.box .lbl{font-family:var(--mono);font-size:0.78cqw;letter-spacing:.1em;text-transform:uppercase;
+          color:var(--uc-azul);display:block;margin-bottom:0.25cqw}
+.box.alt .lbl{color:#8A6D1F}
+
+/* ---------- figura ---------- */
+figure{margin:0;flex:1;min-height:0;display:flex;flex-direction:column;gap:0.7cqw;
+        justify-content:center}
+.canvas{min-height:0;max-height:100%;display:flex;align-items:center;justify-content:center;
+        background:var(--paper);border:1px solid var(--hair);border-top:3px solid var(--uc-azul);
+        padding:1cqw;overflow:hidden}
+.canvas .mermaid,.canvas pre{margin:0;width:100%;display:flex;
+        align-items:center;justify-content:center}
+.canvas svg{width:100%;height:auto;max-width:100%;max-height:100%}
+figcaption{font-size:0.97cqw;line-height:1.45;color:var(--slate)}
+figcaption b{color:var(--ink);font-weight:600}
+.legend{display:flex;gap:1.6cqw;flex-wrap:wrap;font-family:var(--mono);font-size:0.82cqw;
+        letter-spacing:.04em;color:var(--slate);text-transform:uppercase}
+.legend span{display:flex;align-items:center;gap:0.4cqw}
+.swatch{width:1.6cqw;height:0;border-top:2px solid var(--slate)}
+.swatch.rust{border-top:2px dashed var(--ladrillo)}
+.swatch.teal{border-top:3px solid var(--uc-azul)}
+
+/* ---------- notas ---------- */
+.notes{display:grid;grid-template-columns:repeat(3,1fr);gap:1.1cqw;font-size:0.95cqw;
+       line-height:1.42;color:#22303B;border-top:1px solid var(--hair);padding-top:0.8cqw}
+.notes h3{font-family:var(--mono);font-size:0.78cqw;letter-spacing:.1em;text-transform:uppercase;
+          color:var(--uc-azul);margin:0 0 0.3cqw;font-weight:500}
+.notes p{margin:0}
+
+.sign{display:flex;justify-content:space-between;font-family:var(--mono);font-size:0.8cqw;
+      letter-spacing:.05em;color:var(--slate);border-top:1px solid var(--hair);
+      margin-top:1cqw;padding-top:0.6cqw}
+
+@media print{
+  @page{size:13.333in 7.5in;margin:0}
+  body{padding:0;gap:0;background:#fff}
+  .slide{border:none;width:1280px;max-width:none;break-after:page}
+  .slide:last-child{break-after:auto}
+}
+</style>
+
+<section class="slide cover">
+  <div class="banda"><span>PONTIFICIA UNIVERSIDAD CATÓLICA DE CHILE</span>
+    <span>MAGÍSTER EN INTELIGENCIA ARTIFICIAL</span></div>
+  <div class="centro">
+    <div class="izq">
+      <img src="Logo.png" alt="Pontificia Universidad Católica de Chile">
+      <p class="curso">INF3862<br>Big Data</p>
+    </div>
+    <div class="der">
+      <p class="eyebrow">Actividad 03 · Elegir y diseñar una arquitectura</p>
+      <h1>Logs en Hadoop, stock en ACID</h1>
+      <p class="sub">Elegir cuál de los dos casos se resuelve con Hadoop y MapReduce, justificar por
+        qué el otro necesita otra arquitectura, y dibujar cómo se almacenan y procesan los datos del
+        caso elegido.</p>
+      <div class="regla"></div>
+      <dl class="meta">
+        <dt>Estudiante</dt><dd>Armando Arredondo Valle</dd>
+        <dt>Profesor</dt><dd>Sebastián Hagedorn</dd>
+        <dt>Entrega</dt><dd>Viernes 13 de noviembre de 2026</dd>
+      </dl>
+      <div class="indice">
+        <div><b>Lámina 01</b>Decisión: los dos casos frente a los cuatro criterios</div>
+        <div><b>Lámina 02</b>HDFS: bloques, réplicas y un DataNode caído</div>
+        <div><b>Lámina 03</b>MapReduce: de cuatro registros al porcentaje de errores</div>
+      </div>
+    </div>
+  </div>
+  <div class="pie"><span>INF3862 BIG DATA · PROF. SEBASTIÁN HAGEDORN</span>
+    <span>2026 SEGUNDO SEMESTRE</span></div>
+</section>
+
+<section class="slide">
+  <div class="rail"><span class="course">INF3862 Big Data · Actividad 03</span>
+    <span class="step"><b>01</b> / 03 · Decisión</span></div>
+  <h1>60 TB de logs van a Hadoop; 20 MB de stock, jamás</h1>
+  <p class="dek">Los dos casos se comparan con los cuatro criterios de la clase: <b>volumen</b>,
+    <b>latencia exigida</b>, <b>lectura de archivos frente a actualización de registros</b> y
+    <b>posibilidad de dividir y combinar el cálculo</b>. Los criterios apuntan en la misma dirección
+    en ambos casos, y no es la misma dirección.</p>
+
+  <div class="body">
+    <table>
+      <thead><tr>
+        <th class="crit">Criterio</th>
+        <th class="pick">Caso A · logs de la plataforma web<span class="chip">ELEGIDO</span></th>
+        <th>Caso B · confirmar compras con stock</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td class="crit">Volumen</td>
+          <td class="pick"><b>60 TB</b> vivos y <b>+2 TB cada día</b>: excede el disco y, sobre todo,
+            el ancho de banda de lectura de un solo servidor.</td>
+          <td><b>≈20 MB</b> y 50.000 filas: cabe entero en RAM, y de hecho en la caché del motor.</td>
+        </tr>
+        <tr>
+          <td class="crit">Latencia exigida</td>
+          <td class="pick">Lote nocturno con <b>plazo a las 08:00</b>: tolera minutos u horas mientras
+            termine dentro de la ventana.</td>
+          <td><b>&lt;100 ms</b> por confirmación, con muchas compras concurrentes.</td>
+        </tr>
+        <tr>
+          <td class="crit">Lectura vs. escritura</td>
+          <td class="pick">Lectura <b>secuencial</b> de archivos históricos que <b>no se modifican</b>:
+            encaja con el <i>write-once</i> de HDFS.</td>
+          <td>Lee y <b>actualiza el mismo registro</b> (<code>stock = stock − 1</code>) miles de veces
+            por minuto.</td>
+        </tr>
+        <tr>
+          <td class="crit">¿Divide y combina?</td>
+          <td class="pick">Sí: contar solicitudes y errores por <code>(sitio, día)</code> es
+            <b>asociativo y conmutativo</b>, así que admite <b>agregación parcial</b> por bloque.</td>
+          <td>No: <code>stock = 1</code> es un recurso compartido. <b>1 unidad ≠ 2 ventas</b>, y
+            ninguna partición hace independiente esa decisión.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="boxes">
+      <div class="box">
+        <span class="lbl">Elección</span>
+        <h2>Caso A → HDFS + YARN + MapReduce</h2>
+        <p>El volumen obliga a escalar horizontalmente, los archivos son inmutables, la ventana es
+          batch y el cálculo se reparte por clave. <b>El costo que asumimos:</b> con factor de
+          replicación 3, los 60 TB ocupan ~180 TB de disco; el <i>shuffle</i> paga I/O, red y
+          coordinación; y el reporte refleja el cierre del día UTC, no el estado en vivo.</p>
+      </div>
+      <div class="box alt">
+        <span class="lbl">Alternativa para el Caso B</span>
+        <h2>DBMS por filas con transacciones ACID</h2>
+        <p>MapReduce no sirve ahí por tres razones, no por tamaño: lanzar un trabajo paga
+          planificación de YARN, <i>containers</i>, lectura de <i>splits</i> y <i>shuffle</i> a disco,
+          es decir <b>segundos o minutos</b> frente a 100 ms; HDFS es de escritura única y <b>no actualiza
+          un registro en su lugar</b>; y MapReduce <b>no ofrece aislamiento</b>: dos trabajos
+          leerían <code>stock = 1</code> y ambos confirmarían.</p>
+        <p>En su lugar: motor relacional orientado a filas con índice por <code>producto_id</code> y
+          un <code>UPDATE … WHERE producto_id = ? AND stock &gt; 0</code> dentro de una transacción,
+          confirmando solo si afectó una fila; o clave-valor con operación atómica (Redis, escritura
+          condicional en DynamoDB). <b>Su costo:</b> ese registro se vuelve punto de contención y hay
+          que acotar la transacción y definir reintentos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="rail"><span class="course">INF3862 Big Data · Actividad 03</span>
+    <span class="step"><b>02</b> / 03 · Almacenamiento en HDFS</span></div>
+  <h1>Un día de logs: tres bloques, dos réplicas, un nodo caído</h1>
+
+  <div class="body">
+    <figure>
+      <div class="canvas">
+{{DIAGRAMA:hdfs}}
+      </div>
+      <div class="legend">
+        <span><i class="swatch teal"></i>camino de lectura del cliente</span>
+        <span><i class="swatch rust"></i>réplica no disponible: vive en DN1</span>
+        <span><i class="swatch"></i>colocación de réplicas (factor 2 en el dibujo)</span>
+      </div>
+      <figcaption>El color también informa: en <b>oro</b> los bloques en que se parte el archivo,
+        en <b>azul</b> los DataNodes que guardan sus réplicas y el camino de lectura, y en
+        <b>rojo</b> el nodo que se cayó.</figcaption>
+    </figure>
+
+    <div class="notes">
+      <div>
+        <h3>Qué pasa cuando cae DN1</h3>
+        <p>El NameNode deja de recibir su <i>heartbeat</i> y marca B1 y B3 como <b>subreplicados</b>.
+          La lectura no se interrumpe: <b>B1 se lee desde DN2 y B3 desde DN3</b>. Después, HDFS copia
+          B1 y B3 a un nodo sano hasta <b>recuperar el factor configurado</b>.</p>
+      </div>
+      <div>
+        <h3>Quién sabe qué</h3>
+        <p>El NameNode guarda <b>dónde</b> está cada bloque; los DataNodes guardan <b>los bytes</b>.
+          El contenido no pasa por el NameNode: solo entrega la ubicación y el cliente lee directo.</p>
+      </div>
+      <div>
+        <h3>Dos advertencias</h3>
+        <p>Las réplicas son <b>copias para disponibilidad, no registros que se cuenten</b>: el informe
+          sigue contando cada solicitud una vez. Y programar el Map donde ya hay réplica
+          <b>reduce tráfico, no lo elimina</b>: el <i>shuffle</i> sigue moviendo datos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="rail"><span class="course">INF3862 Big Data · Actividad 03</span>
+    <span class="step"><b>03</b> / 03 · Procesamiento MapReduce</span></div>
+  <h1>Cuatro registros hasta el porcentaje de errores por sitio y día</h1>
+
+  <div class="body">
+    <figure>
+      <div class="canvas">
+{{DIAGRAMA:mapreduce}}
+      </div>
+      <figcaption><b>Se lee desde HDFS y se escribe en HDFS:</b>
+        <code>/logs/dt=2026-11-12/access.log</code> entra dividido en <i>splits</i> y el resultado
+        queda en <code>/reportes/dt=2026-11-12/part-r-0000x</code>, que es lo que publica el
+        dashboard antes de las 08:00. <b>Map</b> emite la clave <code>(sitio, día)</code> con el
+        valor <code>(1, error)</code>; el <b>particionador</b> manda cada clave a un reducer con
+        <code>hash(clave) mod 2</code>; <b>Reduce</b> suma solicitudes y errores y calcula el
+        porcentaje. El color separa las tres naturalezas del dato: <b>azul</b> lo que persiste en
+        HDFS, <b>oro</b> el cómputo y <b>gris</b> los pares intermedios, que son efímeros.</figcaption>
+    </figure>
+
+    <div class="notes">
+      <div>
+        <h3>Por qué esa clave</h3>
+        <p>La clave <b>expresa qué debe reunirse</b>: el objetivo es por sitio y día, así que la clave
+          es <code>(sitio, día UTC)</code>. El valor lleva el par <code>(1, error)</code>, con
+          <code>error = 1</code> si el código está entre <b>500 y 599</b>. Así el mismo trabajo
+          entrega las solicitudes y el porcentaje.</p>
+      </div>
+      <div>
+        <h3>Combiner y particionador</h3>
+        <p>Como la suma admite <b>agregación parcial</b>, un <i>combiner</i> suma los pares dentro de
+          cada mapper antes del <i>shuffle</i> y reduce el tráfico. El particionador por
+          <code>hash(clave)</code> garantiza que <b>toda una clave caiga en el mismo reducer</b>; el
+          orden es por partición, <b>no global</b>, y no hace falta un único archivo de salida.</p>
+      </div>
+      <div>
+        <h3>Lo que puede salir mal</h3>
+        <p><b>Skew:</b> si un sitio concentra el tráfico, concentra un reducer, y <b>agregar reducers
+          no divide esa clave</b> (aquí el combiner lo amortigua porque es una suma). Si un mapper
+          falla, el framework <b>reintenta su split</b> releyendo una réplica: replicación y reintento
+          son mecanismos distintos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+

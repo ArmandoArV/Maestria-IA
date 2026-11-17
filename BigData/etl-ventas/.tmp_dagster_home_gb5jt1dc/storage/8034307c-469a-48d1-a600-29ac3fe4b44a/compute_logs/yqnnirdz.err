@@ -1,0 +1,5 @@
+2026-11-11 19:30:00 -0600 - dagster - DEBUG - __ASSET_JOB - 8034307c-469a-48d1-a600-29ac3fe4b44a - 71354 - LOGS_CAPTURED - Capturing logs for process (pid: 71354).
+2026-11-11 19:30:00 -0600 - dagster - DEBUG - __ASSET_JOB - 8034307c-469a-48d1-a600-29ac3fe4b44a - 71354 - ventas_limpias_claves_unicas - STEP_START - Started execution of step "ventas_limpias_claves_unicas".
+2026-11-11 19:30:00 -0600 - dagster - DEBUG - __ASSET_JOB - 8034307c-469a-48d1-a600-29ac3fe4b44a - 71354 - ventas_limpias_claves_unicas - STEP_OUTPUT - Yielded output "result" of type "Any". (Type check passed).
+2026-11-11 19:30:00 -0600 - dagster - DEBUG - __ASSET_JOB - 8034307c-469a-48d1-a600-29ac3fe4b44a - 71354 - ventas_limpias_claves_unicas - ASSET_CHECK_EVALUATION - Asset check 'claves_unicas' on 'ventas_limpias' passed.
+2026-11-11 19:30:00 -0600 - dagster - DEBUG - __ASSET_JOB - 8034307c-469a-48d1-a600-29ac3fe4b44a - 71354 - ventas_limpias_claves_unicas - STEP_SUCCESS - Finished execution of step "ventas_limpias_claves_unicas" in 77ms.

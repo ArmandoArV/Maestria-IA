@@ -1,0 +1,188 @@
+- generic [ref=f14e1]:
+  - generic [ref=f14e3]:
+    - region "Notifications alt+T"
+    - generic [ref=f14e4]:
+      - navigation [ref=f14e7]:
+        - link [ref=f14e9] [cursor=pointer]:
+          - /url: /
+          - img "Dagster" [ref=f14e11]
+        - generic [ref=f14e22]:
+          - generic [ref=f14e23]:
+            - link "timeline Overview" [ref=f14e25] [cursor=pointer]:
+              - /url: /overview
+              - generic [ref=f14e26]:
+                - img "timeline" [ref=f14e28]
+                - generic [ref=f14e29]: Overview
+            - link "runs Runs" [ref=f14e31] [cursor=pointer]:
+              - /url: /runs
+              - generic [ref=f14e32]:
+                - img "runs" [ref=f14e34]
+                - generic [ref=f14e35]: Runs
+          - generic [ref=f14e36]:
+            - link "catalog_book Catalog" [ref=f14e38] [cursor=pointer]:
+              - /url: /assets
+              - generic [ref=f14e39]:
+                - img "catalog_book" [ref=f14e41]
+                - generic [ref=f14e42]: Catalog
+            - link "schedule Automation" [ref=f14e44] [cursor=pointer]:
+              - /url: /automation
+              - generic [ref=f14e45]:
+                - img "schedule" [ref=f14e47]
+                - generic [ref=f14e48]: Automation
+          - generic [ref=f14e49]:
+            - link "lineage Lineage" [ref=f14e51] [cursor=pointer]:
+              - /url: /asset-groups
+              - generic [ref=f14e52]:
+                - img "lineage" [ref=f14e54]
+                - generic [ref=f14e55]: Lineage
+            - link "deployment Deployment" [ref=f14e57] [cursor=pointer]:
+              - /url: /deployment
+              - generic [ref=f14e58]:
+                - img "deployment" [ref=f14e60]
+                - generic [ref=f14e61]: Deployment
+        - generic [ref=f14e62]:
+          - button "search Search" [ref=f14e65] [cursor=pointer]:
+            - generic [ref=f14e66]:
+              - img "search" [ref=f14e68]
+              - generic [ref=f14e69]: Search
+          - generic [ref=f14e70]:
+            - button "panel_show_right Hide navigation" [ref=f14e72] [cursor=pointer]:
+              - generic [ref=f14e73]:
+                - img "panel_show_right" [ref=f14e75]
+                - generic [ref=f14e76]: Hide navigation
+            - button "settings Settings" [ref=f14e78] [cursor=pointer]:
+              - generic [ref=f14e79]:
+                - img "settings" [ref=f14e81]
+                - generic [ref=f14e82]: Settings
+            - button "support Support" [ref=f14e85] [cursor=pointer]:
+              - generic [ref=f14e86]:
+                - img "support" [ref=f14e88]
+                - generic [ref=f14e89]: Support
+      - generic [ref=f14e93]:
+        - generic [ref=f14e94]:
+          - generic [ref=f14e95]:
+            - generic [ref=f14e97]:
+              - list [ref=f14e99]:
+                - listitem [ref=f14e100]:
+                  - link [ref=f14e102] [cursor=pointer]:
+                    - /url: /assets
+                    - generic "Assets" [ref=f14e103]
+                - listitem [ref=f14e104]:
+                  - img "chevron_right" [ref=f14e105]
+                  - generic "ventas_limpias" [ref=f14e107]
+              - button [ref=f14e108] [cursor=pointer]:
+                - img "copy_to_clipboard" [ref=f14e109]
+            - generic [ref=f14e187]:
+              - button "materialization Materialize" [ref=f14e189] [cursor=pointer]:
+                - img "materialization" [ref=f14e190]
+                - generic [ref=f14e191]: Materialize
+              - button [ref=f14e193] [cursor=pointer]:
+                - img "arrow_drop_down" [ref=f14e194]
+          - generic [ref=f14e120]:
+            - tablist [ref=f14e121]:
+              - tab "Overview" [ref=f14e122] [cursor=pointer]
+              - tab "Events" [ref=f14e123] [cursor=pointer]
+              - tab "Checks" [expanded] [active] [selected] [ref=f14e124] [cursor=pointer]
+              - tab "Lineage" [ref=f14e195] [cursor=pointer]
+            - button [ref=f14e128] [cursor=pointer]:
+              - img "refresh" [ref=f14e129]
+        - generic [ref=f14e197]:
+          - generic [ref=f14e198]:
+            - generic [ref=f14e199]:
+              - generic [ref=f14e200]: Checks (5)
+              - button "execute Execute all" [ref=f14e201] [cursor=pointer]:
+                - img "execute" [ref=f14e202]
+                - generic [ref=f14e203]: Execute all
+            - generic [ref=f14e204]:
+              - generic [ref=f14e205]:
+                - img "search" [ref=f14e206]
+                - textbox "Filter checks" [ref=f14e207]
+              - generic [ref=f14e211]:
+                - generic [ref=f14e214] [cursor=pointer]:
+                  - img "check_circle" [ref=f14e216]
+                  - generic [ref=f14e217]:
+                    - generic "claves_unicas" [ref=f14e218]
+                    - text: Succeeded
+                - generic [ref=f14e221] [cursor=pointer]:
+                  - img "check_circle" [ref=f14e223]
+                  - generic [ref=f14e224]:
+                    - generic "cuadra_con_manifiesto" [ref=f14e225]
+                    - text: Succeeded
+                - generic [ref=f14e228] [cursor=pointer]:
+                  - img "check_circle" [ref=f14e230]
+                  - generic [ref=f14e231]:
+                    - generic "estados_normalizados" [ref=f14e232]
+                    - text: Succeeded
+                - generic [ref=f14e235] [cursor=pointer]:
+                  - img "check_circle" [ref=f14e237]
+                  - generic [ref=f14e238]:
+                    - generic "fechas_validas" [ref=f14e239]
+                    - text: Succeeded
+                - generic [ref=f14e242] [cursor=pointer]:
+                  - img "check_circle" [ref=f14e244]
+                  - generic [ref=f14e245]:
+                    - generic "importe_coherente" [ref=f14e246]
+                    - text: Succeeded
+          - generic [ref=f14e247]:
+            - generic [ref=f14e248]:
+              - generic [ref=f14e249]:
+                - img "asset_check" [ref=f14e250]
+                - generic [ref=f14e251]: claves_unicas
+              - generic [ref=f14e253]:
+                - button "execute Execute" [ref=f14e254] [cursor=pointer]:
+                  - img "execute" [ref=f14e255]
+                  - generic [ref=f14e256]: Execute
+                - button [ref=f14e258] [cursor=pointer]:
+                  - img "arrow_drop_down" [ref=f14e259]
+            - tablist [ref=f14e261]:
+              - tab "Overview" [expanded] [selected] [ref=f14e262] [cursor=pointer]
+              - tab "Execution history" [ref=f14e263] [cursor=pointer]
+              - tab "Automation history" [disabled] [ref=f14e264] [cursor=pointer]
+            - generic [ref=f14e266]:
+              - generic [ref=f14e267]:
+                - generic [ref=f14e269] [cursor=pointer]:
+                  - generic [ref=f14e270]: About
+                  - img "arrow_drop_down" [ref=f14e271]
+                - generic [ref=f14e272]:
+                  - img "shield" [ref=f14e273]
+                  - generic [ref=f14e274]:
+                    - text: This is a
+                    - strong [ref=f14e275]: non-blocking
+                    - text: asset check.
+                  - img "info" [ref=f14e277]
+                - paragraph [ref=f14e283]: La clave (codigo_pedido, linea) debe ser unica.
+              - generic [ref=f14e284]:
+                - generic [ref=f14e286] [cursor=pointer]:
+                  - generic [ref=f14e287]: Latest execution
+                  - img "arrow_drop_down" [ref=f14e288]
+                - generic [ref=f14e289]:
+                  - generic [ref=f14e290]:
+                    - generic [ref=f14e291]:
+                      - generic [ref=f14e292]: Evaluation result
+                      - generic [ref=f14e295]:
+                        - img "check_circle" [ref=f14e296]
+                        - generic [ref=f14e297]: Passed
+                    - generic [ref=f14e298]:
+                      - generic [ref=f14e299]: Timestamp
+                      - link "11 nov, 7:29 p.m." [ref=f14e300] [cursor=pointer]:
+                        - /url: /runs/8034307c-469a-48d1-a600-29ac3fe4b44a?focusedTime=1794446991&selection=ventas_limpias_claves_unicas&logs=step%3Aventas_limpias_claves_unicas
+                    - generic [ref=f14e301]:
+                      - generic [ref=f14e302]: Target materialization
+                      - link "11 nov, 7:29 p.m." [ref=f14e303] [cursor=pointer]:
+                        - /url: /runs/8034307c-469a-48d1-a600-29ac3fe4b44a
+                    - generic [ref=f14e304]:
+                      - generic [ref=f14e305]: Partition
+                      - text: —
+                  - generic [ref=f14e306]:
+                    - generic [ref=f14e307]: Metadata
+                    - table [ref=f14e310]:
+                      - rowgroup [ref=f14e311]:
+                        - row [ref=f14e312]:
+                          - cell "duplicados_encontrados" [ref=f14e313]
+                          - cell "0" [ref=f14e314]
+              - generic [ref=f14e315]:
+                - generic [ref=f14e317] [cursor=pointer]:
+                  - generic [ref=f14e318]: Plots
+                  - img "arrow_drop_down" [ref=f14e319]
+                - generic [ref=f14e320]: duplicados_encontrados
+  - alert [ref=f14e186]

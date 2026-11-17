@@ -1,0 +1,152 @@
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - region "Notifications alt+T":
+      - list:
+        - listitem [ref=e316]:
+          - generic [ref=e320]:
+            - generic [ref=e321]:
+              - img "success" [ref=e322]
+              - generic [ref=e323]: Launched run 8034307c
+            - link "View" [ref=e325] [cursor=pointer]:
+              - /url: /runs/8034307c-469a-48d1-a600-29ac3fe4b44a
+    - generic [ref=e4]:
+      - navigation [ref=e7]:
+        - link [ref=e9] [cursor=pointer]:
+          - /url: /
+          - img "Dagster" [ref=e11]
+        - generic [ref=e22]:
+          - generic [ref=e23]:
+            - link "timeline Overview" [ref=e25] [cursor=pointer]:
+              - /url: /overview
+              - generic [ref=e26]:
+                - img "timeline" [ref=e28]
+                - generic [ref=e29]: Overview
+            - link "runs Runs" [ref=e31] [cursor=pointer]:
+              - /url: /runs
+              - generic [ref=e32]:
+                - img "runs" [ref=e34]
+                - generic [ref=e35]: Runs
+          - generic [ref=e36]:
+            - link "catalog_book Catalog" [ref=e38] [cursor=pointer]:
+              - /url: /assets
+              - generic [ref=e39]:
+                - img "catalog_book" [ref=e41]
+                - generic [ref=e42]: Catalog
+            - link "schedule Automation" [ref=e44] [cursor=pointer]:
+              - /url: /automation
+              - generic [ref=e45]:
+                - img "schedule" [ref=e47]
+                - generic [ref=e48]: Automation
+          - generic [ref=e49]:
+            - link "lineage Lineage" [ref=e51] [cursor=pointer]:
+              - /url: /asset-groups
+              - generic [ref=e52]:
+                - img "lineage" [ref=e54]
+                - generic [ref=e55]: Lineage
+            - link "deployment Deployment" [ref=e57] [cursor=pointer]:
+              - /url: /deployment
+              - generic [ref=e58]:
+                - img "deployment" [ref=e60]
+                - generic [ref=e61]: Deployment
+        - generic [ref=e62]:
+          - button "search Search" [ref=e65] [cursor=pointer]:
+            - generic [ref=e66]:
+              - img "search" [ref=e68]
+              - generic [ref=e69]: Search
+          - generic [ref=e70]:
+            - button "panel_show_right Hide navigation" [ref=e72] [cursor=pointer]:
+              - generic [ref=e73]:
+                - img "panel_show_right" [ref=e75]
+                - generic [ref=e76]: Hide navigation
+            - button "settings Settings" [ref=e78] [cursor=pointer]:
+              - generic [ref=e79]:
+                - img "settings" [ref=e81]
+                - generic [ref=e82]: Settings
+            - button "support Support" [ref=e85] [cursor=pointer]:
+              - generic [ref=e86]:
+                - img "support" [ref=e88]
+                - generic [ref=e89]: Support
+      - generic [ref=e93]:
+        - generic [ref=e95]:
+          - generic [ref=e96]: Global asset lineage
+          - button "reload_definitions Reload definitions" [ref=e109] [cursor=pointer]:
+            - img "reload_definitions" [ref=e110]
+            - generic [ref=e111]: Reload definitions
+        - generic [ref=e112]:
+          - generic [ref=e114]:
+            - generic [ref=e115]:
+              - combobox "Jump to…" [ref=e120]
+              - button [ref=e122] [cursor=pointer]:
+                - img "panel_show_right" [ref=e123]
+            - generic [ref=e126]:
+              - generic [ref=e131] [cursor=pointer]:
+                - button [ref=e132]:
+                  - img "arrow_drop_down" [ref=e133]
+                - button [ref=e136]:
+                  - img "asset_group" [ref=e137]
+                  - generic "extract" [ref=e138]
+              - generic [ref=e143] [cursor=pointer]:
+                - button [ref=e144]:
+                  - img "arrow_drop_down" [ref=e145]
+                - button [ref=e148]:
+                  - img "asset_group" [ref=e149]
+                  - generic "load" [ref=e150]
+              - generic [ref=e155] [cursor=pointer]:
+                - button [ref=e156]:
+                  - img "arrow_drop_down" [ref=e157]
+                - button [ref=e160]:
+                  - img "asset_group" [ref=e161]
+                  - generic "transform" [ref=e162]
+          - generic [ref=e167]:
+            - generic [ref=e170]:
+              - img [ref=e172]:
+                - generic [ref=e177] [cursor=pointer]:
+                  - generic [ref=e178]:
+                    - generic [ref=e179]: load
+                    - img "unfold_more" [ref=e183]
+                  - generic [ref=e186]:
+                    - img "dot_filled" [ref=e187]
+                    - generic [ref=e188]: "1"
+                - generic [ref=e195] [cursor=pointer]:
+                  - generic [ref=e196]:
+                    - generic [ref=e197]: extract
+                    - img "unfold_more" [ref=e201]
+                  - generic [ref=e204]:
+                    - img "dot_filled" [ref=e205]
+                    - generic [ref=e206]: "2"
+                - generic [ref=e213] [cursor=pointer]:
+                  - generic [ref=e214]:
+                    - generic [ref=e215]: transform
+                    - img "unfold_more" [ref=e219]
+                  - generic [ref=e222]:
+                    - img "dot_filled" [ref=e223]
+                    - generic [ref=e224]: "3"
+              - generic [ref=e227]:
+                - generic [ref=e228]:
+                  - button [ref=e230] [cursor=pointer]:
+                    - img "zoom_in" [ref=e231]
+                  - slider [ref=e237] [cursor=pointer]
+                  - button [ref=e239] [cursor=pointer]:
+                    - img "zoom_out" [ref=e240]
+                - generic [ref=e241]:
+                  - button [ref=e243] [cursor=pointer]:
+                    - img "settings" [ref=e244]
+                  - button [ref=e245] [cursor=pointer]:
+                    - img "config" [ref=e246]
+                  - button [ref=e249] [cursor=pointer]:
+                    - img "download_for_offline" [ref=e250]
+            - generic [ref=e253]:
+              - generic [ref=e257]:
+                - img "search" [ref=e259]
+                - generic [ref=e261]:
+                  - textbox "Search and filter assets" [ref=e262]
+                  - generic [ref=e263]: Search and filter assets
+              - button [ref=e268] [cursor=pointer]:
+                - img "refresh" [ref=e269]
+              - generic [ref=e270]:
+                - button "materialization Materialize all" [active] [ref=e272] [cursor=pointer]:
+                  - img "materialization" [ref=e327]
+                  - generic [ref=e274]: Materialize all
+                - button [ref=e276] [cursor=pointer]:
+                  - img "arrow_drop_down" [ref=e277]
+  - alert [ref=e108]

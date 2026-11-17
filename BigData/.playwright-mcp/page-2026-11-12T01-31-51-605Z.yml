@@ -1,0 +1,110 @@
+- generic [active] [ref=f12e1]:
+  - generic [ref=f12e3]:
+    - region "Notifications alt+T"
+    - generic [ref=f12e4]:
+      - navigation [ref=f12e7]:
+        - link [ref=f12e9] [cursor=pointer]:
+          - /url: /
+          - img "Dagster" [ref=f12e11]
+        - generic [ref=f12e22]:
+          - generic [ref=f12e23]:
+            - link "timeline Overview" [ref=f12e25] [cursor=pointer]:
+              - /url: /overview
+              - generic [ref=f12e26]:
+                - img "timeline" [ref=f12e28]
+                - generic [ref=f12e29]: Overview
+            - link "runs Runs" [ref=f12e31] [cursor=pointer]:
+              - /url: /runs
+              - generic [ref=f12e32]:
+                - img "runs" [ref=f12e34]
+                - generic [ref=f12e35]: Runs
+          - generic [ref=f12e36]:
+            - link "catalog_book Catalog" [ref=f12e38] [cursor=pointer]:
+              - /url: /assets
+              - generic [ref=f12e39]:
+                - img "catalog_book" [ref=f12e41]
+                - generic [ref=f12e42]: Catalog
+            - link "schedule Automation" [ref=f12e44] [cursor=pointer]:
+              - /url: /automation
+              - generic [ref=f12e45]:
+                - img "schedule" [ref=f12e47]
+                - generic [ref=f12e48]: Automation
+          - generic [ref=f12e49]:
+            - link "lineage Lineage" [ref=f12e51] [cursor=pointer]:
+              - /url: /asset-groups
+              - generic [ref=f12e52]:
+                - img "lineage" [ref=f12e54]
+                - generic [ref=f12e55]: Lineage
+            - link "deployment Deployment" [ref=f12e57] [cursor=pointer]:
+              - /url: /deployment
+              - generic [ref=f12e58]:
+                - img "deployment" [ref=f12e60]
+                - generic [ref=f12e61]: Deployment
+        - generic [ref=f12e62]:
+          - button "search Search" [ref=f12e65] [cursor=pointer]:
+            - generic [ref=f12e66]:
+              - img "search" [ref=f12e68]
+              - generic [ref=f12e69]: Search
+          - generic [ref=f12e70]:
+            - button "panel_show_right Hide navigation" [ref=f12e72] [cursor=pointer]:
+              - generic [ref=f12e73]:
+                - img "panel_show_right" [ref=f12e75]
+                - generic [ref=f12e76]: Hide navigation
+            - button "settings Settings" [ref=f12e78] [cursor=pointer]:
+              - generic [ref=f12e79]:
+                - img "settings" [ref=f12e81]
+                - generic [ref=f12e82]: Settings
+            - button "support Support" [ref=f12e85] [cursor=pointer]:
+              - generic [ref=f12e86]:
+                - img "support" [ref=f12e88]
+                - generic [ref=f12e89]: Support
+      - generic [ref=f12e93]:
+        - generic [ref=f12e94]:
+          - generic [ref=f12e95]:
+            - generic [ref=f12e96]:
+              - generic [ref=f12e97]:
+                - list [ref=f12e99]:
+                  - listitem [ref=f12e100]:
+                    - link [ref=f12e102] [cursor=pointer]:
+                      - /url: /assets
+                      - generic "Assets" [ref=f12e103]
+                  - listitem [ref=f12e104]:
+                    - img "chevron_right" [ref=f12e105]
+                    - link [ref=f12e107] [cursor=pointer]:
+                      - /url: /assets/ventas_limpias?view=folder
+                      - generic "ventas_limpias" [ref=f12e108]
+                  - listitem [ref=f12e109]:
+                    - img "chevron_right" [ref=f12e110]
+                    - generic "checks" [ref=f12e112]
+                - button [ref=f12e113] [cursor=pointer]:
+                  - img "copy_to_clipboard" [ref=f12e114]
+              - generic [ref=f12e115]: External Asset
+            - button "materialization Materialize" [disabled] [ref=f12e120]:
+              - img "materialization" [ref=f12e121]
+              - generic [ref=f12e122]: Materialize
+          - generic [ref=f12e125]:
+            - tablist [ref=f12e126]:
+              - tab "Overview" [expanded] [selected] [ref=f12e127] [cursor=pointer]
+              - tab "Events" [ref=f12e128] [cursor=pointer]
+              - tab "Checks" [ref=f12e129] [cursor=pointer]
+              - tab "Lineage" [disabled] [ref=f12e130] [cursor=pointer]
+            - button [ref=f12e133] [cursor=pointer]:
+              - img "refresh" [ref=f12e134]
+        - generic [ref=f12e135]:
+          - generic [ref=f12e136]:
+            - button "status Status arrow_drop_down" [expanded] [ref=f12e139] [cursor=pointer]:
+              - generic [ref=f12e140]:
+                - img "status" [ref=f12e141]
+                - generic [ref=f12e142]: Status
+                - img "arrow_drop_down" [ref=f12e143]
+            - button "sticky_note Description arrow_drop_down" [expanded] [ref=f12e151] [cursor=pointer]:
+              - generic [ref=f12e152]:
+                - img "sticky_note" [ref=f12e153]
+                - generic [ref=f12e154]: Description
+                - img "arrow_drop_down" [ref=f12e155]
+          - button "info Definition arrow_drop_down" [expanded] [ref=f12e165] [cursor=pointer]:
+            - generic [ref=f12e166]:
+              - img "info" [ref=f12e167]
+              - generic [ref=f12e168]: Definition
+              - img "arrow_drop_down" [ref=f12e169]
+  - alert [ref=f12e191]

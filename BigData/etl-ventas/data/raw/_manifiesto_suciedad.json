@@ -1,0 +1,12 @@
+{
+  "semilla": 3862,
+  "filas_totales": 2043,
+  "filas_base": 1988,
+  "D1_duplicados_exactos_plantados": 40,
+  "D2_filas_parecidas_validas_plantadas": 15,
+  "D3_cantidad_vacia_plantada": 25,
+  "D8_sin_catalogo_plantadas": 18,
+  "D9_codigo_mal_formado_plantadas": 10,
+  "D10_productos_duplicados_en_catalogo": 2,
+  "filas_validas_esperadas": 1978
+}

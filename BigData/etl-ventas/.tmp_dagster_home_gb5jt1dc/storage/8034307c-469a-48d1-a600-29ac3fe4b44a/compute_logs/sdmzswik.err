@@ -1,0 +1,7 @@
+2026-11-11 19:29:59 -0600 - dagster - DEBUG - __ASSET_JOB - 8034307c-469a-48d1-a600-29ac3fe4b44a - 71173 - LOGS_CAPTURED - Capturing logs for process (pid: 71173).
+2026-11-11 19:29:59 -0600 - dagster - DEBUG - __ASSET_JOB - 8034307c-469a-48d1-a600-29ac3fe4b44a - 71173 - transformar_ventas - STEP_START - Started execution of step "transformar_ventas".
+2026-11-11 19:29:59 -0600 - dagster - DEBUG - __ASSET_JOB - 8034307c-469a-48d1-a600-29ac3fe4b44a - 71173 - transformar_ventas - STEP_OUTPUT - Yielded output "ventas_limpias" of type "Nothing". (Type check passed).
+2026-11-11 19:29:59 -0600 - dagster - DEBUG - __ASSET_JOB - 8034307c-469a-48d1-a600-29ac3fe4b44a - 71173 - transformar_ventas - ASSET_MATERIALIZATION - Materialized value ventas_limpias.
+2026-11-11 19:29:59 -0600 - dagster - DEBUG - __ASSET_JOB - 8034307c-469a-48d1-a600-29ac3fe4b44a - 71173 - transformar_ventas - STEP_OUTPUT - Yielded output "ventas_cuarentena" of type "Nothing". (Type check passed).
+2026-11-11 19:29:59 -0600 - dagster - DEBUG - __ASSET_JOB - 8034307c-469a-48d1-a600-29ac3fe4b44a - 71173 - transformar_ventas - ASSET_MATERIALIZATION - Materialized value ventas_cuarentena.
+2026-11-11 19:29:59 -0600 - dagster - DEBUG - __ASSET_JOB - 8034307c-469a-48d1-a600-29ac3fe4b44a - 71173 - transformar_ventas - STEP_SUCCESS - Finished execution of step "transformar_ventas" in 132ms.

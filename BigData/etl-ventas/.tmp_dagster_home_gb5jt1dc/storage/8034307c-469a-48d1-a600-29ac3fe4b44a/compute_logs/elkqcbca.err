@@ -1,0 +1,5 @@
+2026-11-11 19:30:00 -0600 - dagster - DEBUG - __ASSET_JOB - 8034307c-469a-48d1-a600-29ac3fe4b44a - 71357 - LOGS_CAPTURED - Capturing logs for process (pid: 71357).
+2026-11-11 19:30:00 -0600 - dagster - DEBUG - __ASSET_JOB - 8034307c-469a-48d1-a600-29ac3fe4b44a - 71357 - ventas_limpias_fechas_validas - STEP_START - Started execution of step "ventas_limpias_fechas_validas".
+2026-11-11 19:30:00 -0600 - dagster - DEBUG - __ASSET_JOB - 8034307c-469a-48d1-a600-29ac3fe4b44a - 71357 - ventas_limpias_fechas_validas - STEP_OUTPUT - Yielded output "result" of type "Any". (Type check passed).
+2026-11-11 19:30:00 -0600 - dagster - DEBUG - __ASSET_JOB - 8034307c-469a-48d1-a600-29ac3fe4b44a - 71357 - ventas_limpias_fechas_validas - ASSET_CHECK_EVALUATION - Asset check 'fechas_validas' on 'ventas_limpias' passed.
+2026-11-11 19:30:00 -0600 - dagster - DEBUG - __ASSET_JOB - 8034307c-469a-48d1-a600-29ac3fe4b44a - 71357 - ventas_limpias_fechas_validas - STEP_SUCCESS - Finished execution of step "ventas_limpias_fechas_validas" in 78ms.

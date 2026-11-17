@@ -1,0 +1,5 @@
+2026-11-11 19:30:00 -0600 - dagster - DEBUG - __ASSET_JOB - 8034307c-469a-48d1-a600-29ac3fe4b44a - 71359 - LOGS_CAPTURED - Capturing logs for process (pid: 71359).
+2026-11-11 19:30:00 -0600 - dagster - DEBUG - __ASSET_JOB - 8034307c-469a-48d1-a600-29ac3fe4b44a - 71359 - ventas_limpias_importe_coherente - STEP_START - Started execution of step "ventas_limpias_importe_coherente".
+2026-11-11 19:30:00 -0600 - dagster - DEBUG - __ASSET_JOB - 8034307c-469a-48d1-a600-29ac3fe4b44a - 71359 - ventas_limpias_importe_coherente - STEP_OUTPUT - Yielded output "result" of type "Any". (Type check passed).
+2026-11-11 19:30:00 -0600 - dagster - DEBUG - __ASSET_JOB - 8034307c-469a-48d1-a600-29ac3fe4b44a - 71359 - ventas_limpias_importe_coherente - ASSET_CHECK_EVALUATION - Asset check 'importe_coherente' on 'ventas_limpias' passed.
+2026-11-11 19:30:00 -0600 - dagster - DEBUG - __ASSET_JOB - 8034307c-469a-48d1-a600-29ac3fe4b44a - 71359 - ventas_limpias_importe_coherente - STEP_SUCCESS - Finished execution of step "ventas_limpias_importe_coherente" in 75ms.

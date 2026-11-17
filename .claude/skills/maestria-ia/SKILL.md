@@ -4,8 +4,8 @@ description: >
   Umbrella index/router for @ArmandoArV's Magíster en Inteligencia Artificial (PUC Chile,
   Maestria-IA repo), spanning ALL courses: Aprendizaje Supervisado (EPG4001), Aprendizaje No
   Supervisado (EPG4002), Fundamentos Matemáticos de IA (IMT3850), Bases de Datos, Introducción a
-  Data Science (IMT3860), Ética en IA, Recuperación de Información (INF3841), Gobernanza de Datos, and Deep Learning
-  (INF3812). Use for broad or
+  Data Science (IMT3860), Ética en IA, Recuperación de Información (INF3841), Gobernanza de Datos, Deep Learning
+  (INF3812), Computación de Alto Rendimiento (IMT3870), and Big Data (INF3862). Use for broad or
   cross-course questions about the maestría, when unsure which course a topic belongs to, for a
   program overview, or when working in the Maestria-IA repo without naming a course. Routes to the
   per-course skills for depth and directly covers courses lacking one (Bases de Datos, Data Science,
@@ -16,15 +16,27 @@ description: >
   Sobel, Canny, histograma, HOG, EHD, búsqueda por similitud, OpenCV, gobernanza de datos, gobierno de
   datos, DAMA, DMBOK, protección de datos personales, Ley 21.719, RAT, EIPD, ISO 42001, ISO 27001,
   INF3812, deep learning, aprendizaje profundo, red neuronal, MLP, backpropagation, CNN, RNN, LSTM,
-  Transformer, atención, PyTorch, dropout, Adam, transfer learning.
+  Transformer, atención, PyTorch, dropout, Adam, transfer learning, IMT3870, computación de alto
+  rendimiento, HPC, programación paralela, paralelismo, FLOPS, intensidad aritmética, jerarquía de
+  memoria, caché, GIL, multiprocessing, multithreading, pipelining, superescalar, peak performance,
+  speedup, eficiencia paralela, Ley de Amdahl, Ley de Gustafson, escalabilidad fuerte, escalabilidad
+  débil, joblib, memoria compartida, memoria distribuida, MPI, OpenMP, línea de caché, localidad de
+  datos, coherencia de caché, MESI, granularidad, embarrassingly parallel, condición de carrera,
+  thread safe, Numba, njit, prange, JIT, vectorización, INF3862, big data, almacenamiento de datos,
+  DBMS, OLTP, OLAP, ACID, transacción, motor columnar, poda de columnas, DuckDB, SQLite, NoSQL,
+  clave-valor, documental, grafos, series temporales, base de datos vectorial, embedding, RAG,
+  sharding, replicación, data warehouse, modelado dimensional, tabla de hechos, ETL, ELT, data lake,
+  object storage, Parquet, schema-on-read, lakehouse, Delta Lake, Apache Iceberg, Airflow, DAG,
+  Dagster, asset, materialización, dbt, Airbyte, Hadoop, HDFS, NameNode, DataNode, réplica, YARN,
+  MapReduce, mapper, reducer, shuffle, input split, skew, Cloudera, Amazon EMR.
   Respond in Spanish when the user writes in Spanish.
 ---
 
-# Magíster en Inteligencia Artificial (PUC Chile) — Master Index
+# Magíster en Inteligencia Artificial (PUC Chile): Master Index
 
 Umbrella knowledge base for the whole maestría. Use it to answer cross-course questions, figure out
 which course a topic belongs to, and route to the dedicated per-course skill for deep work. For a
-single-course question, the specific skill below usually triggers on its own — this skill is the map.
+single-course question, the specific skill below usually triggers on its own: this skill is the map.
 
 ## How to use this skill
 
@@ -41,15 +53,18 @@ single-course question, the specific skill below usually triggers on its own —
 | Aprendizaje Supervisado | EPG4001 | J. L. Bazán | `aprendizaje-supervisado` (global) | ✅ completa (Clases 1–7) |
 | Aprendizaje No Supervisado | EPG4002 | J. Acosta | `aprendizaje-no-supervisado` (global) | ✅ completa |
 | Fundamentos Matemáticos de IA | IMT3850 | M. A. Sánchez | `fundamentos-matematicos-ia` (global) | ✅ completa |
-| Bases de Datos | — | A. L. Reyes | — | 📄 cubierta aquí (§1) |
-| Introducción a Data Science | IMT3860 | A. Cataldo | — | 📄 cubierta aquí (§2) |
-| Ética en IA | — | — | — | 📄 cubierta aquí (§3) |
+| Bases de Datos | - | A. L. Reyes | - | 📄 cubierta aquí (§1) |
+| Introducción a Data Science | IMT3860 | A. Cataldo | - | 📄 cubierta aquí (§2) |
+| Ética en IA | - | - | - | 📄 cubierta aquí (§3) |
 | Recuperación de Información | INF3841 | J. M. Barrios | `recuperacion-informacion` (global) | ✅ completa (Sesiones 01–03) |
-| Gobernanza de Datos | — | A. Pumarino | `gobernanza-datos` (repo) | ✅ completa (Clases 1–7) |
+| Gobernanza de Datos | - | A. Pumarino | `gobernanza-datos` (repo) | ✅ completa (Clases 1–7) |
 | Deep Learning | INF3812 | H. Löbel | `deep-learning` (repo) | ✅ completa (Sesiones 1–9) |
+| Computación de Alto Rendimiento | IMT3870 | I. Labarca | `computacion-alto-rendimiento` (repo) | ✅ completa (Clases 01–08) |
+| Big Data | INF3862 | S. Hagedorn | `big-data` (repo) | ✅ completa (Clases 01–03) |
 
-> Repo: `D:\Maestria-IA`. Dedicated skills marked "(repo)" live under `.copilot/skills/` and load
-> when working inside the repository; "(global)" skills load anywhere.
+> Repo: `~/Maestria-IA`. **Todas** las skills dedicadas viven hoy bajo `.claude/skills/` del repo y
+> cargan al trabajar dentro de él. Las marcas "(global)"/"(repo)" reflejan su origen histórico, no su
+> ubicación actual.
 
 ## Topic → course cheat sheet
 
@@ -74,6 +89,23 @@ single-course question, the specific skill below usually triggers on its own —
 - Redes neuronales, MLP, backpropagation, descenso de gradiente estocástico, Adam, dropout, batch
   normalization, CNN/convolución, RNN/LSTM/GRU, embeddings, word2vec, seq2seq, atención, Transformer,
   transfer learning, PyTorch → **INF3812 / Deep Learning** (`deep-learning`).
+- Computación de alto rendimiento, paralelismo, FLOP/FLOPS, Ley de Moore, TOP500, arquitectura de Von
+  Neumann, latencia y ancho de banda, T(n) = α + βn, cpu-bound vs. memory-bound, intensidad
+  aritmética, GEMM/DAXPY, jerarquía de memoria y cachés, procesos e hilos, multiprocessing vs.
+  multithreading vs. hyperthreading, GIL de Python, pipelining y procesadores superescalares (R_peak
+  vs. R_max), joblib (`Parallel`/`delayed`, fork vs. spawn, pickle), speedup y eficiencia, Ley de
+  Amdahl y Ley de Gustafson, escalabilidad fuerte y débil, memoria compartida vs. distribuida, MPI y
+  OpenMP, mapeo y línea de caché, localidad temporal/espacial, coherencia y MESI, granularidad,
+  problemas perfectamente paralelos, condiciones de carrera y locks, vectorización, Numba (`@njit`,
+  `prange`, JIT/LLVM) → **IMT3870** (`computacion-alto-rendimiento`).
+- Almacenamiento de datos, DBMS, OLTP vs. OLAP, motores de filas vs. columnares (SQLite/DuckDB,
+  poda de columnas), modelos de datos (relacional, clave-valor, documental, grafos, series
+  temporales, vectorial/RAG), índices y planes de consulta, sharding y replicación, Data Warehouse y
+  modelado dimensional, Data Lake y object storage (S3, Parquet, schema-on-read), Lakehouse, Delta
+  Lake e Iceberg, ETL/ELT y sus técnicas de transformación, idempotencia, UPSERT/MERGE, batch vs.
+  streaming, orquestación con Airflow (DAG) y Dagster (assets), dbt/Airbyte/Glue, Hadoop (HDFS,
+  NameNode/DataNode, réplicas, YARN) y MapReduce (splits, shuffle, skew, K-means distribuido),
+  Cloudera, Amazon EMR → **INF3862 / Big Data** (`big-data`, resumen en §5).
 
 ---
 
@@ -122,7 +154,7 @@ A diferencia de la ciencia clásica (foco en causalidad), integra un enfoque int
 
 **Big Data (las V):** Volumen, Velocidad, Variedad (estructurada/no estructurada), Veracidad, Valor.
 Definición relativa: "es Big Data cuando no cabe en una sola unidad de cómputo". Advertencia: tener
-muchos datos no implica N = todo ni que baste con correlaciones — se necesitan modelos y contexto.
+muchos datos no implica N = todo ni que baste con correlaciones: se necesitan modelos y contexto.
 
 ### 2.2 Inferencia estadística
 Objetivo: concluir sobre una **población** (N) a partir de una **muestra** (n) ruidosa. Dos fuentes
@@ -166,16 +198,16 @@ discrimina: el usuario, el equipo que lo diseñó, la empresa que lo implementó
 ### 3.3 Justicia, responsabilidad y explicabilidad (XAI)
 Principios: fairness, accountability, transparency. La **explicabilidad** hace auditables las
 decisiones de modelos opacos. Herramientas usadas en laboratorio (Python):
-- **SHAP** — atribución de contribución de cada variable a la predicción (valores de Shapley);
+- **SHAP**: atribución de contribución de cada variable a la predicción (valores de Shapley);
   gráficos summary, bar, dependence, force.
-- **LIME** — explicación local aproximando el modelo alrededor de una instancia.
+- **LIME**: explicación local aproximando el modelo alrededor de una instancia.
 - Diagnóstico de desempeño y sesgo con matriz de confusión (p. ej. Random Forest).
 
 ---
 
 ## 4. Recuperación de Información (INF3841, Prof. Juan Manuel Barrios)
 
-> **Skill dedicada:** `recuperacion-informacion`. Cárgala para cualquier pregunta de INF3841 —
+> **Skill dedicada:** `recuperacion-informacion`. Cárgala para cualquier pregunta de INF3841:
 > tiene los apuntes por clase, las recetas de OpenCV y el formato de las evaluaciones.
 
 Curso de **Recuperación de Información (multimedia)**: cómo representar, indexar y buscar contenido
@@ -186,7 +218,7 @@ similitud** (índices multidimensionales, evaluación de efectividad, alta dimen
 OpenCV** (`cv2`, imágenes como matrices NumPy; también C++ con `cv::Mat`).
 
 - **Evaluación:** individual, sin copia ni IA generativa. NF = (C1 + C2 + T1 + T2)/4, aprueba con
-  NF ≥ 4.0. **Tareas** (T1, T2) en Python — solo `.py`, hay evaluador automático con hasta +10 décimas
+  NF ≥ 4.0. **Tareas** (T1, T2) en Python: solo `.py`, hay evaluador automático con hasta +10 décimas
   bonus. **Controles** (C1, C2) en papel/Excel/PDF (no se programa). Entregas parciales cada domingo
   con feedback; no se aceptan atrasos.
 - **Temas cubiertos:** fundamentos de IR (relevancia, ranking, IR vs. BD, RIM), procesamiento de
@@ -201,10 +233,52 @@ OpenCV** (`cv2`, imágenes como matrices NumPy; también C++ con `cv::Mat`).
 
 ---
 
+## 5. Big Data (INF3862, Prof. Sebastián Hagedorn)
+
+> **Skill dedicada:** `big-data`. Cárgala para cualquier pregunta de INF3862: tiene los apuntes por
+> clase, las rúbricas de las actividades y el benchmark OLTP vs. OLAP ya medido.
+
+Curso sobre **la pila de datos de abajo hacia arriba**: dónde viven los datos, cómo se mueven y cómo
+se procesan cuando no caben en una máquina. Material en `~/Maestria-IA/BigData/` (3 clases
+disponibles).
+
+- **Clase 01: Almacenamiento de datos:** bases de datos y DBMS (query engine, storage manager,
+  esquema y metadatos, transacciones y **ACID**), **OLTP vs. OLAP**, organización física **por filas
+  vs. por columnas** (poda de columnas y compresión), **modelos de datos** (relacional, clave-valor,
+  documental, grafos, series temporales, **vectorial**/RAG), rendimiento (índices, caché, planes,
+  particionamiento) y escala (scale up/out, **sharding** vs. **replicación**), **Data Warehouse**
+  (tres capas, ETL, modelado dimensional), **Data Lake** (object storage, schema-on-read y sus
+  problemas) y **Lakehouse / Delta Lake** (delta log, commit, versiones; **Iceberg**).
+- **Clase 02: ETL y orquestación:** estrategias de **extracción** (full, incremental, update
+  notification), **técnicas de transformación** (limpiar, deduplicar, estandarizar, derivar, join,
+  split, resumir, cifrar), estrategias de **carga** (full/incremental, UPSERT/MERGE, batch vs.
+  streaming, **idempotencia**), **ETL vs. ELT**, **Apache Airflow** (DAG, tasks, operators, Jinja,
+  datasets) y **Dagster** (assets, materializaciones); ecosistema dbt / Airbyte / AWS Glue /
+  Lakeflow.
+- **Clase 03: Apache Hadoop:** límites de una máquina y escalamiento horizontal, **HDFS** (bloques,
+  réplicas, NameNode/DataNode, localidad), **YARN** (ResourceManager, ApplicationMaster, containers)
+  y **MapReduce** paso a paso (input splits, map, particionador, shuffle, sort, reduce, **skew**,
+  reintentos), con **K-means distribuido** como caso; **Cloudera** y **Amazon EMR**.
+- **Evaluación:** actividades prácticas con entregables específicos: Actividad 1 (**solo
+  formulario**: 7 objetivas 70 % + 2 de interpretación 30 %), Actividad 2 (**1 punto**: `.py` +
+  captura de una run exitosa, más tres preguntas teóricas con fuentes) y Actividad 3 (**PDF de tres
+  láminas**: decisión, diagrama HDFS, diagrama MapReduce).
+- **Criterio transversal del curso:** *una misma solución no sirve para todas las necesidades*. Toda
+  recomendación sale del **patrón de acceso** y debe **nombrar su costo**. Distinguir siempre
+  **formato de archivo** (Parquet) ≠ **formato de tabla** (Delta/Iceberg) ≠ **motor de consultas** ≠
+  **arquitectura** (Lakehouse), y **orquestador** ≠ **motor de procesamiento**.
+
+> **Ojo con el solapamiento:** *Bases de Datos* (§1, Prof. A. L. Reyes) cubre álgebra relacional y
+> SQL; *Data Science* (§2) usa "Big Data" en el sentido de las **V**. Las preguntas de
+> **almacenamiento, pipelines y cómputo distribuido** son de **INF3862**.
+
+---
+
 ## Notas del programa
 
 - **Institución:** Pontificia Universidad Católica de Chile, Magíster en Inteligencia Artificial.
 - **Idioma:** cursos en español; responder en español salvo que el usuario escriba en inglés.
 - **Utilidad:** `pdf-reader` (global) extrae texto de PDFs y `md_to_pdf.py` (repo) genera PDFs desde Markdown.
-- **Para profundizar** en EPG4001/EPG4002/IMT3850/INF3841, deja que su skill dedicada (global) tome el
-  control; este índice solo enruta y cubre los cursos sin skill propia.
+- **Para profundizar** en EPG4001/EPG4002/IMT3850/INF3841/INF3812/INF3862/IMT3870 o en Gobernanza de
+  Datos, deja que su skill dedicada tome el control; este índice solo enruta y cubre los cursos sin
+  skill propia (Bases de Datos, Data Science, Ética).

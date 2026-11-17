@@ -1,0 +1,664 @@
+% ─────────────────────────────────────────────────────────────────────────
+% Control resuelto — INF3841 Recuperación de Información (Magíster en IA, PUC)
+% Estilo de la casa: portada tikz azul/dorado UC, titlesec, fancyhdr.
+% Compilar: tectonic control2-ri.tex   (o pdflatex x2)
+% ─────────────────────────────────────────────────────────────────────────
+\documentclass[11pt, a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{parskip}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\geometry{margin=2.4cm}
+\onehalfspacing
+\graphicspath{{figures/}{./}}
+
+% ── Colores UC ──
+\definecolor{accent}{RGB}{0, 90, 130}
+\definecolor{ucblue}{RGB}{0, 75, 135}
+\definecolor{ucgold}{RGB}{198, 166, 80}
+
+% ── Formato de secciones ──
+\titleformat{\section}{\large\bfseries\color{accent}}{\thesection.\ }{0.3em}{}[\vspace{-0.5em}\color{accent}\rule{\textwidth}{0.4pt}]
+\titleformat{\subsection}{\normalsize\bfseries\color{accent!80!black}}{\thesubsection\ }{0.3em}{}
+\titleformat{\subsubsection}{\small\bfseries\color{accent!70!black}}{\thesubsubsection\ }{0.3em}{}
+
+% ── Encabezado ──
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{Control resuelto}}
+\fancyhead[R]{\small\textit{INF3841 Recuperación de Información}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\captionsetup{font=small,labelfont=bf}
+\newcommand{\code}[1]{\texttt{#1}}
+
+% ── Entorno para el enunciado de cada pregunta ──
+\newenvironment{enunciado}
+  {\begin{quote}\itshape\color{black!75}\small}
+  {\end{quote}}
+
+\hypersetup{colorlinks=true, linkcolor=accent, urlcolor=accent!70!black, citecolor=accent,
+  pdftitle={Control resuelto - INF3841 Recuperacion de Informacion},
+  pdfauthor={Armando Arredondo Valle}}
+
+\begin{document}
+
+% ── Portada ──
+\begin{titlepage}
+    \begin{tikzpicture}[remember picture, overlay]
+        \fill[ucblue] (current page.north west) rectangle ([yshift=-4cm]current page.north east);
+        \fill[ucgold] ([yshift=-4cm]current page.north west) rectangle ([yshift=-4.15cm]current page.north east);
+        \fill[ucblue] (current page.south west) rectangle ([yshift=2cm]current page.south east);
+        \fill[ucgold] ([yshift=2cm]current page.south west) rectangle ([yshift=2.15cm]current page.south east);
+    \end{tikzpicture}
+    \centering
+    \singlespacing
+    \vspace*{1.2cm}
+
+    \includegraphics[width=5.0cm]{Logo.png}
+    \vspace{1.4cm}
+
+    {\color{ucblue}\rule{0.6\textwidth}{0.8pt}}
+    \vspace{0.8cm}
+
+    {\LARGE\bfseries\color{ucblue} Control resuelto}
+    \vspace{0.9cm}
+
+    {\Large\color{black} Descriptores de audio, descriptores de texto\\[0.25em]
+    y evaluación de efectividad}
+    \vspace{0.9cm}
+
+    {\color{ucblue}\rule{0.6\textwidth}{0.8pt}}
+    \vspace{1.3cm}
+
+    {\large\bfseries Autor}
+    \vspace{0.4cm}
+
+    {\normalsize Armando Arredondo Valle}
+    \vspace{1.1cm}
+
+    {\normalsize Maestría en Inteligencia Artificial\\[0.25em]
+    INF3841 -- Recuperación de Información\\[0.25em]
+    Prof. Juan Manuel Barrios\\[0.25em]
+    Pontificia Universidad Católica de Chile}
+    \vfill
+    {\normalsize Octubre de 2026}
+    \vspace{1.4cm}
+\end{titlepage}
+
+% ═════════════════════════════════════════════════════════════════
+\section*{Nota preliminar sobre las fuentes}
+\addcontentsline{toc}{section}{Nota preliminar}
+
+Todas las convenciones usadas en este documento provienen del material del curso. En particular:
+el escalamiento de frecuencias de la Transformada de Fourier y el rol del primer coeficiente MFCC
+(\textit{Slides 05.2}, pp.~13, 16, 23 y 24); el algoritmo de votación por desfase para detectar
+secuencias duplicadas (\textit{Slides 05.3}, pp.~11--13); las definiciones
+$\mathrm{tf} = 1 + \log(\mathrm{freq})$, $\mathrm{idf} = \log(N/n_i)$, la normalización a norma
+unitaria, la relación $L_2 = \sqrt{2(1-\cos)}$, la inclusión de los n-gramas de grado menor y el
+formato del índice invertido (\textit{Slides 07.1}, pp.~15--18, 28--32, 45 y 50); y las dimensiones e
+interpretación de $AA^T$ y $A^TA$ (\textit{Slides 07.2}, pp.~3--4). La orientación de la matriz de
+descriptores MFCC sigue el \textit{Anexo 05.3}.
+
+% ═════════════════════════════════════════════════════════════════
+\section{Audio}
+
+\subsection{Parámetros del análisis}
+
+Datos: PCM 16 bits (\code{s16le}), $sr = 22.050$ Hz, duración 1~min 50~s $= 110$~s, ventana
+$W = 4.096$ samples, salto $H = 2.048$ samples.
+
+\subsubsection{Largo de cada ventana de análisis}
+
+\begin{enunciado}
+¿De qué largo (en milisegundos) es cada ventana de análisis?
+\end{enunciado}
+
+\begin{equation}
+\frac{4.096 \text{ samples}}{22.050 \text{ samples/s}} = 0{,}185760 \text{ s}
+= \mathbf{185{,}76 \text{ ms}}
+\end{equation}
+
+\subsubsection{Frecuencia audible de una onda de 150 ciclos}
+
+\begin{enunciado}
+Si en una ventana al calcular la Transformada de Fourier se obtiene muy alta energía para una onda
+de 150 ciclos, ¿qué frecuencia de sonido (en hertz) será audible en esa ventana de audio?
+\end{enunciado}
+
+La DFT entrega $w$ en \textbf{ciclos por ventana}, de modo que hay que escalar a ciclos por segundo:
+
+\begin{equation}
+f = \frac{150 \text{ ciclos}}{0{,}185760 \text{ s}}
+= 150 \cdot \frac{22.050}{4.096} = \mathbf{807{,}5 \text{ Hz}}
+\end{equation}
+
+Es el mismo procedimiento del ejemplo de clases: audio de 40.000 samples/s, ventana de 20~ms
+(800 samples), magnitud alta en $w = 200$ $\Rightarrow$ 10.000~Hz.
+
+\subsubsection{Dimensiones de la matriz de descriptores MFCC}
+
+\begin{enunciado}
+Si se calculan descriptores MFCC de 10 dimensiones, señale exactamente cuántas filas y columnas
+tendrá la matriz de descriptores resultante de analizar el audio completo. Asuma que si una ventana
+queda incompleta se rellenará con ceros (padding).
+\end{enunciado}
+
+El audio tiene $N = 110 \times 22.050 = 2.425.500$ samples. Las ventanas comienzan en los
+samples $0$, $2.048$, $4.096$, \dots, $k \cdot 2.048$, mientras el inicio caiga dentro de la señal:
+
+\begin{align}
+k_{\max} &= \left\lfloor \frac{2.425.499}{2.048} \right\rfloor = 1.184
+\quad\Longrightarrow\quad k = 0,\dots,1.184 \\[0.3em]
+\text{N\'umero de ventanas} &= \left\lceil \frac{2.425.500}{2.048} \right\rceil
+= \mathbf{1.185}
+\end{align}
+
+Verificación: el último inicio válido es $1.184 \times 2.048 = 2.424.832 < N$, y el siguiente sería
+$1.185 \times 2.048 = 2.426.880 \geq N$. De esas ventanas,
+$\lfloor (N - 4.096)/2.048 \rfloor + 1 = 1.183$ son completas; las dos últimas quedan con 2.716 y
+668 samples respectivamente y se completan con ceros.
+
+\begin{center}
+\fbox{\parbox{0.72\textwidth}{\centering\vspace{2pt}
+\textbf{Matriz de descriptores: 1.185 filas $\times$ 10 columnas}\vspace{2pt}}}
+\end{center}
+
+La orientación sigue la convención del curso. El \textit{Anexo 05.3} advierte que ``LibROSA retorna
+descriptores como columnas, pero comúnmente para calcular distancias los descriptores se usan como
+filas, por lo que es recomendable llamar a la función \code{transpose()}''. Sin transponer, la salida
+cruda de \code{librosa.feature.mfcc} sería de $10 \times 1.185$.
+
+\subsection{Sobre el descriptor MFCC}
+
+\subsubsection{Por qué no bastan los coeficientes de Fourier}
+
+\begin{enunciado}
+¿Por qué no es adecuado representar una ventana de audio según sus coeficientes de la transformada
+de Fourier? ¿Cómo se resuelve eso? Responda en máximo tres líneas.
+\end{enunciado}
+
+La FT de una ventana de 4.096 samples entrega unos 2.048 coeficientes linealmente espaciados en
+frecuencia: dimensionalidad excesiva, muy sensible a variaciones mínimas y mal alineada con el oído,
+cuya sensibilidad no es lineal en frecuencia. Se resuelve acumulando las energías en
+\textit{filterbanks} triangulares sobre la escala Mel (12 a 30 bandas), tomando el logaritmo y
+codificando con la DCT; los primeros coeficientes de esa DCT (el \textit{cepstro}) forman el
+descriptor MFCC, de pocas dimensiones y cercano a lo perceptual.
+
+\subsubsection{Primer coeficiente MFCC en la Tarea 2}
+
+\begin{enunciado}
+Para el caso particular de la Tarea 2, señale si es conveniente mantener o descartar el primer
+coeficiente de MFCC. Justifique de acuerdo al Enunciado de la Tarea 2.
+\end{enunciado}
+
+\textbf{Conviene descartarlo.} El primer coeficiente representa la energía promedio del espectro, es
+decir el \textbf{volumen global} de la ventana; de hecho las láminas señalan que ``usualmente se
+descarta el primer coeficiente''. La Tarea 2 consiste en localizar segmentos de audio conocidos
+dentro de audios de consulta que pueden venir re-codificados, mezclados o a distinto nivel de
+grabación: conservar $c_0$ haría que las distancias entre descriptores dependieran del volumen y no
+del contenido, degradando justamente la invarianza que la tarea necesita.
+
+El \textit{Anexo 05.3}, que declara explícitamente ``Estas funciones pueden servir para resolver la
+Tarea 2'', lo deja comentado en el propio código:
+
+\begin{quote}\small\ttfamily
+\# en el descriptor MFCC la primera dimensión está\\
+\# relacionada al volumen global del audio (energía promedio)\\
+\# usualmente es buena idea descartar la primera dimensión\\
+\# para tener descriptores invariantes al volumen global
+\end{quote}
+
+\subsection{Detección de secuencias duplicadas}
+
+\begin{enunciado}
+Usando el algoritmo visto en clases para detectar secuencias duplicadas, señale qué audios de $R$ son
+probablemente audibles durante al menos dos segundos en \code{query1.mp3}. Para cada detección señale
+el tiempo de inicio y fin en \code{query1.mp3}, el nombre del audio de $R$, su tiempo de inicio y fin
+audible y cuántos votos obtuvo esa detección.
+\end{enunciado}
+
+El algoritmo calcula para cada par el \textbf{desfase} $= t_q^{\,\text{ini}} - t_r^{\,\text{ini}}$,
+vota sobre el candidato $(q,\,r,\,\text{desfase})$ y reporta los candidatos con suficiente soporte.
+Como cada ventana dura 1~segundo, la condición ``audible al menos dos segundos'' equivale a exigir
+\textbf{al menos 2 votos}.
+
+\begin{table}[H]
+\centering
+\caption{Cálculo del desfase para cada ventana de consulta.}
+\small
+\begin{tabular}{@{}llc@{}}
+\toprule
+\textbf{Ventana de Q} & \textbf{Ventana más parecida de R} & \textbf{Desfase} \\
+\midrule
+00:30 -- 00:31 & cancion1.mp3 \quad 00:22 -- 00:23 & $30-22 = 8$ \\
+00:31 -- 00:32 & cancion2.mp3 \quad 00:05 -- 00:06 & $31-5 = \mathbf{26}$ \\
+00:32 -- 00:33 & cancion1.mp3 \quad 00:22 -- 00:23 & $32-22 = 10$ \\
+00:33 -- 00:34 & cancion2.mp3 \quad 00:07 -- 00:08 & $33-7 = \mathbf{26}$ \\
+00:34 -- 00:35 & cancion2.mp3 \quad 00:08 -- 00:09 & $34-8 = \mathbf{26}$ \\
+00:35 -- 00:36 & cancion4.mp3 \quad 00:11 -- 00:12 & $35-11 = \mathbf{24}$ \\
+00:36 -- 00:37 & cancion3.mp3 \quad 00:10 -- 00:11 & $36-10 = 26$ \\
+00:37 -- 00:38 & cancion3.mp3 \quad 00:10 -- 00:11 & $37-10 = 27$ \\
+00:38 -- 00:39 & cancion4.mp3 \quad 00:14 -- 00:15 & $38-14 = \mathbf{24}$ \\
+00:39 -- 00:40 & cancion4.mp3 \quad 00:15 -- 00:16 & $39-15 = \mathbf{24}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Candidatos $(video,\ desfase)$ y sus votos.}
+(cancion2, 26): \textbf{3 votos} \quad$\cdot$\quad (cancion4, 24): \textbf{3 votos} \quad$\cdot$\quad
+(cancion1, 8): 1 \quad$\cdot$\quad (cancion1, 10): 1 \quad$\cdot$\quad (cancion3, 26): 1
+\quad$\cdot$\quad (cancion3, 27): 1.
+
+\begin{table}[H]
+\centering
+\caption{Detecciones reportadas (candidatos con al menos 2 votos).}
+\small
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Audio de R} & \textbf{Tramo en query1.mp3} & \textbf{Tramo audible de R} & \textbf{Votos} \\
+\midrule
+\textbf{cancion2.mp3} & 00:31 -- 00:35 & 00:05 -- 00:09 & 3 \\
+\textbf{cancion4.mp3} & 00:35 -- 00:40 & 00:11 -- 00:16 & 3 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Dos observaciones sobre el algoritmo.} Primero, el tramo de cada detección va
+\textbf{desde el primer inicio hasta el último fin} del grupo, de modo que los huecos quedan
+incluidos: la ventana 00:32--00:33 cae dentro de la detección de \code{cancion2.mp3} aunque haya
+votado por \code{cancion1.mp3}, y lo mismo ocurre con 00:36--00:38 dentro de
+\code{cancion4.mp3}. Segundo, \code{cancion3.mp3} \textbf{no} genera detección pese a tener dos
+coincidencias, porque éstas cayeron en desfases distintos (26 y 27) y por tanto votaron por
+candidatos diferentes; es exactamente el criterio que distingue una secuencia duplicada de dos
+coincidencias aisladas.
+
+% ═════════════════════════════════════════════════════════════════
+\section{Descriptores de texto}
+
+\subsection{Modelo vectorial TF-IDF}
+
+El vocabulario de los tres documentos corresponde a las nueve palabras de la tabla del enunciado. Se
+usan las definiciones del curso: $\mathrm{idf}_i = \log_{10}(N/n_i)$ y
+$\mathrm{tf} = 1 + \log_{10}(\mathrm{freq})$. Como todos los términos aparecen una sola vez en cada
+documento, $\mathrm{tf} = 1 + \log_{10}(1) = 1$ en todos los casos.
+
+\subsubsection{IDF del vocabulario}
+
+\begin{table}[H]
+\centering
+\caption{IDF de cada término, con $N = 10.000$ documentos.}
+\small
+\begin{tabular}{@{}lccccccccc@{}}
+\toprule
+& gatos & muchos & negros & no & quiero & solo & tener & tengo & tres \\
+\midrule
+$n_i$ & 1.000 & 1.000 & 10 & 1.000 & 100 & 1.000 & 10 & 100 & 1.000 \\
+$\mathrm{idf}_i$ & \textbf{1} & \textbf{1} & \textbf{3} & \textbf{1} & \textbf{2} & \textbf{1}
+& \textbf{3} & \textbf{2} & \textbf{1} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Vectores TF-IDF normalizados}
+
+\begin{table}[H]
+\centering
+\caption{Vectores TF-IDF antes y después de normalizar a norma unitaria.}
+\small
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{@{}lcccccccccc@{}}
+\toprule
+& gatos & muchos & negros & no & quiero & solo & tener & tengo & tres & $\|\cdot\|$ \\
+\midrule
+$D_1$ crudo & 1 & 1 & 0 & 1 & 2 & 0 & 3 & 0 & 0 & $\sqrt{16}=4$ \\
+$\mathbf{D_1}$ \textbf{norm.} & 0,25 & 0,25 & 0 & 0,25 & 0,50 & 0 & 0,75 & 0 & 0 & 1 \\
+\midrule
+$D_2$ crudo & 1 & 0 & 3 & 0 & 0 & 1 & 0 & 2 & 1 & $\sqrt{16}=4$ \\
+$\mathbf{D_2}$ \textbf{norm.} & 0,25 & 0 & 0,75 & 0 & 0 & 0,25 & 0 & 0,50 & 0,25 & 1 \\
+\midrule
+$Q$ crudo & 1 & 1 & 3 & 1 & 0 & 0 & 0 & 2 & 0 & $\sqrt{16}=4$ \\
+$\mathbf{Q}$ \textbf{norm.} & 0,25 & 0,25 & 0,75 & 0,25 & 0 & 0 & 0 & 0,50 & 0 & 1 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Las tres normas resultan iguales a 4, lo que deja todas las coordenadas en múltiplos de un cuarto.
+
+\subsubsection{Similitud coseno}
+
+Como los vectores ya están normalizados, la similitud coseno es el producto punto:
+
+\begin{align}
+\cos(Q, D_1) &= 0{,}25^2 + 0{,}25^2 + 0{,}25^2 = \mathbf{0{,}1875} \\
+\cos(Q, D_2) &= 0{,}25^2 + 0{,}75^2 + 0{,}50^2 = 0{,}0625 + 0{,}5625 + 0{,}25 = \mathbf{0{,}8750}
+\end{align}
+
+\textbf{$D_2$ es claramente el más similar a $Q$.} Lo decide el término \textit{negros}, el único
+raro ($\mathrm{idf} = 3$) que $Q$ comparte con $D_2$: aporta por sí solo $0{,}5625$ de los $0{,}875$
+totales. Con $D_1$, en cambio, $Q$ solo coincide en términos de $\mathrm{idf} = 1$.
+
+\subsubsection{Distancia euclidiana}
+
+Usando la relación vista en clases $L_2(x,y) = \sqrt{2\,(1 - \cos(x,y))}$, válida para vectores
+normalizados:
+
+\begin{align}
+L_2(Q, D_1) &= \sqrt{2\,(1 - 0{,}1875)} = \sqrt{1{,}625} = \mathbf{1{,}275} \\
+L_2(Q, D_2) &= \sqrt{2\,(1 - 0{,}8750)} = \sqrt{0{,}25} = \mathbf{0{,}500}
+\end{align}
+
+\textbf{$D_2$ es el más cercano}, coherente con el resultado del coseno, como debe ocurrir dado que
+la distancia es monótona decreciente en la similitud.
+
+\subsection{N-gramas}
+
+\begin{enunciado}
+Se desea representar el documento de 29 palabras usando n-gramas, para $n \leq 3$. Señale la cantidad
+de términos totales y la cantidad de términos distintos.
+\end{enunciado}
+
+Según la convención del curso, los n-gramas ``también incluyen las secuencias de grado menor'', de
+modo que hay que sumar unigramas, bigramas y trigramas.
+
+\begin{table}[H]
+\centering
+\caption{Conteo de n-gramas sobre las 29 palabras del documento.}
+\small
+\begin{tabular}{@{}lccl@{}}
+\toprule
+& \textbf{Totales} & \textbf{Distintos} & \textbf{Términos repetidos} \\
+\midrule
+Unigramas & 29 & 23 & \textit{de, comadre, Lola, al, Guatón, Loyola} (6) \\
+Bigramas  & 28 & 25 & \textit{comadre Lola, al Guatón, Guatón Loyola} (3) \\
+Trigramas & 27 & 26 & \textit{al Guatón Loyola} (1) \\
+\midrule
+\textbf{TOTAL} & \textbf{84} & \textbf{74} & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Los totales salen de $29 + 28 + 27 = 84$. La cantidad de distintos baja poco porque lo único que se
+repite es el estribillo \textit{``comadre Lola''} y el nombre \textit{``al Guatón Loyola''}, y a
+partir de los trigramas casi todas las secuencias vuelven a ser únicas. Esto ilustra la advertencia
+de clases: al usar n-gramas \textbf{el tamaño del vocabulario crece de forma significativa}.
+
+\subsection{Conceptos sobre TF-IDF}
+
+\subsubsection{Por qué un histograma de palabras simple no es adecuado}
+
+Porque pondera todos los términos por igual, de modo que las palabras que aparecen en casi todos los
+documentos (artículos, conectores, vocabulario común del dominio) \textbf{no sirven para distinguir}
+y sin embargo dominan el cálculo de similitud por su alta frecuencia. TF-IDF lo corrige con el factor
+IDF, que asigna a cada término una relevancia \textit{a priori} inversa a la cantidad de documentos en
+que aparece. El ejercicio de la sección 2.1 lo muestra literalmente: la respuesta la decide
+\textit{negros} y no \textit{gatos}.
+
+\subsubsection{Por qué \code{cdist()} es siempre más lento que \code{matmul()}}
+
+\code{matmul()} delega el cálculo en BLAS (rutina GEMM), que está vectorizada, bloqueada para
+aprovechar la caché y paralelizada en múltiples hilos. \code{cdist()}, en cambio, recorre los pares
+de vectores en un ciclo genérico parametrizado por la métrica, sin esas optimizaciones, y además
+recalcula las normas en cada par en lugar de una sola vez por vector. El resultado numérico es el
+mismo (con descriptores normalizados, $\cos = 1 - \texttt{cosine distance}$), pero el camino de
+cómputo es mucho menos eficiente.
+
+\subsubsection{Índice invertido}
+
+\begin{table}[H]
+\centering
+\caption{Índice invertido para $d_1$: ``pablito clavó un clavito'' y $d_2$: ``qué clavito clavó pablito''.}
+\small
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{@{}clcl@{}}
+\toprule
+\textbf{Id} & \textbf{Término (vocabulario)} & & \textbf{Lista de ocurrencias} \\
+\midrule
+0 & clavito & $\rightarrow$ & $d_1$, $d_2$ \\
+1 & clavó   & $\rightarrow$ & $d_1$, $d_2$ \\
+2 & pablito & $\rightarrow$ & $d_1$, $d_2$ \\
+3 & qué     & $\rightarrow$ & $d_2$ \\
+4 & un      & $\rightarrow$ & $d_1$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Si se desea la variante con posiciones que menciona el material del curso, en la que cada
+ocurrencia guarda, además del id de documento, el número de palabra, quedaría:
+\code{clavito $\rightarrow$ d1(4), d2(2)} $\cdot$ \code{clavó $\rightarrow$ d1(2), d2(3)} $\cdot$
+\code{pablito $\rightarrow$ d1(1), d2(4)} $\cdot$ \code{qué $\rightarrow$ d2(1)} $\cdot$
+\code{un $\rightarrow$ d1(3)}.
+
+\subsection{Latent Semantic Analysis}
+
+Sea $A$ la matriz de $n \times t = 10.000 \times 50.000$ que contiene en cada fila el descriptor
+TF-IDF de un documento.
+
+\subsubsection{Matriz $B = A \times A^T$}
+Dimensiones $\mathbf{10.000 \times 10.000}$. Contiene la \textbf{similitud entre cada par de
+documentos}, calculada de acuerdo a los términos que tienen en común.
+
+\subsubsection{Matriz $C = A^T \times A$}
+Dimensiones $\mathbf{50.000 \times 50.000}$. Contiene la \textbf{similitud entre cada par de
+términos}, calculada de acuerdo a los documentos en que coinciden, es decir, qué tan correlacionada
+es su aparición.
+
+\subsubsection{Mayor ventaja de LSA en efectividad}
+Agrupa en un mismo concepto latente los términos que aparecen correlacionados, de modo que dos
+documentos que tratan el mismo tema \textbf{con palabras distintas} quedan cercanos; con TF-IDF puro
+su similitud sería cero por no compartir ningún término.
+
+\subsubsection{Mayor ventaja de LSA en eficiencia}
+Reduce los descriptores de 50.000 dimensiones a $k$ conceptos (del orden de cientos), por lo que
+comparar documentos es órdenes de magnitud más rápido y los vectores ocupan mucha menos memoria.
+
+\subsubsection{Primer concepto latente en el dataset de CIPER Chile}
+
+Un nombre adecuado sería \textbf{``actualidad político-institucional chilena''}: el vocabulario
+periodístico transversal del sitio (\textit{chile, gobierno, ministro, empresa, caso, años}\dots).
+
+Aparece porque el primer vector singular corresponde a la \textbf{dirección de mayor varianza} y, en
+una matriz TF-IDF no centrada y de valores no negativos, esa dirección se alinea con el
+\textbf{centroide de la colección}: el núcleo de vocabulario que comparten prácticamente todos los
+documentos. Es, por lo mismo, el concepto \textbf{menos discriminativo} de todos, pese a concentrar
+el mayor valor singular.
+
+% ═════════════════════════════════════════════════════════════════
+\section{Evaluación de efectividad}
+
+\subsection{Comparación de dos sistemas de búsqueda de imágenes}
+
+\subsubsection{Cálculo de las cinco métricas}
+
+Relevantes: $Q_1 = \{d92, d25, d11, d18\}$ ($R=4$) y $Q_2 = \{d39, d07, d73\}$ ($R=3$).
+
+\paragraph{Average Precision, Sistema 1.} En $Q_1$ los relevantes caen en los rangos 1, 3 y 10
+($d92$ no se recupera); en $Q_2$, en los rangos 1 y 2 ($d39$ no se recupera):
+\begin{align}
+AP_{1}(Q_1) &= \frac{1/1 + 2/3 + 3/10 + 0}{4} = \frac{1{,}9667}{4} = 0{,}4917 \\
+AP_{1}(Q_2) &= \frac{1/1 + 2/2 + 0}{3} = \frac{2}{3} = 0{,}6667
+\end{align}
+
+\paragraph{Average Precision, Sistema 2.} En $Q_1$ los cuatro relevantes caen en 3, 5, 6 y 8; en
+$Q_2$, los tres caen en 4, 6 y 8:
+\begin{align}
+AP_{2}(Q_1) &= \frac{1/3 + 2/5 + 3/6 + 4/8}{4} = \frac{1{,}7333}{4} = 0{,}4333 \\
+AP_{2}(Q_2) &= \frac{1/4 + 2/6 + 3/8}{3} = \frac{0{,}9583}{3} = 0{,}3194
+\end{align}
+
+\begin{table}[H]
+\centering
+\caption{Métricas de efectividad de ambos sistemas. En negrita el mejor valor de cada fila.}
+\small
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Métrica} & \textbf{Sistema 1} & \textbf{Sistema 2} \\
+\midrule
+Mean Average Precision (MAP) & \textbf{0,579} & 0,376 \\
+Mean Reciprocal Rank (MRR)   & \textbf{1,000} & 0,292 \\
+Precision@1                  & \textbf{1,000} & 0,000 \\
+Recall@12                    & 0,708 & \textbf{1,000} \\
+R-Precision                  & \textbf{0,583} & 0,125 \\
+\midrule
+\textit{(Recall@8, tamaño de la primera página)} & \textit{0,583} & \textbf{\textit{1,000}} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Detalle de las dos últimas métricas oficiales. El Recall@12 del Sistema 1 es
+$(3/4 + 2/3)/2 = 0{,}708$, mientras que el Sistema 2 recupera todos los relevantes en ambas
+consultas. La R-Precision evalúa los primeros $R$ resultados: para el Sistema 1,
+$(2/4 + 2/3)/2 = 0{,}583$; para el Sistema 2, $(1/4 + 0/3)/2 = 0{,}125$.
+
+\subsubsection{Cuál sistema logra mejor efectividad}
+
+\textbf{El Sistema 2}, porque el objetivo declarado por la empresa es ``recuperar la mayor cantidad
+de imágenes similares dentro de la primera página de resultados (que es de tamaño 8)'': el Sistema 2
+alcanza \textbf{Recall@8 $= 1{,}000$} frente a $0{,}583$ del Sistema 1, que deja fuera a $d92$ y
+$d39$ por completo.
+
+Conviene explicitar la tensión. Las cuatro métricas de ranking favorecen al Sistema 1
+(MAP 0,579 contra 0,376; MRR 1,000 contra 0,292; Precision@1 1,000 contra 0,000; R-Precision 0,583
+contra 0,125), porque coloca un documento relevante en el primer lugar de ambas consultas. Pero
+\textbf{no los recupera todos}. Dado que el requisito del cliente es \textit{cantidad} dentro de la
+página y no \textit{posición} dentro de ella, la métrica que decide es el recall en el corte 8, y
+ahí el Sistema 2 es perfecto.
+
+\subsection{Intervalos de confianza}
+
+El MAP de cada técnica es el promedio $\mu$ de los AP, y el intervalo de confianza al 95\,\% es
+$\mu \pm 1{,}96\,\sigma/\sqrt{n}$.
+
+\subsubsection{Con $n = 10$ consultas}
+
+\begin{table}[H]
+\centering
+\caption{Intervalos de confianza al 95\,\% con 10 consultas ($\sqrt{10} = 3{,}162$).}
+\small
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Técnica} & \textbf{MAP} & \textbf{Margen de error} & \textbf{Intervalo} \\
+\midrule
+Técnica 1 & 0,532 & $\pm 0{,}0707$ & [0,461 ; 0,603] \\
+Técnica 2 & 0,449 & $\pm 0{,}0924$ & [0,357 ; 0,541] \\
+Técnica 3 & 0,611 & $\pm 0{,}0570$ & [0,554 ; 0,668] \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Por valor puntual, la \textbf{Técnica 3 es la mejor} y la \textbf{Técnica 2 la peor}. Ahora bien,
+considerando los intervalos, la \textbf{Técnica 1 se solapa con ambas}, de modo que con solo 10
+consultas lo único estadísticamente sostenible es que \textbf{la Técnica 3 supera a la Técnica 2}
+(sus intervalos no se tocan: $0{,}541 < 0{,}554$). La Técnica 1 no puede separarse de ninguna de las
+otras dos.
+
+\subsubsection{Con $n = 200$ consultas}
+
+\begin{table}[H]
+\centering
+\caption{Intervalos de confianza al 95\,\% con 200 consultas ($\sqrt{200} = 14{,}142$).}
+\small
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Técnica} & \textbf{MAP} & \textbf{Margen de error} & \textbf{Intervalo} \\
+\midrule
+Técnica 1 & 0,532 & $\pm 0{,}0158$ & [0,516 ; 0,548] \\
+Técnica 2 & 0,449 & $\pm 0{,}0207$ & [0,428 ; 0,470] \\
+Técnica 3 & 0,611 & $\pm 0{,}0128$ & [0,598 ; 0,624] \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{No hay diferencia en cuál resulta la mejor ni la peor}: siguen siendo la Técnica 3 y la
+Técnica 2 respectivamente. Lo que cambia es la \textbf{confianza}. Al multiplicarse el número de
+consultas por 20, los márgenes se reducen en un factor $\sqrt{20} \approx 4{,}5$ y ahora
+\textbf{ningún par de intervalos se solapa}, de modo que el orden completo
+$T_3 > T_1 > T_2$ queda estadísticamente respaldado. La moraleja es que aumentar el número de
+consultas no mueve el promedio, sino que reduce la incertidumbre y permite afirmar diferencias que
+antes no eran distinguibles del ruido.
+
+\subsection{Correlación entre rankings de predicción}
+
+Rangos reales: U. Católica 1, Cruzeiro 2, Boca Juniors 3, Barcelona SC 4.
+
+\subsubsection{Coeficiente de Spearman}
+
+Con $\rho = 1 - \dfrac{6\sum d_i^2}{n(n^2-1)}$, donde $n = 4$ y por tanto $n(n^2-1) = 60$.
+
+\begin{table}[H]
+\centering
+\caption{Diferencias de rango para ambos proveedores.}
+\small
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{@{}lccccccc@{}}
+\toprule
+& \textbf{Real} & \multicolumn{3}{c}{\textbf{Proveedor 1}} & \multicolumn{3}{c}{\textbf{Proveedor 2}} \\
+\cmidrule(lr){3-5}\cmidrule(lr){6-8}
+\textbf{Equipo} & rango & rango & $d$ & $d^2$ & rango & $d$ & $d^2$ \\
+\midrule
+U. Católica  & 1 & 2 & $-1$ & 1 & 1 & 0  & 0 \\
+Cruzeiro     & 2 & 3 & $-1$ & 1 & 4 & $-2$ & 4 \\
+Boca Juniors & 3 & 4 & $-1$ & 1 & 3 & 0  & 0 \\
+Barcelona SC & 4 & 1 & 3    & 9 & 2 & 2  & 4 \\
+\midrule
+\multicolumn{4}{r}{$\sum d_i^2 =$} & \textbf{12} & & & \textbf{8} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{align}
+\rho_{P_1} &= 1 - \frac{6 \cdot 12}{60} = 1 - 1{,}2 = \mathbf{-0{,}2} \\
+\rho_{P_2} &= 1 - \frac{6 \cdot 8}{60} = 1 - 0{,}8 = \mathbf{0{,}2}
+\end{align}
+
+\textbf{El Proveedor 2 se acerca más} a la respuesta real. El Proveedor 1 queda incluso en
+correlación negativa: acertó el orden relativo de tres equipos, pero situó en primer lugar al que
+terminó último, y Spearman penaliza ese desplazamiento al cuadrado ($d = 3 \Rightarrow d^2 = 9$, el
+75\,\% de su error total).
+
+\subsubsection{Coeficiente de Kendall-Tau}
+
+Con $\tau = \dfrac{C - D}{n(n-1)/2}$, donde el denominador es $6$ pares.
+
+\textbf{Proveedor 1.} Concordantes: (UC, Cruzeiro), (UC, Boca), (Cruzeiro, Boca). Discordantes: los
+tres pares que involucran a Barcelona SC. Luego $C = 3$, $D = 3$:
+\begin{equation}
+\tau_{P_1} = \frac{3-3}{6} = \mathbf{0}
+\end{equation}
+
+\textbf{Proveedor 2.} Concordantes: los tres pares que involucran a U. Católica. Discordantes:
+(Cruzeiro, Boca), (Cruzeiro, Barcelona), (Boca, Barcelona). Luego $C = 3$, $D = 3$:
+\begin{equation}
+\tau_{P_2} = \frac{3-3}{6} = \mathbf{0}
+\end{equation}
+
+\textbf{Hay empate: según Kendall-Tau ninguno se acerca más que el otro.} La discrepancia con
+Spearman es informativa y vale la pena explicitarla: Kendall-Tau \textbf{solo cuenta pares
+invertidos}, y ambas predicciones tienen exactamente 3 inversiones de 6: el Proveedor 1 al mover
+Barcelona SC del cuarto al primer lugar, y el Proveedor 2 al invertir el orden de los tres últimos.
+Spearman, en cambio, \textbf{pondera la magnitud del desplazamiento}, y por eso sí distingue: mover
+un equipo tres puestos pesa más que mover dos equipos dos puestos cada uno.
+
+\end{document}

@@ -1,0 +1,47 @@
+%%{init:{"theme":"base","themeVariables":{"fontFamily":"IBM Plex Sans, Helvetica, Arial, sans-serif","fontSize":"15px","primaryColor":"#E8EFF7","primaryBorderColor":"#004B87","primaryTextColor":"#10161E","lineColor":"#58657A","clusterBkg":"#FFFFFF","clusterBorder":"#D6DCE4"},"flowchart":{"htmlLabels":false,"nodeSpacing":92,"rankSpacing":40,"wrappingWidth":340,"curve":"basis","padding":8}}}%%
+flowchart LR
+  subgraph IN["1 · ENTRADA"]
+    direction TB
+    S1["split 1<br/>r1 · 01:15Z · tienda.cl · 200 · 5.120 B<br/>r2 · 03:40Z · tienda.cl · 503 · 180 B"]
+    S2["split 2<br/>r3 · 07:05Z · blog.cl · 200 · 2.048 B<br/>r4 · 09:12Z del día 13 · tienda.cl · 500 · 150 B"]
+  end
+  subgraph MAP["2 · MAP"]
+    direction TB
+    I1["(tienda.cl, 11-12) → (1, 0)<br/>(tienda.cl, 11-12) → (1, 1)"]
+    I2["(blog.cl, 11-12) → (1, 0)<br/>(tienda.cl, 11-13) → (1, 1)"]
+  end
+  subgraph SH["3 · SHUFFLE y SORT"]
+    direction TB
+    G1["(tienda.cl, 2026-11-12)<br/>[ (1,0) , (1,1) ]"]
+    G2["(tienda.cl, 2026-11-13)<br/>[ (1,1) ]"]
+    G3["(blog.cl, 2026-11-12)<br/>[ (1,0) ]"]
+  end
+  subgraph RED["4 · REDUCE"]
+    direction TB
+    R0["Reduce 0"]
+    R1["Reduce 1"]
+  end
+  subgraph OUT["5 · SALIDA"]
+    direction TB
+    O0["part-r-00000<br/>tienda.cl · 2026-11-12 · 2 solic. · 1 error · 50,0 %<br/>tienda.cl · 2026-11-13 · 1 solic. · 1 error · 100,0 %"]
+    O1["part-r-00001<br/>blog.cl · 2026-11-12 · 1 solic. · 0 errores · 0,0 %"]
+  end
+
+  S1 -- "Map 1" --> I1
+  S2 -- "Map 2" --> I2
+  I1 --> G1
+  I1 --> G2
+  I2 --> G3
+  I2 --> G2
+  G1 --> R0
+  G2 --> R0
+  G3 --> R1
+  R0 --> O0
+  R1 --> O1
+
+  classDef io fill:#E8EFF7,stroke:#004B87,stroke-width:1.8px,color:#00315A;
+  classDef mid fill:#F5F7FA,stroke:#58657A,color:#22303B;
+  classDef red fill:#F7F0DC,stroke:#C6A650,stroke-width:2px,color:#4A3B12;
+  class S1,S2,O0,O1 io;
+  class I1,I2,G1,G2,G3 mid;
+  class R0,R1 red;

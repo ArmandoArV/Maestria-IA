@@ -1,0 +1,40 @@
+%%{init:{"theme":"base","themeVariables":{"fontFamily":"IBM Plex Sans, Helvetica, Arial, sans-serif","fontSize":"15px","primaryColor":"#E8EFF7","primaryBorderColor":"#004B87","primaryTextColor":"#10161E","lineColor":"#58657A"},"flowchart":{"htmlLabels":false,"nodeSpacing":40,"rankSpacing":78,"wrappingWidth":460,"curve":"basis","padding":10}}}%%
+flowchart LR
+  FILE["/logs/dt=2026-11-12/access.log<br/>2 TB · write-once, inmutable"]
+  B1["bloque B1"]
+  B2["bloque B2"]
+  B3["bloque B3"]
+  DN2["DataNode 2<br/>B1 · B2"]
+  DN3["DataNode 3<br/>B2 · B3"]
+  DN1["DataNode 1 · CAÍDO<br/>B1 · B3"]
+  NN["NameNode · solo metadatos<br/>B1 → DN1, DN2<br/>B2 → DN2, DN3<br/>B3 → DN1, DN3"]
+  C["Tarea Map<br/>cliente HDFS"]
+
+  FILE -- "se divide en bloques" --> B1
+  FILE --> B2
+  FILE --> B3
+  B1 --> DN2
+  B2 --> DN2
+  B2 --> DN3
+  B3 --> DN3
+  B1 --> DN1
+  B3 --> DN1
+  C -- "1 · ¿dónde está B1?" --> NN
+  NN -- "2 · B1 está en DN1 y DN2" --> C
+  C -- "3 · lee los bytes, sin pasar por el NameNode" --> DN2
+
+  classDef bloque fill:#F7F0DC,stroke:#C6A650,stroke-width:1.6px,color:#4A3B12;
+  classDef dn fill:#E8EFF7,stroke:#004B87,stroke-width:1.6px,color:#00315A;
+  classDef down fill:#F8E9E6,stroke:#A4262C,stroke-width:2px,color:#7A1C20;
+  classDef meta fill:#FFFFFF,stroke:#C6A650,stroke-width:1.6px,stroke-dasharray:5 3,color:#10161E;
+  classDef file fill:#FFFFFF,stroke:#004B87,stroke-width:2.2px,color:#00315A;
+  class B1,B2,B3 bloque;
+  class DN2,DN3 dn;
+  class DN1 down;
+  class NN meta;
+  class FILE,C file;
+  linkStyle 7 stroke:#A4262C,stroke-width:1.8px,stroke-dasharray:5 4;
+  linkStyle 8 stroke:#A4262C,stroke-width:1.8px,stroke-dasharray:5 4;
+  linkStyle 9 stroke:#004B87,stroke-width:2.6px;
+  linkStyle 10 stroke:#004B87,stroke-width:2.6px;
+  linkStyle 11 stroke:#004B87,stroke-width:2.6px;

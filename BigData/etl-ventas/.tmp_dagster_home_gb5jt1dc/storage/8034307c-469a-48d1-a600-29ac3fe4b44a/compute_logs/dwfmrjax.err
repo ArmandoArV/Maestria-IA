@@ -1,0 +1,5 @@
+2026-11-11 19:30:00 -0600 - dagster - DEBUG - __ASSET_JOB - 8034307c-469a-48d1-a600-29ac3fe4b44a - 71356 - LOGS_CAPTURED - Capturing logs for process (pid: 71356).
+2026-11-11 19:30:00 -0600 - dagster - DEBUG - __ASSET_JOB - 8034307c-469a-48d1-a600-29ac3fe4b44a - 71356 - ventas_limpias_estados_normalizados - STEP_START - Started execution of step "ventas_limpias_estados_normalizados".
+2026-11-11 19:30:00 -0600 - dagster - DEBUG - __ASSET_JOB - 8034307c-469a-48d1-a600-29ac3fe4b44a - 71356 - ventas_limpias_estados_normalizados - STEP_OUTPUT - Yielded output "result" of type "Any". (Type check passed).
+2026-11-11 19:30:00 -0600 - dagster - DEBUG - __ASSET_JOB - 8034307c-469a-48d1-a600-29ac3fe4b44a - 71356 - ventas_limpias_estados_normalizados - ASSET_CHECK_EVALUATION - Asset check 'estados_normalizados' on 'ventas_limpias' passed.
+2026-11-11 19:30:00 -0600 - dagster - DEBUG - __ASSET_JOB - 8034307c-469a-48d1-a600-29ac3fe4b44a - 71356 - ventas_limpias_estados_normalizados - STEP_SUCCESS - Finished execution of step "ventas_limpias_estados_normalizados" in 79ms.

@@ -5,7 +5,8 @@ description: >
   Maestria-IA repo), spanning ALL courses: Aprendizaje Supervisado (EPG4001), Aprendizaje No
   Supervisado (EPG4002), Fundamentos Matemáticos de IA (IMT3850), Bases de Datos, Introducción a
   Data Science (IMT3860), Ética en IA, Recuperación de Información (INF3841), Gobernanza de Datos, Deep Learning
-  (INF3812), Computación de Alto Rendimiento (IMT3870), and Big Data (INF3862). Use for broad or
+  (INF3812), Deep Learning Avanzado / Advanced Topics in AI (INF3813), Computación de Alto Rendimiento
+  (IMT3870), and Big Data (INF3862). Use for broad or
   cross-course questions about the maestría, when unsure which course a topic belongs to, for a
   program overview, or when working in the Maestria-IA repo without naming a course. Routes to the
   per-course skills for depth and directly covers courses lacking one (Bases de Datos, Data Science,
@@ -28,7 +29,13 @@ description: >
   sharding, replicación, data warehouse, modelado dimensional, tabla de hechos, ETL, ELT, data lake,
   object storage, Parquet, schema-on-read, lakehouse, Delta Lake, Apache Iceberg, Airflow, DAG,
   Dagster, asset, materialización, dbt, Airbyte, Hadoop, HDFS, NameNode, DataNode, réplica, YARN,
-  MapReduce, mapper, reducer, shuffle, input split, skew, Cloudera, Amazon EMR.
+  MapReduce, mapper, reducer, shuffle, input split, skew, Cloudera, Amazon EMR, INF3813, deep learning
+  avanzado, advanced topics in AI, CENIA, atención, self-attention, RoPE, máscara causal, RMSNorm,
+  SwiGLU, caché KV, GQA, MLA, FlashAttention, MoE, BERT, T5, GPT, transfer learning, feature
+  extraction, fine-tuning, PEFT, LoRA, catastrophic forgetting, modelos fundacionales, aprendizaje
+  autosupervisado, self-supervised, MAE, ViT, CLIP, zero-shot, prompting, scaling laws,
+  interpretabilidad mecanicista, cabeza de inducción, logit lens, activation patching, probe lineal,
+  SAE, entity binding, GNN, reinforcement learning.
   Respond in Spanish when the user writes in Spanish.
 ---
 
@@ -59,6 +66,7 @@ single-course question, the specific skill below usually triggers on its own: th
 | Recuperación de Información | INF3841 | J. M. Barrios | `recuperacion-informacion` (global) | ✅ completa (Sesiones 01–03) |
 | Gobernanza de Datos | - | A. Pumarino | `gobernanza-datos` (repo) | ✅ completa (Clases 1–7) |
 | Deep Learning | INF3812 | H. Löbel | `deep-learning` (repo) | ✅ completa (Sesiones 1–9) |
+| Deep Learning Avanzado | INF3813 | Equipo CENIA | `deep-learning-avanzado` (repo) | ✅ Clases 1–4 · faltan GNNs, integración y RL |
 | Computación de Alto Rendimiento | IMT3870 | I. Labarca | `computacion-alto-rendimiento` (repo) | ✅ completa (Clases 01–08) |
 | Big Data | INF3862 | S. Hagedorn | `big-data` (repo) | ✅ completa (Clases 01–03) |
 
@@ -89,6 +97,12 @@ single-course question, the specific skill below usually triggers on its own: th
 - Redes neuronales, MLP, backpropagation, descenso de gradiente estocástico, Adam, dropout, batch
   normalization, CNN/convolución, RNN/LSTM/GRU, embeddings, word2vec, seq2seq, atención, Transformer,
   transfer learning, PyTorch → **INF3812 / Deep Learning** (`deep-learning`).
+- Transformers en detalle (Q/K/V, RoPE, máscara causal, RMSNorm, SwiGLU, caché KV, GQA/MQA/MLA,
+  FlashAttention, atención dispersa y lineal, MoE), familias GPT/BERT/T5, transferencia de conocimiento
+  (feature extraction, fine-tuning, PEFT/LoRA, catastrophic forgetting), aprendizaje autosupervisado
+  (GPT, MAE, CLIP, SimCLR/DINO), interpretabilidad mecanicista (cabezas de inducción, logit lens,
+  activation patching, probes lineales, SAEs), GNNs y RL → **INF3813 / Deep Learning Avanzado**
+  (`deep-learning-avanzado`, resumen en §6).
 - Computación de alto rendimiento, paralelismo, FLOP/FLOPS, Ley de Moore, TOP500, arquitectura de Von
   Neumann, latencia y ancho de banda, T(n) = α + βn, cpu-bound vs. memory-bound, intensidad
   aritmética, GEMM/DAXPY, jerarquía de memoria y cachés, procesos e hilos, multiprocessing vs.
@@ -271,6 +285,51 @@ disponibles).
 > **Ojo con el solapamiento:** *Bases de Datos* (§1, Prof. A. L. Reyes) cubre álgebra relacional y
 > SQL; *Data Science* (§2) usa "Big Data" en el sentido de las **V**. Las preguntas de
 > **almacenamiento, pipelines y cómputo distribuido** son de **INF3862**.
+
+---
+
+## 6. Deep Learning Avanzado · Advanced Topics in AI (INF3813, equipo CENIA)
+
+> **Skill dedicada:** `deep-learning-avanzado`. Cárgala para cualquier pregunta de INF3813: tiene las
+> cuatro clases con sus ecuaciones y las cifras medidas en las diapositivas, más los prácticos y el
+> Laboratorio 1. Para ubicar y abrir el material en disco, `dla-material` (skill local de
+> `DeepLearningAvanzado/`).
+
+Continuación de **INF3812**, dictada por el **CENIA** en **MIA 2026-2**: Felipe Urrutia (introducción e
+interpretabilidad), Felipe del Río (fundamentos y RL), Nicolás Alvarado (GNNs y técnicas avanzadas),
+Rex Liu (RL y proyecto), Andreina Cota (ayudante). Material en `~/Maestria-IA/DeepLearningAvanzado/`
+(clases 1–4 disponibles).
+
+- **Clase 1 · Panorama + Transformers:** los 8 módulos del curso y 5 casos de estudio (DeepSeek-R1,
+  Gemini Robotics, AlphaFold 3, circuit tracing en Claude, AlphaEvolve); un **decoder-only moderno tipo
+  Llama paso a paso** (tokens → embeddings → Q/K/V → RoPE → scores → máscara causal → softmax → mezcla
+  de values → multi-head → residual + MLP SwiGLU → unembedding → probabilidades → generación con caché
+  KV); las tres familias **GPT / BERT / T5**; historia de la atención y de los embeddings posicionales
+  (sinusoidal, Shaw, T5, ALiBi, **RoPE**); y arquitecturas y eficiencia (sliding window, DSA, atención
+  lineal, Strassen, **FlashAttention**, **MHA/GQA/MQA/MLA**, caché KV, **MoE**).
+- **Clase 2 · Transferencia de conocimiento:** tipos de transferencia; **feature extraction** vs.
+  **fine-tuning**; embeddings, búsqueda semántica y bases de datos vectoriales; **catastrophic
+  forgetting** y sus mitigaciones; **PEFT/LoRA** (ΔW = BA de rango bajo); foundation models.
+- **Clase 3 · Modelos autosupervisados:** tareas de pretexto y las tres familias de objetivos
+  (generativo, contrastivo, adversarial); **GPT** y modelamiento de lenguaje, scaling laws, prompting
+  zero-/few-shot y chain-of-thought; **ViT + MAE** (75 % de parches ocultos); SimCLR/MoCo/BYOL/DINO;
+  **CLIP** (WIT de 400 M pares, objetivo contrastivo, zero-shot con «A photo of a {class}»).
+- **Clase 4 · Interpretabilidad en Transformers:** protocolo de **siete pasos** (observar → proponer →
+  demostrar a mano → caracterizar → intervenir → descomponer → confirmar) sobre **cabezas de
+  inducción** en un Transformer de juguete: patrones de atención, logit lens, construcción a mano con
+  RoPE, puntajes **pos/sym**, **activation patching** y ablación, **PCA** y **SAE TopK**, **probes
+  lineales**.
+- **Evaluación:** Laboratorio 1 (interpretabilidad, individual, entrega 24/11/2026 en Canvas),
+  Laboratorio 2 (GNNs) y proyecto final. **El programa no especifica ponderaciones.**
+- **Criterio transversal del curso:** separar siempre las dimensiones de diseño (conectividad ≠ memoria
+  y ejecución ≠ forma de interacción ≠ posición ≠ capacidad) y **el tipo de evidencia** (observación ≠
+  plausibilidad ≠ consistencia ≠ causal ≠ correlacional). *Los pesos de atención no son por sí solos
+  una explicación causal.*
+
+> **Ojo con el solapamiento:** **INF3812** (`deep-learning`, Prof. Löbel) cubre los fundamentos — MLP,
+> CNN, entrenamiento, RNN/LSTM y una introducción a atención y Transformers. **INF3813** parte de ahí:
+> si la pregunta es sobre RoPE, GQA, caché KV, LoRA, CLIP, MAE o interpretabilidad mecanicista, es
+> **INF3813**.
 
 ---
 
